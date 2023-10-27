@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <h1> FARMACIA </h1>
+
+        {% for producto in productos_mostrar %}
+
+            <div>
+                <h2>Nombre: {{ producto.nombre_prod }} </h2>
+                <h2>Descripción: {{ producto.descripcion }} </h2>
+                <h2>Precio: {{ producto.precio }} </h2>
+                <h2>Farmacia: {{ producto.farmacia_prod.nombre_farm }} </h2>
+
+        {% endfor %}
+    </body>
+</html>

@@ -9,6 +9,13 @@ from django.views.defaults import page_not_found
 def index(request):
     return render(request, 'index.html')
 
-def listar_farmacias(request):
-    farmacias = Farmacia.objects.select_related
+def listar_productos(request):
+    productos = Producto.objects.select_related("farmacia_prod")
+    productos = productos.all()
+    return render(request, 'producto/lista.html', {"productos_mostrar":productos})
+
+
+
+
+
     

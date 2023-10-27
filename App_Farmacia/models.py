@@ -24,6 +24,7 @@ class Producto(models.Model):
     nombre_prod = models.CharField(max_length=200)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
+    farmacia_prod = models.ForeignKey(Farmacia, on_delete=models.CASCADE)
 
 class Proveedor(models.Model):
     nombre_prov = models.CharField(max_length=200)
@@ -66,7 +67,7 @@ class HistorialCliente(models.Model):
     total_compras = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
 class DatosFarmacia(models.Model):
-    farmacia = models.OneToOneField(Farmacia, on_delete=models.CASCADE)
+    farmacia_datos = models.OneToOneField(Farmacia, on_delete=models.CASCADE)
     descripcion = models.TextField()
     horario = models.CharField(max_length=100)
 
