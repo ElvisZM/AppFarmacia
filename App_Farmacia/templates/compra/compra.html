@@ -1,0 +1,20 @@
+<html>
+    <head></head>
+    <body>
+        <h1> COMPRA ESPECIFICA Y SUS DETALLES </h1>
+        {% for compra in compras %}
+        <div>
+            <h2>Fecha Compra: {{ compra.fecha_compra }}</h2>
+            {% for detcompra in compra.detallecompra_set.all %}
+                <h2>Cantidad Compra: {{ detcompra.cantidad_prod_comprado }}</h2>
+                <h2>Precio Ud: {{ detcompra.precio_ud }}</h2>
+                {% for producto in detcompra.producto_set.all %}
+                    <h2>Nombre Producto: {{ producto.nombre_prod }}</h2>
+                    <h2>Descripcion: {{ producto.descripcion }}</h2>
+                {% endfor %}
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+    </body>
+</html>

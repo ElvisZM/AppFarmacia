@@ -1,0 +1,17 @@
+<html>
+    <head></head>
+    <body>
+        <h1> FARMACIA Y SUS PRODUCTOS </h1>
+        <div>
+            <h2>Nombre Farmacia: {{ farmacia.nombre_farm }}</h2>
+            <h2>Direccion: {{ farmacia.direccion_farm }}</h2>
+            <h2>Telefono: {{ farmacia.telefono_farm }}</h2>
+            {% for producto in productos %}
+                <h2>Nombre Producto: {{ producto.nombre_prod }}</h2>
+                <h2>Descripcion: {{ producto.descripcion }}</h2>
+                <h2>Precio: {{ producto.precio }}</h2>
+
+            {% endfor %}
+        </div>
+    </body>
+</html>

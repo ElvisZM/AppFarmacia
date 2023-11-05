@@ -1,0 +1,15 @@
+<html>
+    <head></head>
+    <body>
+        <h1> FARMACIAS </h1>
+        {% for farmacia in farmacias %}
+        <div>
+            <h2>Nombre: {{ farmacia.nombre_farm }}</h2>
+            <h2>Direccion: {{ farmacia.direccion_farm }}</h2>
+            <h2>Telefono: {{ farmacia.telefono_farm }}</h2>
+            <h2>Descripcion: {{ farmacia.datosfarmacia.descripcion }}</h2> 
+            <h2>Fecha Creacion: {{ farmacia.datosfarmacia.fecha_creacion }}</h2>
+        </div>
+        {% endfor %}
+    </body>
+</html>

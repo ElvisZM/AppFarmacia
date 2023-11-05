@@ -1,0 +1,16 @@
+<html>
+    <head></head>
+    <body>
+        <h1> FARMACIAS Y SUS GERENTES</h1>
+        {% for farmacia in farmacias %}
+        <div>
+            <h2>Farmacia: {{ farmacia.nombre_farm }}</h2>
+            <h2>Direccion: {{ farmacia.direccion_farm }}</h2>
+            <h2>Telefono: {{ farmacia.telefono_farm }}</h2>
+            <h2>Gerente: {{ farmacia.gerente.nombre_ger }}</h2>
+            <h2>Correo Gerente: {{ farmacia.gerente.correo }}</h2>
+            <h2>Fecha Inicio Gestion: {{ farmacia.gerente.fecha_inicio_gestion }}</h2>
+        </div>
+        {% endfor %}
+    </body>
+</html>

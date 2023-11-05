@@ -1,0 +1,13 @@
+<html>
+    <head></head>
+    <body>
+        <h1> GERENTES </h1>
+        {% for gerente in gerentes %}
+        <div>
+            <h2>Nombre: {{ gerente.nombre_ger }}</h2>
+            <h2>Correo Electronico: {{ gerente.correo }}</h2>
+            <h2>Fecha Inicio: {{ gerente.fecha_inicio_gestion }}</h2>
+        </div>
+        {% endfor %}
+    </body>
+</html>
