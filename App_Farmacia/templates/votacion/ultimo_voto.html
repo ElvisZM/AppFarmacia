@@ -1,0 +1,16 @@
+<html>
+    <head></head>
+    <body>
+        <h1> ULTIMA VOTACION REALIZADA PRODUCTO CONCRETO </h1>
+        <div>
+            <h2>Votacion: {{ votacion.puntuacion }}</h2>
+            <h2>Fecha: {{ votacion.fecha_votacion }}</h2>
+            <h2>Comentario: {{ votacion.comenta_votacion }}</h2>
+            {% for cliente in votacion.cliente_set.all %}
+                <h2>Cliente: {{ cliente.nombre_cli }}</h2>
+                <h2>Telefono: {{ cliente.telefono_cli }}</h2>
+                <h2>Direccion: {{ cliente.direccion_cli }}</h2>
+            {% endfor %}
+        </div>
+    </body>
+</html>

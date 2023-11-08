@@ -1,0 +1,15 @@
+<html>
+    <head></head>
+    <body>
+        <h1>Modelos con Votos Puntuación Tres del Cliente 2</h1>
+        
+        {% for producto in productos_con_votos %}
+            <div>
+                <h2>Producto: {{ producto.nombre_prod }}</h2>
+                <p>Descripción: {{ producto.descripcion }}</p>
+                <p>Precio: {{ producto.precio }}</p>
+            </div>
+        {% endfor %}
+        
+    </body>
+</html>

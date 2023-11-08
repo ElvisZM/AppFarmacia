@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+
 # Create your models here.
 
 class Farmacia(models.Model):
@@ -31,6 +32,19 @@ class Producto(models.Model):
     farmacia_prod = models.ForeignKey(Farmacia, on_delete=models.CASCADE)
     prov_sum_prod = models.ManyToManyField(Proveedor, through='SuministroProducto')
 
+class Votacion(models.Model):
+    numeros = [
+        (1,"Uno"), 
+        (2,"Dos"), 
+        (3,"Tres"),
+        (4,"Cuatro"),
+        (5,"Cinco"),
+        ]
+    puntuacion = models.CharField(max_length=1, choices=numeros)
+    fecha_votacion = models.DateField(null=False, blank=False)
+    comenta_votacion = models.TextField()
+    voto_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+
 class SuministroProducto(models.Model):
     fecha_sum = models.DateField(null=True, blank=True)
     cantidad = models.IntegerField(null=True, blank=True)
@@ -40,9 +54,33 @@ class SuministroProducto(models.Model):
 
 class Cliente(models.Model):
     nombre_cli = models.CharField(max_length=200)
-    telefono_cli = models.IntegerField(null=True, blank=True)
+    telefono_cli = models.IntegerField(null=True, blank=True, )
     direccion_cli = models.CharField(max_length=200, null=True, blank=True)
     productos_favoritos = models.ManyToManyField(Producto)
+    votacion_cliente = models.ForeignKey(Votacion, on_delete=models.CASCADE)
+    
+class Subscripcion(models.Model):
+    cliente_sub = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    plan_sub = models.CharField(max_length=200)
+    precio = models.DecimalField(max_digits=5, decimal_places=2)
+    cliente_subscripcion = models.ManyToManyField(Cliente, through='Pago', related_name="cliente_subscripcion")
+
+class Pago(models.Model):
+    entidades = [
+        ("CA","Caixa"),
+        ("BB","BBVA"),
+        ("UN","UNICAJA"),
+        ("IN","ING Direct"),
+    ]
+    banco = models.CharField(
+        max_length=2,
+        choices=entidades,
+    )
+    cuenta_bancaria = models.CharField(max_length=20)
+    fecha_pago = models.DateTimeField(null=True, blank=True)
+    cliente_pago = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    subscripcion_pago = models.ForeignKey(Subscripcion, on_delete=models.CASCADE)
+    
 
 class Compra(models.Model):
     fecha_compra = models.DateField(null=False, blank=False)

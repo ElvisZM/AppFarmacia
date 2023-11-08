@@ -15,6 +15,12 @@
             <li><a href="{% url 'empleados_salariosuperior' 3000 %}"> 8 -- Empleados con salario superior a 3000€ </a></li>
             <li><a href="{% url 'productos_disponibles_farmacia_especifica' 1 %}"> 9 -- Productos disponible en farmacia '1' </a></li>
             <li><a href="{% url 'compras_entre_fechas' '2010-01-01' '2020-12-31' %}"> 10 -- Compras realizadas entre fechas (2010 - 2020) </a></li>
+            <li><a href="{% url 'ultimo_voto_producto_concreto' 2 %}"> EXAMEN -- ULTIMO VOTO A PRODUCTO CONCRETO </a></li>
+            <li><a href="{% url 'productos_con_puntuacion_3_cliente_concreto' 2 %}"> EXAMEN -- MODELOS PRINCIPALES CON VOTOS IGUAL A 3 CLIENTE CONCRETO</a></li>
+            <li><a href="{% url 'clientes_nunca_votaron' %}"> EXAMEN -- CLIENTES NUNCA VOTARON </a></li>
+
+
+
         </ul>
     </body>
 </html>

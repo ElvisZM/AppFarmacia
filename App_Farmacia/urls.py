@@ -23,5 +23,13 @@ urlpatterns = [
     path('productos/disponibles/farmacia/<int:id_farmacia>',views.productos_disponibles_farmacia_especifica, name='productos_disponibles_farmacia_especifica'),
     
     path('compras/entre/<str:fecha_inicio>/<str:fecha_fin>',views.compras_entre_fechas, name="compras_entre_fechas"),
+
+    path('ultimo_voto_producto_concreto/<int:producto_id>',views.ultimo_voto_producto_concreto, name='ultimo_voto_producto_concreto'),
+    
+    path('productos_puntuacion_3_cliente_concreto/<int:cliente_id>/',views. productos_con_puntuacion_3_cliente_concreto, name='productos_con_puntuacion_3_cliente_concreto'),
+
+    path('clientes_nunca_votaron',views.clientes_nunca_votaron, name='clientes_nunca_votaron'),
+    
+    path('cuentas_bancarias_propietario_nombre/<str:nombre_propietario>/',views.cuentas_bancarias_propietario_nombre, name='cuentas_bancarias'),
     
 ]

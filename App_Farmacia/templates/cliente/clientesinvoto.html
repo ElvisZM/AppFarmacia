@@ -1,0 +1,13 @@
+<html>
+    <head></head>
+    <body>
+        <h1> CLIENTE QUE NUNCA VOTARON </h1>
+        {% for cliente in clientes %}
+        <div>
+            <h2>Nombre Cliente: {{ cliente.nombre_cli }}</h2>
+            <h2>Telefono Cliente: {{ cliente.telefono_cli }}</h2>
+            <h2>Direccion Cliente: {{ cliente.direccion_cli }}</h2>
+        </div>
+        {% endfor %}
+    </body>
+</html>
