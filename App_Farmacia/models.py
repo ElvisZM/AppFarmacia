@@ -32,19 +32,6 @@ class Producto(models.Model):
     farmacia_prod = models.ForeignKey(Farmacia, on_delete=models.CASCADE)
     prov_sum_prod = models.ManyToManyField(Proveedor, through='SuministroProducto')
 
-class Votacion(models.Model):
-    numeros = [
-        (1,"Uno"), 
-        (2,"Dos"), 
-        (3,"Tres"),
-        (4,"Cuatro"),
-        (5,"Cinco"),
-        ]
-    puntuacion = models.CharField(max_length=1, choices=numeros)
-    fecha_votacion = models.DateField(null=False, blank=False)
-    comenta_votacion = models.TextField()
-    voto_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-
 class SuministroProducto(models.Model):
     fecha_sum = models.DateField(null=True, blank=True)
     cantidad = models.IntegerField(null=True, blank=True)
@@ -56,14 +43,27 @@ class Cliente(models.Model):
     nombre_cli = models.CharField(max_length=200)
     telefono_cli = models.IntegerField(null=True, blank=True, )
     direccion_cli = models.CharField(max_length=200, null=True, blank=True)
-    productos_favoritos = models.ManyToManyField(Producto)
-    votacion_cliente = models.ForeignKey(Votacion, on_delete=models.CASCADE)
+    productos_favoritos = models.ManyToManyField(Producto, related_name='productos_favoritos')
+    votacion_prod = models.ManyToManyField(Producto, through='Votacion', related_name='votacion_prod')
     
 class Subscripcion(models.Model):
-    cliente_sub = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    cliente_sub = models.OneToOneField(Cliente, on_delete=models.CASCADE)
     plan_sub = models.CharField(max_length=200)
     precio = models.DecimalField(max_digits=5, decimal_places=2)
-    cliente_subscripcion = models.ManyToManyField(Cliente, through='Pago', related_name="cliente_subscripcion")
+    
+class Votacion(models.Model):
+    numeros = [
+        (1,"Uno"), 
+        (2,"Dos"), 
+        (3,"Tres"),
+        (4,"Cuatro"),
+        (5,"Cinco"),
+        ]
+    puntuacion = models.CharField(max_length=1, choices=numeros)
+    fecha_votacion = models.DateField(null=True, blank=True)
+    comenta_votacion = models.TextField()
+    voto_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    voto_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
 class Pago(models.Model):
     entidades = [

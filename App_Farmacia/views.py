@@ -69,31 +69,32 @@ def mi_error_500(request, exception=None):
 
 def ultimo_voto_producto_concreto(request, producto_id):
 
-    ultimo_voto = Votacion.objects.filter(voto_producto__id=producto_id).order_by('-fecha_votacion')[:1].get()
+    ultimo_voto = Votacion.objects.select_related("voto_producto", "voto_cliente").filter(voto_producto__id=producto_id).order_by('-fecha_votacion')[:1].get()
     return render(request, 'votacion/ultimo_voto.html', {'votacion':ultimo_voto})
 
 
 def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
     
     cliente = Cliente.objects.get(pk=cliente_id)
-    productos_con_votos = Producto.objects.filter(votacion__puntuacion=3, votacion__cliente=cliente)
+    productos_con_votos = Producto.objects.filter(votacion_prod__puntuacion=3, votacion_prod__voto_cliente=cliente)
+
 
     return render(request, 'producto/productos_con_3.html', {'productos_con_votos': productos_con_votos})
     
 def clientes_nunca_votaron(request):
-    clientes_no_votaron = Cliente.objects.filter(votacion_cliente__isnull=True).all()
+    clientes_no_votaron = Cliente.objects.prefetch_related("productos_favoritos").filter(votacion__isnull=True).all()
     return render(request, 'cliente/clientesinvoto.html', {'clientes_no_votaron':clientes_no_votaron})    
 
 def cuentas_bancarias_propietario_nombre(request, nombre_propietario):
-    cuentas_bancarias = Pago.objects.filter(
+    cuentas_bancarias = Pago.objects.select_related("cliente_pago", "subscripcion_pago").filter(
         Q(banco='CA') | Q(banco='UN'),Q(cliente_pago__nombre_cli__icontains=nombre_propietario)
     )
     return render(request, 'cuentas/cuentas_bancarias.html', {'cuentas_bancarias': cuentas_bancarias})
 
 def modelos_con_media_superior(request):    
-    media_votaciones = Producto.objects.aggregate(media=Avg('votacion__puntuacion'))
+    media_votaciones = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod").annotate(media=Avg('votacion__puntuacion'))
 
-    productos_con_media_superior = Producto.objects.filter(votacion__puntuacion__gt=2.5)
+    productos_con_media_superior = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod").filter(media__gt=2.5)
 
     return render(request, 'producto.html', {'productos_con_media_superior': productos_con_media_superior})
 
