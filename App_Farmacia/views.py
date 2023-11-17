@@ -73,13 +73,30 @@ def ultimo_voto_producto_concreto(request, producto_id):
     return render(request, 'votacion/ultimo_voto.html', {'votacion':ultimo_voto})
 
 
-def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
+#def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
     
-    cliente = Cliente.objects.get(pk=cliente_id)
+    cliente = Cliente.objects.prefetch_related("productos_favoritos", "votacion_prod").get(pk=cliente_id)
+    productos_con_votos = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod").filter(votacion_prod__puntuacion=3, votacion_prod__voto_cliente=cliente)
+    
+    return render(request, 'producto/productos_con_3.html', {'productos_con_votos': productos_con_votos})
+
+
+    from django.db.models import F
+
+def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
+    cliente = Cliente.objects.prefetch_related("productos_favoritos", "votacion_prod").get(pk=cliente_id)
+
+    # Filtrar por votos con puntuación 3 y cliente específico
     productos_con_votos = Producto.objects.filter(votacion_prod__puntuacion=3, votacion_prod__voto_cliente=cliente)
 
+    # Seleccionar campos relacionados
+    productos_con_votos = productos_con_votos.select_related("farmacia_prod").prefetch_related("prov_sum_prod")
 
     return render(request, 'producto/productos_con_3.html', {'productos_con_votos': productos_con_votos})
+
+
+
+
     
 def clientes_nunca_votaron(request):
     clientes_no_votaron = Cliente.objects.prefetch_related("productos_favoritos").filter(votacion__isnull=True).all()
