@@ -1,0 +1,461 @@
+*{  /*Doy unas reglas generales para todo mi contenido*/
+    text-decoration: none; /*No quiero que ningun elemento tenga subrayado o decoracion por defecto*/
+    margin: 0;/*No quiero que tenga margenes exteriores*/
+    padding: 0;/*No quiero que tenga margenes interiores*/
+    box-sizing: border-box;
+    
+}
+
+.container-menu{ /*Trabajo con mi container que contiene mi header*/
+    width: 90%; /*Quiero que mi contenedor tenga un ancho de 90%*/
+    height: auto; /*Quiero que mi contenedor tenga una altura automatica segun su contenido*/
+    margin: 1% auto; /*Quiero que los margenes superior e inferior sean de 1% para separarlos un poco y los laterales automáticos, haciendo que el container se ajuste automaticamente en los laterales al centro del container.*/
+    /*border: 1px solid black; */   
+}
+
+.header{    /*Trabajo con mi header que contiene mi logo y mi menu*/
+    display: flex; /*Al usar flex en mi header se me pone un elemento al lado del otro*/
+    flex-direction: row; /*Indico que se alineen en filas, que es como viene por defecto*/
+    flex-wrap: wrap; /*Si algo se sale de mi caja, lo pone debajo*/
+    align-items: center; /*Centro verticalmente mis elementos del header*/
+    height: auto; /*Le doy una altura para que se centren mis elementos en el header*/
+}
+
+.logo-signup{
+    display: flex;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;  
+}
+
+.logo-signup > a > img {
+    display: flex;
+    height: 8rem;
+    justify-content: end;
+}
+
+.logo-signup > h4 {
+    font-weight: lighter;
+    color: #1a1d32;
+}
+
+.container-formulario {
+    width: 50%;
+    margin-top: 6%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15%;
+}
+
+.formulario{
+    width: 100%;
+    color: #1a1d32;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: auto 19%;
+}
+
+.formulario > h1{
+    font-weight: lighter;
+    
+}
+
+.formulario > label {
+    display: block;
+    margin-top: 5%;
+}
+
+.formulario > label > h4{
+    font-weight:600;
+}
+
+.formulario > input {
+    margin-top: 2%;
+    width: 60%;
+    padding: 2.5%;
+    border-radius: 10px;
+}
+
+.formulario > button {
+    display: block;
+    margin-top: 4%;
+    width: 60%;
+    padding: 2.5%;
+    border-radius: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    background-color: rgb(48, 124, 126, 0.938);
+    color: white;
+    cursor: pointer;
+}
+
+.formulario > p {
+    margin: 5% 0;
+    width: 60%;
+    font-size: small;
+}
+
+.formulario > p > a{
+    color: #1a1d32;
+}
+
+
+.logo{
+    flex-grow: 1; /*Lo utilizo para que mi elemento flex se expanda para llenar el espacio disponible, es parecido al tamaño que se asigna en grid-template-columns en grid*/
+    flex-basis: auto; /*Le doy un tamaño automatico a nivel de flexbox, ajusto su ancho al contenido*/
+    padding: 5px; /*Quiero que su contenido se despegue 5 pixeles en su margen interior a su borde (borde logo) por todos los lados*/
+    /*margin-left: 20px; /*Quiero que se despegue 20 pixeles en su margen exterior al borde de header*/
+}
+
+.menu-expansible {
+
+    flex-grow: 1; 
+    flex-basis: 80%; /*Le doy un tamaño por defecto del 80% al ancho del container*/
+    height: 100%; /*Dentro de la altura del container le doy una altura del 100% para que se ajuste desde arriba hasta abajo*/
+
+}
+
+.menu-expansible ul {
+    display: flex; /*Le indico que los elementos dentro de ul se pongan en flex y esto hara que se pongan uno al lado del otro*/
+    flex-direction: row; /*Aunque es su direccion por defecto, lo indicamos*/
+    flex-wrap: wrap; /*Por si acaso se sale algo de la caja, lo pone debajo*/
+    align-items: center; /*Alineo los elementos verticalmente para que se pongan en el centro*/
+    justify-content: space-between; /*Indico que mis elementos tengan espacio entre ellos pero los de inicio y fin se peguen a los bordes*/
+    height: 100%; /*Pongo altura 100% para que ocupe toda la altura*/
+    list-style: none; /*Quito los estilos de los enlaces y a la lista para que se quiten los puntitos*/
+}
+
+.menu-expansible a { /*Ahora me meto a trabajar en mis enlaces*/
+    text-transform: uppercase; /*Transformo los textos a mayúscula*/
+    color: #262b4f; /*Pongo mi texto en azul oscuro*/
+    background-color: white;
+    padding: 15px; /*Pongo un padding para que halla separacion con los diferentes enlaces*/
+    transition: all 300ms; /*Sirve para que cuando ponga el menu con :hover los cambios visuales se hagan de manera suave*/  
+}
+
+.menu-expansible a:hover{ /*Activo mi hover en mi menu para que al pasar el raton por encima se active*/
+    background-color: pink; /*Pongo el fondo de los elementos del menu en rosa cuando pase el raton por encima de ellos*/
+    color: white; /*Pongo mis letras en blanco para que queden mas bonitas con el fondo rosa*/
+}
+
+.menu-expansible li{ /*Trabajo con los li de mi menu-expansible*/
+    display: flex; /*Indico que los elementos li se comporten como un contenedor flex*/
+    flex-direction: column; /*Esta vez indico que la dirección de los elementos li sean de tipo columna*/
+    position: relative; /*Basicamente se aplica el position relative para que los hijos que en este caso es el submenu, tengan este elemento como referencia*/
+}
+
+.submenu{ /*Me meto a trabajar con mi submenu y mi submenulogin*/
+    display: none; /*Oculto inicialmente los elementos del submenu*/
+    position: absolute; /*Posiciono el submenu de forma absoluta con respecto a su padre que tiene posicion relative, si su padre no fuese relativo el elemento se coloca en relacion al documento.*/
+    z-index: 1; /*Con esta propiedad hacemos que el submenu se superponga del resto de elementos, para que destaque.*/
+    left: 0; /*Alineo mi submenu a la izquierda*/
+    top: 100%; /*Indico que el submenú aparezca justo despues de la parte inferior del elemento menu principal*/
+    text-align: left; /*Alineo mi texto a la izquierda*/
+    width: 200%;
+    
+}
+
+.login {
+    position:relative;
+}
+
+.submenulogin {
+    display: inline-block;
+    position: absolute;
+    z-index: 1;
+    top:100%;
+    right:0%;
+    width: 220%;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+
+}
+
+.submenulogin > li {
+    margin: auto;
+    text-align: left;
+    background-color: white;
+    z-index:1;
+}
+
+.submenulogin > li > i{
+    padding-top: 5%;
+    text-align: center;
+}
+
+.submenulogin > li > input {
+    border-radius: 15px;
+    text-align: center;
+    width: 58%;
+    margin-left: 21%;
+    padding: 3%;
+}
+
+.submenulogin > li > a > button {    /*Me meto a trabajar con mi boton de "Acceder" en especifico mediante su id*/
+    width: 100%;
+    padding: 3%;
+    font-size: large;
+    background-color: rgb(255, 160, 122, 1);
+    /*background: linear-gradient(to bottom, #262b4f 0%, rgba(48, 124, 126, 0.938) 100%); /*Con la funcion linear-gradient dentro del background, puedo hacer que el boton empiece por un color y termine en otro. En esta línea indico que se ejecutará desde arriba hacia abajo de modo que empieze por el color azul marino y termine en un azul clarito*/
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+}
+.submenulogin > li > a {
+    width: 90%;
+    margin-left: 5%;
+    border-radius: 15px;
+
+}
+
+
+.submenulogin > li > h4 {
+    margin-top: 5%;
+    padding-left: 3%;
+}
+
+.submenulogin > li > p {
+    margin-top: 3%;
+    padding-left: 3%;
+    margin-bottom: 5%;
+}
+
+#ó {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.google-apple > button{
+    width: 40%;
+    padding: 3%;
+    border-radius: 15px;
+    margin-left: 6%; 
+    cursor: pointer;
+}
+
+#parrafo-google-apple{
+    margin-top: 0;
+    margin-left: 5%;
+}
+
+
+
+.menu-expansible li .submenu{ /*Selecciono todos los elementos con la clase submenu que son descendientes del elemento li de menu-expansible, es decir, selecciono submenu nuevamente.*/
+    display: none; /*Indico con esta propiedad que los elementos estarán ocultos inicialmente, de algún modo en .submenu el display:none se anula por ninguna razon aparente, por eso tengo que especificar esto de nuevo*/
+}
+
+.menu-expansible li .submenulogin{ /*Selecciono todos los elementos con la clase submenulogin que son descendientes del elemento li de menu-expansible, es decir, selecciono submenulogin nuevamente.*/
+    display: none; /*Indico con esta propiedad que los elementos estarán ocultos inicialmente, de algún modo en .submenulogin el display:none se anula por ninguna razon aparente, por eso tengo que especificar esto de nuevo*/
+}
+
+.menu-expansible li:hover .submenu{ /*Indico de esta manera que al pasar el raton por encima de mis <li> del menu-expansible, se despliegue el submenu*/
+    display: block; /*Poniendo el display en tipo bloque hago que el submenu sea visible mientras el este en hover, es decir, mientras tenga mi raton por encima*/
+}
+
+.menu-expansible li:hover .submenulogin{ /*Indico de esta manera que al pasar el raton por encima de mis <li> del menu-expansible, se despliegue el submenulogin*/
+    display: block; /*Poniendo el display en tipo bloque hago que el submenu sea visible mientras el este en hover, es decir, mientras tenga mi raton por encima*/
+}
+
+.submenulogin input{    /*Me meto a trabajar con los campos input de mi submenulogin*/
+    width: 100%;    /*Ajusto la anchura de los input al 100% de la anchura del submenulogin*/
+    height: auto;   /*Ajusto una altura automática según su contenido*/
+    margin-top: 3px;    /*Le doy un poquito de margen hacia arriba para separarlo de los iconos*/
+    margin-bottom: 10px;   /*Le doy también un poquito de margen hacia abajo para separarlo de los iconos también*/
+}
+
+
+.submenulogin a{
+    text-transform: initial; /*Con esta propiedad anulo las mayúsculas en el submenulogin que estaban definidas anteriormente para todos los enlaces*/
+    padding:0;  /*Quito los margenes interiores*/
+    margin:0;   /*Quito los margenes exteriores*/
+    background-color: rgb(255, 160, 122, 0.2);
+}
+
+.submenulogin a:hover{ /*En este apartado indico lo que ocurre cuando coloco mi cursor encima de los enlaces del submenulogin*/
+    background-color: white;
+    color: #262b4f;
+}
+
+
+.cabecera {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    text-align: center;
+    color: #1a1d32;
+    margin: 0;
+    padding: 0;
+
+}
+
+.descripcion_body {
+    width: 100%;
+    background-color: rgb(255, 160, 122, 0.2);
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.descripcion_body-texto {
+    display: inline-block;
+    width: 90%;
+    margin-top: 4%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+    padding-left: 20%;
+    padding-right: 20%;
+    color: #1a1d32;
+}
+
+.descripcion_body-texto > h2 {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+.descripcion_body-texto > p {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+.descripcion_body-texto > ul > li {
+    margin-top: 3%;
+
+}
+
+.descripcion_body-texto > ul > li > a {
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 4%;
+    margin-bottom: 4%;
+    color: #1a1d32;
+
+}
+
+.descripcion_body-texto > div > h2 {
+
+    font-family: Arial, Helvetica, sans-serif;
+    margin-top: 4%;
+    margin-bottom: 4%;
+}
+
+
+
+
+.footer {
+    width: 100%;
+    background-color: #262b4f;
+    color: white;
+    margin-top: 4%;
+
+}
+
+.footer a {
+    color: white;
+}
+
+.contenedorpie{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr 2% 2.3fr 2% 0.3fr 2% 5%;
+    grid-template-areas: 
+        "farma farma farma farma"
+        "linea1 linea1 linea1 linea1"
+        "servicio legal psur siguenos"
+        "linea2 linea2 linea2 linea2"
+        "entregas entregas confianza opinion"
+        "linea3 linea3 linea3 linea3"
+        "pago pago pago pago"
+    ;
+    width: 90%;
+    margin: 1% auto;
+}
+
+.mifarma {
+    grid-area: farma;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 3% auto;
+}
+
+.mifarma > p {
+    align-self: end;
+}
+
+.mifarma > img {
+    width: 8%;
+}
+
+.linea-top {
+    grid-area: linea1;
+}
+
+.linea-medium {
+    grid-area: linea2;
+}
+
+.linea-bottom {
+    grid-area: linea3;
+}
+
+.servicio {
+    grid-area: servicio;
+}
+
+.contenedorpie h2 {
+    padding-bottom: 4%;
+}
+
+.contenedorpie p {
+    padding-bottom: 4%;
+}
+
+.mapa {
+    margin-top: 2%;
+    width: 80%;
+    height: 50%;
+}
+
+.legal {
+    grid-area: legal;
+}
+
+.psur {
+    grid-area: psur;
+}
+
+.siguenos i{
+    grid-area: siguenos;
+    padding-right: 3%;
+}
+
+.siguenos > p {
+    margin-top: 5%;
+}
+
+
+.entregas {
+    grid-area: entregas;   
+}
+
+.entregas p {
+    display: inline-flex;
+    margin-right: 2%;
+    margin-top: 3%;
+    
+}
+
+.confianza {
+    grid-area: confianza;
+}
+
+.opiniones {
+    grid-area: opinion;
+}
+
+.pago {
+    grid-area: pago;
+    display: flex;
+    justify-content: space-between;
+}

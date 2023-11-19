@@ -1,0 +1,23 @@
+{% extends 'principal.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+{% block contenido %}
+<div class="container-formulario">
+    <div class="formulario">
+        <h1>Crea tu cuenta en P.Sur Pharmacy</h1>
+        <label for="nombre"><h4>Nombre*</h4></label>
+        <input type="text" name="nombre" placeholder="Nombre">
+        <label for="apellidos"><h4>Apellidos*</h4></label>
+        <input type="text" name="apellidos" placeholder="Apellidos">
+        <label for="correo"><h4>Email*</h4></label>
+        <input type="email" name="correo" placeholder="Su dirección de correo electrónico">
+        <label for="contraseña"><h4>Contraseña*</h4></label>
+        <input type="password" name="contraseña" placeholder="Crear una contraseña">
+        <button>Enviar</button>
+        <p>Al hacer clic en 'Enviar' estás aceptando el <b>Términos de uso</b> y <b>Política de Privacidad</b> de P.Sur Pharmacy.</p>
+        <p><a href="{% url 'index' %}"><i class="fa-solid fa-arrow-left fa-sm"></i> Volver</a></p>
+    </div>
+</div>
+{% endblock%}

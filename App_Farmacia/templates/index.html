@@ -1,26 +1,30 @@
-<html>
-    <head></head>
-    <body>
-        <h1>MI PROYECTO</h1>
+{% extends "principal.html" %}
 
-        <h2>Listado de enlaces</h2>
-        <ul>
-            <li><a href="{% url 'farmacias_ordenadas_fecha' %}">1 -- Farmacias ordenadas por fecha de creacion </a></li>
-            <li><a href="{% url 'gerentes_nombre' 'low' %}"> 2 -- Gerentes filtrados por nombre "low" </a></li>
-            <li><a href="{% url 'farmacias_con_gerentes' %}"> 3 -- Farmacias con sus gerentes </a></li>
-            <li><a href="{% url 'productos_con_proveedores' %}"> 4 -- Productos con sus proveedores {# ##¿¿NO FUNCIONA CORRECTAMENTE O COINCIDENCIA NO HAY DATOS EN DB?? PREGUNTAR EN CLASE## #} </a></li>
-            <li><a href="{% url 'empleados_compras' %}"> 5 -- Empleados y sus compras </a></li>
-            <li><a href="{% url 'detalle_compra' 5 %}"> 6 -- Detalle de Compra '5' </a></li>
-            <li><a href="{% url 'clientes_productosfavoritos' %}"> 7 -- Clientes y sus Productos favoritos </a></li>
-            <li><a href="{% url 'empleados_salariosuperior' 3000 %}"> 8 -- Empleados con salario superior a 3000€ </a></li>
-            <li><a href="{% url 'productos_disponibles_farmacia_especifica' 1 %}"> 9 -- Productos disponible en farmacia '1' </a></li>
-            <li><a href="{% url 'compras_entre_fechas' '2010-01-01' '2020-12-31' %}"> 10 -- Compras realizadas entre fechas (2010 - 2020) </a></li>
-            <li><a href="{% url 'ultimo_voto_producto_concreto' 2 %}"> EXAMEN -- ULTIMO VOTO A PRODUCTO CONCRETO </a></li>
-            <li><a href="{% url 'productos_con_puntuacion_3_cliente_concreto' 2 %}"> EXAMEN -- MODELOS PRINCIPALES CON VOTOS IGUAL A 3 CLIENTE CONCRETO</a></li>
-            <li><a href="{% url 'clientes_nunca_votaron' %}"> EXAMEN -- CLIENTES NUNCA VOTARON </a></li>
+{% block cabecera %}
+    <div class="cabecera">
+        <h1>MI PROYECTO - INICIO</h1>
+    </div>
+{% endblock %}
 
-
-
-        </ul>
-    </body>
-</html>
+{% block contenido %}
+    <div class="descripcion_body">
+        <div class="descripcion_body-texto">
+            <h2>Listado de enlaces</h2>
+            <ul>
+                <li><a href="{% url 'farmacias_ordenadas_fecha' %}">1 -- Farmacias ordenadas por fecha de creacion </a></li>
+                <li><a href="{% url 'gerentes_nombre' 'low' %}"> 2 -- Gerentes filtrados por nombre "low" </a></li>
+                <li><a href="{% url 'farmacias_con_gerentes' %}"> 3 -- Farmacias con sus gerentes </a></li>
+                <li><a href="{% url 'productos_con_proveedores' %}"> 4 -- Productos con sus proveedores {# ##¿¿NO FUNCIONA CORRECTAMENTE O COINCIDENCIA NO HAY DATOS EN DB?? PREGUNTAR EN CLASE## #} </a></li>
+                <li><a href="{% url 'empleados_compras' %}"> 5 -- Empleados y sus compras </a></li>
+                <li><a href="{% url 'detalle_compra' 5 %}"> 6 -- Detalle de Compra '5' </a></li>
+                <li><a href="{% url 'clientes_productosfavoritos' %}"> 7 -- Clientes y sus Productos favoritos </a></li>
+                <li><a href="{% url 'empleados_salariosuperior' 3000 %}"> 8 -- Empleados con salario superior a 3000€ </a></li>
+                <li><a href="{% url 'productos_disponibles_farmacia_especifica' 1 %}"> 9 -- Productos disponible en farmacia '1' </a></li>
+                <li><a href="{% url 'compras_entre_fechas' '2010-01-01' '2020-12-31' %}"> 10 -- Compras realizadas entre fechas (2010 - 2020) </a></li>
+                <li><a href="{% url 'ultimo_voto_producto_concreto' 2 %}"> EXAMEN -- ULTIMO VOTO A PRODUCTO CONCRETO </a></li>
+                <li><a href="{% url 'productos_con_puntuacion_3_cliente_concreto' 2 %}"> EXAMEN -- MODELOS PRINCIPALES CON VOTOS IGUAL A 3 CLIENTE CONCRETO</a></li>
+                <li><a href="{% url 'clientes_nunca_votaron' %}"> EXAMEN -- CLIENTES NUNCA VOTARON </a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

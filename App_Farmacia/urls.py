@@ -14,7 +14,7 @@ urlpatterns = [
     
     path('empleados/compras',views.empleado_compras, name='empleados_compras'),
     
-    path('detalles/compra/<int:id_compra>',views.detalle_compra, name='detalle_compra'),
+    path('detalles/compra/<int:id_compra>',views.detalle_compra_id, name='detalle_compra'),
     
     path('clientes/productosfavoritos',views.clientes_productosfavoritos, name='clientes_productosfavoritos'),
     
@@ -31,5 +31,7 @@ urlpatterns = [
     path('clientes_nunca_votaron',views.clientes_nunca_votaron, name='clientes_nunca_votaron'),
     
     path('cuentas_bancarias_propietario_nombre/<str:nombre_propietario>/',views.cuentas_bancarias_propietario_nombre, name='cuentas_bancarias'),
+    
+    path('signup',views.signup, name='signup'),
     
 ]

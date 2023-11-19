@@ -1,26 +1,25 @@
-<html>
-    <head></head>
-    <body>
-        <h1> EMPLEADOS Y SUS COMPRAS</h1>
-        {% for empleado in empleados %}
-        <div>
-            <h2>Nombre Empleado: {{ empleado.nombre_emp }}</h2>
-            <h2>Cargo: {{ empleado.cargo }}</h2>
-            <h2>Salario: {{ empleado.salario }}</h2>
-            {% for compra in empleado.compra_set.all %} {# Se establece _set porque en el modelo compra, en el campo empleado_compra, que es una relacion foreign key con empleado, no hay ningun related name, sino se pondria el related name #}
-                <h2>Fecha Compra: {{ compra.fecha_compra }}</h2>
-                {% for detcompra in compra.detallecompra_set.all %}
-                    <h2>Cantidad: {{ detcompra.cantidad_prod_comprado }}</h2>
-                    <h2>Precio Ud: {{ detcompra.precio_ud }}</h2>
-                    {% for prod in detcompra.producto_set.all %}
-                        <h2>Nombre Producto: {{ prod.nombre_prod }}</h2>
-                        <h2>Descripcion: {{ prod.descripcion }}</h2>
-                    {% endfor %}
+{% extends 'principal.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-                {% endfor%}
+{% block cabecera %}
+    <div class ="cabecera">
+        <h1>EMPLEADOS | COMPRAS</h1>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+
+    <div class="descripcion_body">
+        <div class="descripcion_body-texto">    
+            {% for empleado in empleados %}
+                {% include 'empleado/empleado.html' %}
+                {% include 'compra/compra_detalle_empleado.html' %}
+            {% empty %}
+                <h2>Lo sentimos, no hay información para mostrar</h2> 
             {% endfor %}
-
         </div>
-        {% endfor %}
-    </body>
-</html>
+    </div>
+
+{% endblock %}

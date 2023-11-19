@@ -11,6 +11,9 @@ from django.db.models import Avg
 def index(request):
     return render(request, 'index.html')
 
+def signup(request):
+    return render(request, 'signup.html')
+
 def farmacia_ordenada_fecha(request):
     farmacias = Farmacia.objects.select_related('datosfarmacia').order_by('datosfarmacia__fecha_creacion')
     return render(request, 'farmacia/farmaciaydatos.html', {'farmacias':farmacias})
@@ -31,13 +34,17 @@ def empleado_compras(request):
     empleados = Empleado.objects.select_related('farm_emp').all()
     return render(request, 'empleado/empleado_y_compras.html', {'empleados':empleados})
 
-def detalle_compra(request, id_compra):
+def detalle_compra(request):
+    compra = Compra.objects.select_related('cliente_compra', 'empleado_compra').prefetch_related('producto_compra').all()
+    return render(request, 'compra/compra_detalle_empleado.html', {'compras':compra})
+
+def detalle_compra_id(request, id_compra):
     compra = Compra.objects.select_related('cliente_compra', 'empleado_compra').prefetch_related('producto_compra').filter(id=id_compra)
-    return render(request, 'compra/compra.html', {'compras':compra})
+    return render(request, 'compra/compraydetalles_id.html', {'compras_id':compra})
 
 def clientes_productosfavoritos(request):
     clientes = Cliente.objects.prefetch_related('productos_favoritos').all()
-    return render(request, 'cliente/cliente.html', {'clientes':clientes})
+    return render(request, 'cliente/cliente_prod_fav.html', {'clientes':clientes})
 
 def empleado_salariosuperior(request, cantidad_salario):
     empleados = Empleado.objects.filter(salario__gte=cantidad_salario).all()   #IMPORTANTE gte = mayor o igual que  y  lte = menor o igual que

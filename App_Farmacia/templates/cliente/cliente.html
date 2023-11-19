@@ -1,20 +1,5 @@
-<html>
-    <head></head>
-    <body>
-        <h1> CLIENTE Y PRODUCTOS FAVORITOS </h1>
-        {% for cliente in clientes %}
-        <div>
-            <h2>Nombre Cliente: {{ cliente.nombre_cli }}</h2>
-            <h2>Telefono Cliente: {{ cliente.telefono_cli }}</h2>
-            <h2>Direccion Cliente: {{ cliente.direccion_cli }}</h2>
-            {% for producto in cliente.productos_favoritos.all %}
-                <h2>Nombre Producto: {{ producto.nombre_prod }}</h2>
-                <h2>Descripcion Producto: {{ producto.descripcion }}</h2>
-                <h2>Precio: {{ producto.precio }}</h2>
-                
-            {% endfor %}
-
-        </div>
-        {% endfor %}
-    </body>
-</html>
+<div>
+    <h2>Nombre Cliente: {{ cliente.nombre_cli }}</h2>
+    <h2>Telefono Cliente: {{ cliente.telefono_cli }}</h2>
+    <h2>Direccion Cliente: {{ cliente.direccion_cli }}</h2>
+</div>

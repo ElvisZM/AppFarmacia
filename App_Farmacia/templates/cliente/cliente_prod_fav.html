@@ -5,7 +5,7 @@
 
 {% block cabecera %}
     <div class ="cabecera">
-        <h1>CLIENTES | NUNCA VOTARON</h1>
+        <h1>CLIENTES | PRODUCTOS FAVORITOS</h1>
     </div>
 {% endblock %}
 
@@ -14,13 +14,17 @@
     <div class="descripcion_body">
         <div class="descripcion_body-texto">
             {% for cliente in clientes %}
-                {% include 'cliente/cliente.html'%}
-
-
+                {% include 'cliente/cliente.html' %}
+                {% for producto in cliente.productos_favoritos.all %}
+                    <h2>Nombre Producto: {{ producto.nombre_prod }}</h2>
+                    <h2>Descripcion Producto: {{ producto.descripcion }}</h2>
+                    <h2>Precio: {{ producto.precio }}</h2>
+                    
+                {% endfor %}
             {% empty %}
-                <h2>No hay ningun cliente que nunca haya votado</h>
+                <h2>Lo sentimos, no hay información que mostrar</h2>
             {% endfor %}
+
         </div>
     </div>
-
 {% endblock %}
