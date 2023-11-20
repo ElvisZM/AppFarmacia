@@ -16,7 +16,7 @@
             {% for cliente in clientes %}
                 {% include 'cliente/cliente.html' %}
                 {% for producto in cliente.productos_favoritos.all %}
-                    <h2>Nombre Producto: {{ producto.nombre_prod }}</h2>
+                    <h2>Nombre Producto: {{ producto.nombre_prod|truncatewords:2 }}</h2>
                     <h2>Descripcion Producto: {{ producto.descripcion }}</h2>
                     <h2>Precio: {{ producto.precio }}</h2>
                     

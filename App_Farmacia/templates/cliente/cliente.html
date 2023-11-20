@@ -1,5 +1,5 @@
 <div>
-    <h2>Nombre Cliente: {{ cliente.nombre_cli }}</h2>
+    <h2>Nombre Cliente: {{ cliente.nombre_cli|truncatewords:1 }}</h2>
     <h2>Telefono Cliente: {{ cliente.telefono_cli }}</h2>
-    <h2>Direccion Cliente: {{ cliente.direccion_cli }}</h2>
+    <h2>Direccion Cliente: {{ cliente.direccion_cli|truncatewords:3 }}</h2>
 </div>

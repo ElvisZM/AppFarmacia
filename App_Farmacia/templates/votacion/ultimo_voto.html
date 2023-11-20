@@ -1,16 +1,18 @@
-<html>
-    <head></head>
-    <body>
-        <h1> ULTIMA VOTACION REALIZADA PRODUCTO CONCRETO </h1>
-        <div>
-            <h2>Votacion: {{ votacion.puntuacion }}</h2>
-            <h2>Fecha: {{ votacion.fecha_votacion }}</h2>
-            <h2>Comentario: {{ votacion.comenta_votacion }}</h2>
-            {% for cliente in votacion.cliente_set.all %}
-                <h2>Cliente: {{ cliente.nombre_cli }}</h2>
-                <h2>Telefono: {{ cliente.telefono_cli }}</h2>
-                <h2>Direccion: {{ cliente.direccion_cli }}</h2>
-            {% endfor %}
+{% extends 'principal.html' %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+{% block cabecera %}
+    <div class ="cabecera">
+        <h1>VOTACION | ULTIMO VOTO PRODUCTO (#2) </h1>
+    </div>
+{% endblock %}
+
+{% block contenido %}
+    <div class="descripcion_body">
+        <div class="descripcion_body-texto">
+            {% include 'votacion/votacion.html' %}
         </div>
-    </body>
-</html>
+    </div>
+{% endblock %}

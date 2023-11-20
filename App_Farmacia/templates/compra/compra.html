@@ -1,8 +1,8 @@
 <div>
-    <h2> Fecha Compra: {{ compra.fecha_compra }}</h2>
-    <h2> Cliente: {{ compra.cliente_compra.nombre_cli }} </h2>
+    <h2> Fecha Compra: {{ compra.fecha_compra|date:"d-m-Y" }}</h2>
+    <h2> Cliente: {{ compra.cliente_compra.nombre_cli|truncatewords:1 }} </h2>
     {% for detalle_compra in compra.producto_compra.all %}
-        <h2> Producto comprado: {{ detalle_compra.producto_detalle.nombre_prod }} </h2>
+        <h2> Producto comprado: {{ detalle_compra.producto_detalle.nombre_prod|truncatewords:2 }} </h2>
     {% endfor %}
-    <h2> Empleado: {{ compra.empleado_compra.nombre_emp }} </h2>
+    <h2> Empleado: {{ compra.empleado_compra.nombre_emp|truncatewords:2 }} </h2>
 </div> 

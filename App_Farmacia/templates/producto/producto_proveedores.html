@@ -5,20 +5,25 @@
 
 {% block cabecera %}
     <div class ="cabecera">
-        <h1>FARMACIAS | ESPECIFICA Y SUS PRODUCTOS </h1>
+        <h1>PRODUCTOS | Y PROVEEDORES </h1>
     </div>
 {% endblock %}
 
 {% block contenido %}
     <div class="descripcion_body">
         <div class="descripcion_body-texto">
-            {% include 'farmacia/farmacia.html' %}
             {% for producto in productos %}
-                <h2>Producto: {{ producto.nombre_prod|truncatewords:1 }}</h2>
-                <h2>Descripcion Producto: {{ producto.descripcion }}</h2>
-                <h2>Precio: {{ producto.precio }}</h2>
+                {% include 'producto/producto.html' %}
+                {% if producto.prov_sum_prod.all %}
+                    {% for suministro in producto.prov_sum_prod.all %}
+                        <h2>Proveedor: {{ suministro.proveedor.nombre_prov|truncatewords:1 }}</h2>
+                        <h2>Dirección: {{ suministro.proveedor.direccion_prov|truncatewords:3}}</h2>
+                    {% endfor %}
+                {% else %}
+                    <h2>No hay proveedores para este producto.</h2>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
-
 {% endblock %}
+

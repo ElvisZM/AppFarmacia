@@ -13,13 +13,14 @@
 
     <div class="descripcion_body">
         <div class="descripcion_body-texto">    
-            {% for empleado in empleados %}
+            {% for empleado in compras_empleados %}
                 {% include 'empleado/empleado.html' %}
                 {% include 'compra/compra_detalle_empleado.html' %}
             {% empty %}
-                <h2>Lo sentimos, no hay información para mostrar</h2> 
+            <h2>Lo sentimos, no hay información que mostrar</h2>
             {% endfor %}
         </div>
     </div>
 
 {% endblock %}
+{# MARCADO PARA RETOCAR CODIGO #}

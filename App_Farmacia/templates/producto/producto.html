@@ -1,17 +1,6 @@
-<html>
-    <head></head>
-    <body>
-        <h1> PRODUCTOS Y SUS PROVEEDORES </h1>
-        {% for producto in productos %}
-        <div>
-            <h2>Nombre Producto: {{ producto.nombre_prod }}</h2>
-            <h2>Descripcion Producto: {{ producto.descripcion }}</h2>
-            <h2>Precio: {{ producto.precio }}</h2>
-            {% for suministro in producto.prov_sum_prod.all %}
-                <h2>Proveedor: {{ suministro.proveedor.nombre_prov }}</h2>
-                <h2>Direccion Proveedor: {{ suministro.proveedor.direccion_prov }}</h2>
-            {% endfor %}
-        </div>
-        {% endfor %}
-    </body>
-</html>
+
+<div>
+    <h2>Nombre Producto: {{ producto.nombre_prod|truncatewords:1 }}</h2>
+    <h2>Descripcion Producto: {{ producto.descripcion }}</h2>
+    <h2>Precio: {{ producto.precio }}</h2>
+</div>

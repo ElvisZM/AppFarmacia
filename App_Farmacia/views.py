@@ -20,19 +20,19 @@ def farmacia_ordenada_fecha(request):
 
 def gerente_nombre(request, nombre_introducido):
     gerentes = Gerente.objects.select_related('gerente_farm').filter(nombre_ger__contains=nombre_introducido)
-    return render(request, 'gerente/gerente.html', {'gerentes':gerentes})
+    return render(request, 'gerente/gerentes_filtrado_nombre.html', {'gerentes':gerentes})
 
 def farmacias_con_gerentes(request):
     farmacias = Farmacia.objects.select_related('gerente').all()
-    return render(request, 'farmacia/farmaciaygerentes.html', {'farmacias':farmacias})
+    return render(request, 'farmacia/farmaciaygerentes.html', {'farmacias':farmacias, 'gerente':request})
 
 def productos_con_proveedores(request):
     productos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod').all()
-    return render(request, 'producto/producto.html', {'productos':productos})
+    return render(request, 'producto/producto_proveedores.html', {'productos':productos})
 
 def empleado_compras(request):
     empleados = Empleado.objects.select_related('farm_emp').all()
-    return render(request, 'empleado/empleado_y_compras.html', {'empleados':empleados})
+    return render(request, 'empleado/empleado_y_compras.html', {'compras_empleados':empleados})
 
 def detalle_compra(request):
     compra = Compra.objects.select_related('cliente_compra', 'empleado_compra').prefetch_related('producto_compra').all()
@@ -48,7 +48,7 @@ def clientes_productosfavoritos(request):
 
 def empleado_salariosuperior(request, cantidad_salario):
     empleados = Empleado.objects.filter(salario__gte=cantidad_salario).all()   #IMPORTANTE gte = mayor o igual que  y  lte = menor o igual que
-    return render(request, 'empleado/empleado.html', {'empleados':empleados})
+    return render(request, 'empleado/empleados_salario_superior.html', {'empleados':empleados})
 
 def productos_disponibles_farmacia_especifica(request, id_farmacia):
     farmacia = Farmacia.objects.get(id=id_farmacia)

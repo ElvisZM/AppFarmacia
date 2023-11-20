@@ -5,18 +5,15 @@
 
 {% block cabecera %}
     <div class ="cabecera">
-        <h1>FARMACIAS | DATOS Y ORDENADAS POR FECHA DE CREACION</h1>
+        <h1>EMPLEADOS | SALARIO SUPERIOR A 3000€</h1>
     </div>
 {% endblock %}
 
 {% block contenido %}
     <div class="descripcion_body">
-        <div class="descripcion_body-texto">
-            {% for farmacia in farmacias %}
-                {% include 'farmacia/farmacia.html' %}
-                <h2>Descripcion: {{ farmacia.datosfarmacia.descripcion }}</h2>
-                <h2>Horario: {{ farmacia.datosfarmacia.horario }}</h2>
-                <h2>Fecha Creacion: {{ farmacia.datosfarmacia.fecha_creacion|date:"m-d-Y" }}</h2>
+        <div class="descripcion_body-texto">    
+            {% for empleado in empleados %}
+                {% include 'empleado/empleado.html' %}          
             {% endfor %}
         </div>
     </div>
