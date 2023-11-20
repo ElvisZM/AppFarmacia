@@ -59,7 +59,7 @@ def compras_entre_fechas(request, fecha_inicio, fecha_fin):
     fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
     fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')
     compras = Compra.objects.select_related('cliente_compra', 'empleado_compra').prefetch_related('producto_compra').filter(fecha_compra__gte=fecha_inicio, fecha_compra__lte=fecha_fin)
-    return render(request, 'compra/compra.html', {'compras':compras})
+    return render(request, 'compra/compra_entre_fechas.html', {'compras':compras})
 
 def mi_error_400(request, exception=None):
     return render(request, 'errores/400.html',None,None,400)
