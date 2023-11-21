@@ -4,6 +4,8 @@ from .import views
 urlpatterns = [
     path('',views.index,name='index'),
     
+    path('producto/create',views.producto_create,name='producto_create'),
+    
     path('farmacias/ordenadas',views.farmacia_ordenada_fecha,name='farmacias_ordenadas_fecha'),
     
     path('gerentes/<str:nombre_introducido>',views.gerente_nombre, name='gerentes_nombre'),

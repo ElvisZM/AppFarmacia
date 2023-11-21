@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_seed',
     'debug_toolbar',
     'App_Farmacia',
+    'bootstrap5',
+    'django_bootstrap_icons'
 ]
 
 MIDDLEWARE = [

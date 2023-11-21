@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
-from .models import Farmacia, Gerente, Empleado, Producto, Proveedor, SuministroProducto, Cliente, Compra, DetalleCompra, CuentaEmpleado, HistorialCliente, DatosFarmacia, DetalleProducto, Votacion, Subscripcion, Pago
-from django.db.models import Q
+from .models import *
+from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found
 from datetime import datetime, date
 from django.db.models import Avg
+from .forms import *
+from django.contrib import messages
 
 
 def index(request):
@@ -13,6 +15,45 @@ def index(request):
 
 def signup(request):
     return render(request, 'signup.html')
+
+
+# PARA FORMULARIOS 
+
+def producto_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario == request.POST
+    
+    formulario = ProductoModelForm(datosFormulario)
+    
+    if (request.method == 'POST'):
+        producto_creado = crear_producto_modelo(formulario)
+        if (producto_creado):
+            messages.success(request, 'Se ha creado el producto'+formulario.cleaned_data.get('nombre_prod')+"correctamente")
+            return redirect("productos_con_proveedores")       
+
+    return render(request, 'producto/create.html', {'formulario':formulario})
+
+def crear_producto_modelo(formulario):
+        
+    producto_creado = False
+    #Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            #Guarda el producto en la base de datos
+            formulario.save()
+            producto_creado = True
+        except:
+            pass
+    return producto_creado                
+
+
+
+
+
 
 def farmacia_ordenada_fecha(request):
     farmacias = Farmacia.objects.select_related('datosfarmacia').order_by('datosfarmacia__fecha_creacion')
@@ -121,6 +162,7 @@ def modelos_con_media_superior(request):
     productos_con_media_superior = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod").filter(media__gt=2.5)
 
     return render(request, 'producto.html', {'productos_con_media_superior': productos_con_media_superior})
+
 
 
     

@@ -1,0 +1,81 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+{% load bootstrap5 %}
+
+<form action ="{% url 'producto_create' %}" method = "post">
+
+    {% csrf_token %}
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.nombre_prod show_label=True %}
+
+        {% if formulario.nombre_prod.help_text %}
+        <div class="form-text">
+            {{ formulario.nombre_prod.help_text }}
+        </div>
+        {% endif %}
+
+        <div class="invalid-feedback">
+            {% for error in formulario.nombre_prod.errors %} 
+                {{ error }}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.descripcion show_label=True %}
+
+        {% if formulario.descripcion.help_text %}
+        <div class="form-text">
+            {{ formulario.descripcion.help_text }}
+        </div>
+        {% endif %}
+
+        <div class="invalid-feedback">
+            {% for error in formulario.descripcion.errors %} 
+                {{ error }}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.precio show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.precio.errors %} 
+                {{ error }}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.farmacia_prod show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.farmacia_prod.errors %} 
+                {{ error }}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="mb-4">
+        {% bootstrap_field formulario.prov_sum_prod show_label=True %}
+        <div class="invalid-feedback">
+            {% for error in formulario.prov_sum_prod.errors %} 
+                {{ error }}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar</button>
+
+</form>
+
+<!--
+    {% bootstrap_form formulario %}
+-->
+{% endblock %}
