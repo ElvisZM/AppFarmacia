@@ -20,6 +20,10 @@ class ProductoModelForm(ModelForm):
             "prov_sum_prod": {"Indique quien es el Proveedor"}
         }
         
+        widgets = {   
+            
+        }
+        
         def clean(self):
             
             super().clean()

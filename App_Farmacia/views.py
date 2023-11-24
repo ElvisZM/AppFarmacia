@@ -19,24 +19,6 @@ def signup(request):
 
 # PARA FORMULARIOS 
 
-def producto_create(request):
-    
-    # Si la petición es GET se creará el formulario Vacio
-    # Si la petición es POST se creará el formulario con Datos
-    datosFormulario = None
-    if (request.method == 'POST'):
-        datosFormulario == request.POST
-    
-    formulario = ProductoModelForm(datosFormulario)
-    
-    if (request.method == 'POST'):
-        producto_creado = crear_producto_modelo(formulario)
-        if (producto_creado):
-            messages.success(request, 'Se ha creado el producto'+formulario.cleaned_data.get('nombre_prod')+"correctamente")
-            return redirect("productos_con_proveedores")       
-
-    return render(request, 'producto/create.html', {'formulario':formulario})
-
 def crear_producto_modelo(formulario):
         
     producto_creado = False
@@ -50,9 +32,22 @@ def crear_producto_modelo(formulario):
             pass
     return producto_creado                
 
+def producto_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario == request.POST
+    
+    formulario = ProductoModelForm(datosFormulario)
+    if (request.method == 'POST'):
+        producto_creado = crear_producto_modelo(formulario)
+        if (producto_creado):
+            messages.success(request, 'Se ha creado el producto'+formulario.cleaned_data.get('nombre_prod')+"correctamente")
+            return redirect("productos_con_proveedores")       
 
-
-
+    return render(request, 'producto/create.html', {'formulario':formulario})
 
 
 def farmacia_ordenada_fecha(request):
