@@ -24,40 +24,40 @@ class ProductoModelForm(ModelForm):
             
         }
         
-        def clean(self):
+    def clean(self):
+        
+        super().clean()
+        
+        #Obtenemos los campos
+        nombre_prod = self.cleaned_data.get('nombre_prod')
+        descripcion = self.cleaned_data.get('descripcion')
+        precio = self.cleaned_data.get('precio')
+        farmacia_prod = self.cleaned_data.get('farmacia_prod')
+        prov_sum_prod = self.cleaned_data.get('prov_sum_prod')
+        
+        #Comprobamos que no existe un producto con ese nombre
+        productoNombre = Producto.objects.filter(nombre_prod=nombre_prod).first()
+        if (not productoNombre is None):
+            self.add_error('nombre_prod','Ya existe un producto con ese nombre')
             
-            super().clean()
+        #Comprobamos que la descripción tiene al menos 10 carácteres.            
+        if len(descripcion) < 10:
+            self.add_error('descripcion','Al menos debes indicar 10 carácteres')
             
-            #Obtenemos los campos
-            nombre_prod = self.cleaned_data.get('nombre_prod')
-            descripcion = self.cleaned_data.get('descripcion')
-            precio = self.cleaned_data.get('precio')
-            farmacia_prod = self.cleaned_data.get('farmacia_prod')
-            prov_sum_prod = self.cleaned_data.get('prov_sum_prod')
+        #Comprobamos que el precio está puesto en su formato con decimales (float)
+        if type(precio) != float:
+            self.add_error('precio','El precio introducido no es válido')
             
-            #Comprobamos que no existe un producto con ese nombre
-            productoNombre = Producto.objects.filter(nombre_prod=nombre_prod).first()
-            if (not productoNombre is None):
-                self.add_error('nombre_prod','Ya existe un producto con ese nombre')
-                
-            #Comprobamos que la descripción tiene al menos 10 carácteres.            
-            if len(descripcion) < 10:
-                self.add_error('descripcion','Al menos debes indicar 10 carácteres')
-                
-            #Comprobamos que el precio está puesto en su formato con decimales (float)
-            if type(precio) != float:
-                self.add_error('precio','El precio introducido no es válido')
-                
-            #Comprobamos que al menos seleccione una Farmacia
-            if len(farmacia_prod) < 1:
-                self.add_error('farmacia_prod','Debe seleccionar una farmacia para su producto')
-                
-            #Comprobamos que al menos seleccione un Proveedor
-            if len(prov_sum_prod):
-                self.add_error('prov_sum_prod','Debe seleccionar al menos un proveedor')
+        #Comprobamos que al menos seleccione una Farmacia
+        if len(farmacia_prod) < 1:
+            self.add_error('farmacia_prod','Debe seleccionar una farmacia para su producto')
             
-            #Siempre devolver los datos    
-            return self.cleaned_data
+        #Comprobamos que al menos seleccione un Proveedor
+        if len(prov_sum_prod):
+            self.add_error('prov_sum_prod','Debe seleccionar al menos un proveedor')
+        
+        #Siempre devolver los datos    
+        return self.cleaned_data
             
             
                                  

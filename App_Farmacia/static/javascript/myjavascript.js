@@ -1,1 +1,1 @@
-alert("¡P.Sur Pharmacy, tu farmacia de confianza!")
+/*alert("¡P.Sur Pharmacy, tu farmacia de confianza!")*/

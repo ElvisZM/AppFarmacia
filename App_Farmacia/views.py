@@ -38,7 +38,7 @@ def producto_create(request):
     # Si la petición es POST se creará el formulario con Datos
     datosFormulario = None
     if (request.method == 'POST'):
-        datosFormulario == request.POST
+        datosFormulario = request.POST
     
     formulario = ProductoModelForm(datosFormulario)
     if (request.method == 'POST'):
@@ -48,6 +48,11 @@ def producto_create(request):
             return redirect("productos_con_proveedores")       
 
     return render(request, 'producto/create.html', {'formulario':formulario})
+
+
+
+
+
 
 
 def farmacia_ordenada_fecha(request):
@@ -157,6 +162,8 @@ def modelos_con_media_superior(request):
     productos_con_media_superior = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod").filter(media__gt=2.5)
 
     return render(request, 'producto.html', {'productos_con_media_superior': productos_con_media_superior})
+
+
 
 
 

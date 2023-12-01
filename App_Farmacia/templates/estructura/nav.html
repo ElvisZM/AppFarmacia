@@ -32,8 +32,14 @@
                 <!-- Elemento del menú "Novedades" -->
                 <li><a href="#">Novedades</a></li>
                 <!-- Elemento del menú "Marcas" -->
-                <li><a href="{% url 'producto_create' %}">Crear Producto</a></li>
-    
+                <li><a href="#">C.R.U.D.</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'producto_create' %}">Crear Producto</a></li>
+                        <li><a href="{% url 'producto_create' %}">Leer Producto</a></li>
+                        <li><a href="{% url 'producto_create' %}">Editar Producto</a></li>
+                        <li><a href="{% url 'producto_create' %}">Eliminar Producto</a></li>
+                    </ul>
+                </li>
                 <li class="login"><a href="#"><i class="fa-regular fa-user"></i> Cuenta </a>
                     <ul class="submenulogin">
                         <!-- Elementos del submenú "LOGIN" -->

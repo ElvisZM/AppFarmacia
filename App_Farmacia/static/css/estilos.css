@@ -1,24 +1,23 @@
-*{  /*Doy unas reglas generales para todo mi contenido*/
-    text-decoration: none; /*No quiero que ningun elemento tenga subrayado o decoracion por defecto*/
-    margin: 0;/*No quiero que tenga margenes exteriores*/
-    padding: 0;/*No quiero que tenga margenes interiores*/
+*{  
+    text-decoration: none; 
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
     
 }
 
-.container-menu{ /*Trabajo con mi container que contiene mi header*/
-    width: 90%; /*Quiero que mi contenedor tenga un ancho de 90%*/
-    height: auto; /*Quiero que mi contenedor tenga una altura automatica segun su contenido*/
-    margin: 1% auto; /*Quiero que los margenes superior e inferior sean de 1% para separarlos un poco y los laterales automáticos, haciendo que el container se ajuste automaticamente en los laterales al centro del container.*/
-    /*border: 1px solid black; */   
+.container-menu{ 
+    width: 90%; 
+    height: auto; 
+    margin: 1% auto; 
 }
 
-.header{    /*Trabajo con mi header que contiene mi logo y mi menu*/
-    display: flex; /*Al usar flex en mi header se me pone un elemento al lado del otro*/
-    flex-direction: row; /*Indico que se alineen en filas, que es como viene por defecto*/
-    flex-wrap: wrap; /*Si algo se sale de mi caja, lo pone debajo*/
-    align-items: center; /*Centro verticalmente mis elementos del header*/
-    height: auto; /*Le doy una altura para que se centren mis elementos en el header*/
+.header{    
+    display: flex; 
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    align-items: center; 
+    height: auto; 
 }
 
 .logo-signup{
@@ -103,56 +102,56 @@
 
 
 .logo{
-    flex-grow: 1; /*Lo utilizo para que mi elemento flex se expanda para llenar el espacio disponible, es parecido al tamaño que se asigna en grid-template-columns en grid*/
-    flex-basis: auto; /*Le doy un tamaño automatico a nivel de flexbox, ajusto su ancho al contenido*/
-    padding: 5px; /*Quiero que su contenido se despegue 5 pixeles en su margen interior a su borde (borde logo) por todos los lados*/
-    /*margin-left: 20px; /*Quiero que se despegue 20 pixeles en su margen exterior al borde de header*/
+    flex-grow: 1; 
+    flex-basis: auto; 
+    padding: 5px; 
+    
 }
 
 .menu-expansible {
-
     flex-grow: 1; 
-    flex-basis: 80%; /*Le doy un tamaño por defecto del 80% al ancho del container*/
-    height: 100%; /*Dentro de la altura del container le doy una altura del 100% para que se ajuste desde arriba hasta abajo*/
+    flex-basis: 80%; 
+    height: 100%; 
 
 }
 
 .menu-expansible ul {
-    display: flex; /*Le indico que los elementos dentro de ul se pongan en flex y esto hara que se pongan uno al lado del otro*/
-    flex-direction: row; /*Aunque es su direccion por defecto, lo indicamos*/
-    flex-wrap: wrap; /*Por si acaso se sale algo de la caja, lo pone debajo*/
-    align-items: center; /*Alineo los elementos verticalmente para que se pongan en el centro*/
-    justify-content: space-between; /*Indico que mis elementos tengan espacio entre ellos pero los de inicio y fin se peguen a los bordes*/
-    height: 100%; /*Pongo altura 100% para que ocupe toda la altura*/
-    list-style: none; /*Quito los estilos de los enlaces y a la lista para que se quiten los puntitos*/
+    display: flex; 
+    flex-direction: row; 
+    flex-wrap: wrap; 
+    align-items: center; 
+    justify-content: space-between; 
+    height: 100%; 
+    list-style: none; 
 }
 
-.menu-expansible a { /*Ahora me meto a trabajar en mis enlaces*/
-    text-transform: uppercase; /*Transformo los textos a mayúscula*/
-    color: #262b4f; /*Pongo mi texto en azul oscuro*/
+.menu-expansible a { 
+    text-transform: uppercase; 
+    color: #262b4f; 
     background-color: white;
-    padding: 15px; /*Pongo un padding para que halla separacion con los diferentes enlaces*/
-    transition: all 300ms; /*Sirve para que cuando ponga el menu con :hover los cambios visuales se hagan de manera suave*/  
+    padding: 15px; 
+    transition: all 300ms; 
+    text-decoration: none;
 }
 
-.menu-expansible a:hover{ /*Activo mi hover en mi menu para que al pasar el raton por encima se active*/
-    background-color: pink; /*Pongo el fondo de los elementos del menu en rosa cuando pase el raton por encima de ellos*/
-    color: white; /*Pongo mis letras en blanco para que queden mas bonitas con el fondo rosa*/
+.menu-expansible a:hover{ 
+    background-color: pink; 
+    color: white; 
 }
 
-.menu-expansible li{ /*Trabajo con los li de mi menu-expansible*/
-    display: flex; /*Indico que los elementos li se comporten como un contenedor flex*/
-    flex-direction: column; /*Esta vez indico que la dirección de los elementos li sean de tipo columna*/
-    position: relative; /*Basicamente se aplica el position relative para que los hijos que en este caso es el submenu, tengan este elemento como referencia*/
+.menu-expansible li{ 
+    display: flex; 
+    flex-direction: column; 
+    position: relative; 
 }
 
-.submenu{ /*Me meto a trabajar con mi submenu y mi submenulogin*/
-    display: none; /*Oculto inicialmente los elementos del submenu*/
-    position: absolute; /*Posiciono el submenu de forma absoluta con respecto a su padre que tiene posicion relative, si su padre no fuese relativo el elemento se coloca en relacion al documento.*/
-    z-index: 1; /*Con esta propiedad hacemos que el submenu se superponga del resto de elementos, para que destaque.*/
-    left: 0; /*Alineo mi submenu a la izquierda*/
-    top: 100%; /*Indico que el submenú aparezca justo despues de la parte inferior del elemento menu principal*/
-    text-align: left; /*Alineo mi texto a la izquierda*/
+.submenu{ 
+    display: none; 
+    position: absolute; 
+    z-index: 1; 
+    left: 0; 
+    top: 100%; 
+    text-align: left; 
     width: 200%;
     
 }
@@ -192,7 +191,7 @@
     padding: 3%;
 }
 
-.submenulogin > li > a > button {    /*Me meto a trabajar con mi boton de "Acceder" en especifico mediante su id*/
+.submenulogin > li > a > button {  
     width: 100%;
     padding: 3%;
     font-size: large;
@@ -242,38 +241,38 @@
 
 
 
-.menu-expansible li .submenu{ /*Selecciono todos los elementos con la clase submenu que son descendientes del elemento li de menu-expansible, es decir, selecciono submenu nuevamente.*/
-    display: none; /*Indico con esta propiedad que los elementos estarán ocultos inicialmente, de algún modo en .submenu el display:none se anula por ninguna razon aparente, por eso tengo que especificar esto de nuevo*/
+.menu-expansible li .submenu{ 
+    display: none; 
 }
 
-.menu-expansible li .submenulogin{ /*Selecciono todos los elementos con la clase submenulogin que son descendientes del elemento li de menu-expansible, es decir, selecciono submenulogin nuevamente.*/
-    display: none; /*Indico con esta propiedad que los elementos estarán ocultos inicialmente, de algún modo en .submenulogin el display:none se anula por ninguna razon aparente, por eso tengo que especificar esto de nuevo*/
+.menu-expansible li .submenulogin{ 
+    display: none; 
 }
 
-.menu-expansible li:hover .submenu{ /*Indico de esta manera que al pasar el raton por encima de mis <li> del menu-expansible, se despliegue el submenu*/
-    display: block; /*Poniendo el display en tipo bloque hago que el submenu sea visible mientras el este en hover, es decir, mientras tenga mi raton por encima*/
+.menu-expansible li:hover .submenu{ 
+    display: block; 
 }
 
-.menu-expansible li:hover .submenulogin{ /*Indico de esta manera que al pasar el raton por encima de mis <li> del menu-expansible, se despliegue el submenulogin*/
-    display: block; /*Poniendo el display en tipo bloque hago que el submenu sea visible mientras el este en hover, es decir, mientras tenga mi raton por encima*/
+.menu-expansible li:hover .submenulogin{ 
+    display: block; 
 }
 
-.submenulogin input{    /*Me meto a trabajar con los campos input de mi submenulogin*/
-    width: 100%;    /*Ajusto la anchura de los input al 100% de la anchura del submenulogin*/
-    height: auto;   /*Ajusto una altura automática según su contenido*/
-    margin-top: 3px;    /*Le doy un poquito de margen hacia arriba para separarlo de los iconos*/
-    margin-bottom: 10px;   /*Le doy también un poquito de margen hacia abajo para separarlo de los iconos también*/
+.submenulogin input{    
+    width: 100%;    
+    height: auto;   
+    margin-top: 3px;    
+    margin-bottom: 10px;   
 }
 
 
 .submenulogin a{
-    text-transform: initial; /*Con esta propiedad anulo las mayúsculas en el submenulogin que estaban definidas anteriormente para todos los enlaces*/
-    padding:0;  /*Quito los margenes interiores*/
-    margin:0;   /*Quito los margenes exteriores*/
+    text-transform: initial; 
+    padding:0;  
+    margin:0;   
     background-color: rgb(255, 160, 122, 0.2);
 }
 
-.submenulogin a:hover{ /*En este apartado indico lo que ocurre cuando coloco mi cursor encima de los enlaces del submenulogin*/
+.submenulogin a:hover{ 
     background-color: white;
     color: #262b4f;
 }
@@ -329,7 +328,7 @@
     margin-top: 4%;
     margin-bottom: 4%;
     color: #1a1d32;
-
+    text-decoration: none;
 }
 
 .descripcion_body-texto > div > h2 {
@@ -369,6 +368,7 @@
     ;
     width: 90%;
     margin: 1% auto;
+    
 }
 
 .mifarma {
