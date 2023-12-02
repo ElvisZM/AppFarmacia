@@ -47,13 +47,9 @@ class ProductoModelForm(ModelForm):
         #Comprobamos que el precio está puesto en su formato con decimales (float)
         if type(precio) != float:
             self.add_error('precio','El precio introducido no es válido')
-            
-        #Comprobamos que al menos seleccione una Farmacia
-        if len(farmacia_prod) < 1:
-            self.add_error('farmacia_prod','Debe seleccionar una farmacia para su producto')
-            
+                        
         #Comprobamos que al menos seleccione un Proveedor
-        if len(prov_sum_prod):
+        if len(prov_sum_prod = 0):
             self.add_error('prov_sum_prod','Debe seleccionar al menos un proveedor')
         
         #Siempre devolver los datos    
