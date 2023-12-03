@@ -28,10 +28,12 @@
                         <li><a href="{% url 'clientes_nunca_votaron' %}"> EXAMEN -- CLIENTES NUNCA VOTARON </a></li>
                     </ul>
                 </li>
-                <!-- Elemento del menú "Promociones" -->
-                <li><a href="#">Promociones</a></li>
-                <!-- Elemento del menú "C.R.U.D." -->
-                <li><a href="#">C.R.U.D.</a>
+                <li><a href="#">C.R.U.D. Farmacia</a></li>
+                <li><a href="#">C.R.U.D. Gerente</a></li>
+                <li><a href="#">C.R.U.D. Empleado</a></li>
+                <li><a href="#">C.R.U.D. Proveedor</a></li>
+                <li><a href="#">C.R.U.D. Cliente</a></li>
+                <li><a href="#">C.R.U.D. Productos</a>
                     <ul class="submenucrud">
                         <li><a href="{% url 'producto_create' %}">C |Crear Producto</a></li>
                         <li><a href="{% url 'producto_buscar_avanzado' %}">R |Busqueda Avanzada Producto</a></li>
@@ -41,12 +43,43 @@
                 </li>
                 <!-- Elemento del menú "Busqueda" -->
                 <li>            
-                    <form action="{% url 'producto_buscar' %}" class="d-flex" role="search" method="GET">
+                    <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">
+                    <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su farmacia" aria-label="Search">
+                    <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+                    </form>
+                </li>
+                <li>            
+                    <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">
+                    <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su gerente" aria-label="Search">
+                    <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+                    </form>
+                </li>
+                <li>            
+                    <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">
+                    <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su empleado" aria-label="Search">
+                    <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+                    </form>
+                </li>
+                <li>            
+                    <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">
+                    <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su proveedor" aria-label="Search">
+                    <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+                    </form>
+                </li>
+                <li>            
+                    <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">
+                    <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su cliente" aria-label="Search">
+                    <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+                    </form>
+                </li>
+                <li>            
+                    <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">
                     <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su producto" aria-label="Search">
                     <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
                     </form>
                 </li>
-                <li class="login"><a href="#"><i class="fa-regular fa-user"></i> Cuenta </a>
+
+                <li class="login mt-2"><a href="#"><i class="fa-regular fa-user"></i> Cuenta </a>
                     <ul class="submenulogin">
                         <!-- Elementos del submenú "LOGIN" -->
                         <li><i class="fa-solid fa-user"></i> </li>

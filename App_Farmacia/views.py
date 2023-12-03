@@ -136,6 +136,8 @@ def producto_eliminar(request, producto_id):
     return redirect('productos_con_proveedores')
 
 
+
+
 def farmacia_ordenada_fecha(request):
     farmacias = Farmacia.objects.select_related('datosfarmacia').order_by('datosfarmacia__fecha_creacion')
     return render(request, 'farmacia/farmaciaydatos.html', {'farmacias':farmacias})
