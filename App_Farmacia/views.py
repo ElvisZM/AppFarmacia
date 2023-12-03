@@ -44,15 +44,96 @@ def producto_create(request):
     if (request.method == 'POST'):
         producto_creado = crear_producto_modelo(formulario)
         if (producto_creado):
-            messages.success(request, 'Se ha creado el producto'+formulario.cleaned_data.get('nombre_prod')+"correctamente")
+            messages.success(request, 'Se ha creado el producto '+formulario.cleaned_data.get('nombre_prod')+"correctamente")
             return redirect("productos_con_proveedores")       
 
     return render(request, 'producto/create.html', {'formulario':formulario})
 
+def producto_buscar(request):
+    
+    formulario = BusquedaProductoForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        productos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod')
+        productos = productos.filter(Q(nombre_prod__contains=texto) | Q(descripcion__contains=texto)).all()
+        return render(request, 'producto/producto_busqueda.html',{"productos_mostrar":productos, "texto_busqueda":texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+def producto_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaProductoForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "Se ha buscado por los siguientes valores:\n"
+            
+            QSproductos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod')
+            
+            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
+            nombre_prod = formulario.cleaned_data.get('nombre_prod')
+            descripcion = formulario.cleaned_data.get('descripcion')
+            precio = formulario.cleaned_data.get('precio')
+            farmacia_prod = formulario.cleaned_data.get('farmacia_prod')
+            prov_sum_prod = formulario.cleaned_data.get('prov_sum_prod')
+            
+            if (textoBusqueda != ""):
+                QSproductos = QSproductos.filter(Q(nombre_prod__contains=textoBusqueda) | Q(descripcion__contains=textoBusqueda))
+                mensaje_busqueda += "Nombre o descripcion que contenga la palabra "+textoBusqueda+"\n"
+                
+            if (nombre_prod != ""):
+                QSproductos = QSproductos.filter(Q(nombre_prod__contains=nombre_prod) | Q(descripcion__contains=nombre_prod))
+                mensaje_busqueda += "Nombre o descripcion que contenga la palabra "+nombre_prod+"\n"
+                
+            if (descripcion != ""):
+                QSproductos = QSproductos.filter(Q(nombre_prod__contains=descripcion) | Q(descripcion__contains=descripcion))
+                mensaje_busqueda += "Nombre o descripcion que contenga la palabra "+descripcion+"\n"
+            
+            if (not precio is None):
+                QSproductos = QSproductos.filter(precio = precio)
+                mensaje_busqueda += f"Precio que sea igual a {precio}\n"
+            
+                
+    else:
+        formulario = BusquedaAvanzadaProductoForm(None)
+        print("No coge nada")
+    return render(request, 'producto/busqueda_avanzada.html',{"formulario":formulario})
+                
 
+def producto_editar(request, producto_id):
+    producto = Producto.objects.get(id=producto_id)
 
+    datosFormulario = None
+    
+    if request.method == 'POST':
+        datosFormulario = request.POST
 
+    formulario = ProductoModelForm(datosFormulario, instance=producto)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                messages.success(request, f"Se ha editado el producto {producto.nombre_prod} correctamente")
+                return redirect('productos_con_proveedores')
+            except Exception as error:
+                print(error)
+            
+    return render(request, 'producto/actualizar.html',{"formulario":formulario, "producto":producto})
 
+def producto_eliminar(request, producto_id):
+    producto = Producto.objects.get(id=producto_id)
+    try:
+        producto.delete()
+        messages.success(request, f"Se ha eliminado el producto {producto.nombre_prod} correctamente.")
+    except:
+        pass
+    return redirect('productos_con_proveedores')
 
 
 def farmacia_ordenada_fecha(request):

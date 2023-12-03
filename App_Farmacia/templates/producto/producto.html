@@ -1,6 +1,6 @@
-
-<div>
-    <h2>Nombre Producto: {{ producto.nombre_prod|truncatewords:1 }}</h2>
+<div> 
+    <h2>Nombre Producto: {{ producto.nombre_prod|truncatewords:3 }}</h2>
     <h2>Descripcion Producto: {{ producto.descripcion }}</h2>
     <h2>Precio: {{ producto.precio }}</h2>
+    <h2>Farmacia: {{ producto.farmacia_prod.nombre_farm}}
 </div>

@@ -6,6 +6,14 @@ urlpatterns = [
     
     path('producto/create',views.producto_create,name='producto_create'),
     
+    path('producto/buscar/',views.producto_buscar, name='producto_buscar'),
+    
+    path('producto/buscar/avanzado/',views.producto_buscar_avanzado, name='producto_buscar_avanzado'),
+    
+    path('producto/editar/<int:producto_id>',views.producto_editar, name='producto_editar'),
+    
+    path('producto/eliminar/<int:producto_id>',views.producto_eliminar, name='producto_eliminar'),
+    
     path('farmacias/ordenadas',views.farmacia_ordenada_fecha,name='farmacias_ordenadas_fecha'),
     
     path('gerentes/<str:nombre_introducido>',views.gerente_nombre, name='gerentes_nombre'),

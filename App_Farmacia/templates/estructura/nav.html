@@ -5,6 +5,9 @@
         <div class="logo">
             <a href="{% url 'index' %}"><img src="{% static 'imagenes/Logo.jpg' %}" alt="logotipo web"/></a>
         </div>
+        <div>
+        
+        </div>
         <div class="menu-expansible">
             <ul>
                 <!-- Elemento del menú "Categorías" con un submenu-->
@@ -27,18 +30,21 @@
                 </li>
                 <!-- Elemento del menú "Promociones" -->
                 <li><a href="#">Promociones</a></li>
-                <!-- Elemento del menú "Packs Ahorro" -->
-                <li><a href="#">Packs Ahorro</a></li>
-                <!-- Elemento del menú "Novedades" -->
-                <li><a href="#">Novedades</a></li>
-                <!-- Elemento del menú "Marcas" -->
+                <!-- Elemento del menú "C.R.U.D." -->
                 <li><a href="#">C.R.U.D.</a>
-                    <ul class="submenu">
-                        <li><a href="{% url 'producto_create' %}">Crear Producto</a></li>
-                        <li><a href="{% url 'producto_create' %}">Leer Producto</a></li>
-                        <li><a href="{% url 'producto_create' %}">Editar Producto</a></li>
-                        <li><a href="{% url 'producto_create' %}">Eliminar Producto</a></li>
+                    <ul class="submenucrud">
+                        <li><a href="{% url 'producto_create' %}">C |Crear Producto</a></li>
+                        <li><a href="{% url 'producto_buscar_avanzado' %}">R |Busqueda Avanzada Producto</a></li>
+                        <li><a href="{% url 'producto_editar' 7 %}">U |Editar Producto</a></li>
+                        <li><a href="{% url 'productos_con_proveedores' %}">D |Eliminar Producto</a></li>
                     </ul>
+                </li>
+                <!-- Elemento del menú "Busqueda" -->
+                <li>            
+                    <form action="{% url 'producto_buscar' %}" class="d-flex" role="search" method="GET">
+                    <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su producto" aria-label="Search">
+                    <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+                    </form>
                 </li>
                 <li class="login"><a href="#"><i class="fa-regular fa-user"></i> Cuenta </a>
                     <ul class="submenulogin">

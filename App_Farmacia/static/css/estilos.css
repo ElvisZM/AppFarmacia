@@ -102,8 +102,6 @@
 
 
 .logo{
-    flex-grow: 1; 
-    flex-basis: auto; 
     padding: 5px; 
     
 }
@@ -149,11 +147,21 @@
     display: none; 
     position: absolute; 
     z-index: 1; 
-    left: 0; 
+    left: -23.25%; 
     top: 100%; 
     text-align: left; 
     width: 200%;
     
+}
+
+.submenucrud{
+    display: none; 
+    position: absolute; 
+    z-index: 1; 
+    left: -36%; 
+    top: 100%; 
+    text-align: left; 
+    width: 270%;
 }
 
 .login {
@@ -249,11 +257,19 @@
     display: none; 
 }
 
+.menu-expansible li .submenucrud{ 
+    display: none; 
+}
+
 .menu-expansible li:hover .submenu{ 
     display: block; 
 }
 
 .menu-expansible li:hover .submenulogin{ 
+    display: block; 
+}
+
+.menu-expansible li:hover .submenucrud{ 
     display: block; 
 }
 
