@@ -28,7 +28,15 @@
                         <li><a href="{% url 'clientes_nunca_votaron' %}"> EXAMEN -- CLIENTES NUNCA VOTARON </a></li>
                     </ul>
                 </li>
-                <li><a href="#">C.R.U.D. Farmacia</a></li>
+                <li><a href="#">C.R.U.D. Farmacia</a>
+                    <ul class="submenucrud">
+                        <li><a href="{% url 'farmacia_create' %}">C |Crear Farmacia</a></li>
+                        <li><a href="{% url 'farmacia_buscar_avanzado' %}">R |Busq. Avanzada Farmacia</a></li>
+                        <li><a href="{% url 'farmacia_editar' 1 %}">U |Editar Farmacia</a></li>
+                        <li><a href="{% url 'farmacias_ordenadas_fecha' %}">D |Eliminar Farmacia</a></li>
+
+                    </ul>
+                </li>
                 <li><a href="#">C.R.U.D. Gerente</a></li>
                 <li><a href="#">C.R.U.D. Empleado</a></li>
                 <li><a href="#">C.R.U.D. Proveedor</a></li>
@@ -36,14 +44,14 @@
                 <li><a href="#">C.R.U.D. Productos</a>
                     <ul class="submenucrud">
                         <li><a href="{% url 'producto_create' %}">C |Crear Producto</a></li>
-                        <li><a href="{% url 'producto_buscar_avanzado' %}">R |Busqueda Avanzada Producto</a></li>
+                        <li><a href="{% url 'producto_buscar_avanzado' %}">R |Busq. Avanzada Producto</a></li>
                         <li><a href="{% url 'producto_editar' 7 %}">U |Editar Producto</a></li>
                         <li><a href="{% url 'productos_con_proveedores' %}">D |Eliminar Producto</a></li>
                     </ul>
                 </li>
                 <!-- Elemento del menú "Busqueda" -->
                 <li>            
-                    <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">
+                    <form action="{% url 'farmacia_buscar' %}" class="d-flex mt-2" role="search" method="GET">
                     <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su farmacia" aria-label="Search">
                     <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
                     </form>

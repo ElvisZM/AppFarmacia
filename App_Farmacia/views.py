@@ -44,7 +44,7 @@ def producto_create(request):
     if (request.method == 'POST'):
         producto_creado = crear_producto_modelo(formulario)
         if (producto_creado):
-            messages.success(request, 'Se ha creado el producto '+formulario.cleaned_data.get('nombre_prod')+"correctamente")
+            messages.success(request, 'Se ha creado el producto '+formulario.cleaned_data.get('nombre_prod')+" correctamente")
             return redirect("productos_con_proveedores")       
 
     return render(request, 'producto/create.html', {'formulario':formulario})
@@ -69,7 +69,7 @@ def producto_buscar_avanzado(request):
         formulario = BusquedaAvanzadaProductoForm(request.GET)
         if formulario.is_valid():
             
-            mensaje_busqueda = "Se ha buscado por los siguientes valores:\n"
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
             
             QSproductos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod')
             
@@ -96,6 +96,10 @@ def producto_buscar_avanzado(request):
                 QSproductos = QSproductos.filter(precio = precio)
                 mensaje_busqueda += f"Precio que sea igual a {precio}\n"
             
+            productos = QSproductos.all()
+            
+            return render(request, 'producto/producto_busqueda.html', {'productos_mostrar':productos, 'texto_busqueda':mensaje_busqueda})    
+                
                 
     else:
         formulario = BusquedaAvanzadaProductoForm(None)
@@ -134,6 +138,120 @@ def producto_eliminar(request, producto_id):
     except:
         pass
     return redirect('productos_con_proveedores')
+
+
+def crear_farmacia_modelo(formulario):
+    farmacia_creada = False
+    
+    if formulario.is_valid():
+        try:
+            formulario.save()
+            farmacia_creada = True
+        except:
+            pass
+    return farmacia_creada
+
+def farmacia_create(request):
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario = request.POST
+        
+    formulario = FarmaciaModelForm(datosFormulario)
+    
+    if (request.method == 'POST'):
+        farmacia_creada = crear_farmacia_modelo(formulario)
+        
+        if(farmacia_creada):
+            messages.success(request, 'Se ha creado la farmacia '+formulario.cleaned_data.get('nombre_farm')+' correctamente.')
+            return redirect("farmacias_ordenadas_fecha")
+    
+    return render(request, 'farmacia/create_farmacia.html',{'formulario':formulario})
+
+
+def farmacia_buscar(request):
+    formulario = BusquedaFarmaciaForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        farmacias = Farmacia.objects.all()
+        farmacias = farmacias.filter(nombre_farm__contains=texto).all()
+        return render(request, 'farmacia/farmacia_busqueda.html',{'farmacias_mostrar':farmacias, 'texto_busqueda':texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+    
+def farmacia_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaFarmaciaForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSfarmacias = Farmacia.objects.all()
+            
+            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
+            nombre_farm = formulario.cleaned_data.get('nombre_farm')
+            direccion_farm = formulario.cleaned_data.get('direccion_farm')
+            telefono_farm = formulario.cleaned_data.get('telefono_farm')
+            
+            if (textoBusqueda != ""):
+                QSfarmacias = QSfarmacias.filter(nombre_farm__contains=textoBusqueda)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+textoBusqueda+"\n"
+                
+            if (nombre_farm != ""):
+                QSfarmacias = QSfarmacias.filter(nombre_farm__contains=nombre_farm)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_farm+"\n"
+                
+            if (direccion_farm != ""):
+                QSfarmacias = QSfarmacias.filter(direccion_farm__contains=direccion_farm)
+                mensaje_busqueda += "Direccion o que contenga la palabra "+direccion_farm+"\n"
+            
+            if (not telefono_farm is None):
+                QSfarmacias = QSfarmacias.filter(telefono_farm = telefono_farm)
+                mensaje_busqueda += f"Numero de telefono que sea igual a {telefono_farm}\n"
+                
+            farmacias = QSfarmacias.all()
+            
+            return render(request, 'farmacia/farmacia_busqueda.html', {'farmacias_mostrar':farmacias, 'texto_busqueda':mensaje_busqueda})  
+                      
+    else:
+        formulario = BusquedaAvanzadaFarmaciaForm(None)
+    return render(request, 'farmacia/busqueda_avanzada_farmacia.html',{'formulario':formulario})    
+    
+    
+def farmacia_editar(request, farmacia_id):
+    farmacia = Farmacia.objects.get(id=farmacia_id)
+    
+    datosFormulario = None
+    
+    if (request.method == "POST"):
+        datosFormulario = request.POST
+        
+    formulario = FarmaciaModelForm(datosFormulario, instance = farmacia)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                return redirect('farmacias_ordenadas_fecha')
+            except Exception as error:
+                pass
+    return render(request, 'farmacia/actualizar_farmacia.html', {'formulario': formulario, 'farmacia':farmacia})    
+    
+    
+    
+def farmacia_eliminar(request, farmacia_id):
+    farmacia = Farmacia.objects.get(id=farmacia_id)
+    try:
+        farmacia.delete()
+    except:
+        pass
+    return redirect('farmacias_ordenadas_fecha')
 
 
 

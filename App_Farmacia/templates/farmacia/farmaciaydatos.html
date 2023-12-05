@@ -1,7 +1,12 @@
 {% extends 'principal.html' %}
 {% load static %}
+{% load bootstrap_icons %}
 <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+{% block cabecera_extra %}
+    {% load static %}
+    <script type="text/javascript" src="{% static 'javascript/myjavascript.js' %}"></script>
+{% endblock %}
 
 {% block cabecera %}
     <div class ="cabecera">
@@ -10,14 +15,35 @@
 {% endblock %}
 
 {% block contenido %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-0 mt-5" role="alert">
+                {{ message }}
+                <button type"button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="descripcion_body">
         <div class="descripcion_body-texto">
             {% for farmacia in farmacias %}
+                <br>
                 {% include 'farmacia/farmacia.html' %}
                 <h2>Descripcion: {{ farmacia.datosfarmacia.descripcion }}</h2>
                 <h2>Horario: {{ farmacia.datosfarmacia.horario }}</h2>
                 <h2>Fecha Creacion: {{ farmacia.datosfarmacia.fecha_creacion|date:"m-d-Y" }}</h2>
+                <div class="">
+                    <form action = "{% url 'farmacia_eliminar' farmacia.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                            <span>Eliminar este producto{% bs_icon 'trash' %}</span>
+                        </button>
+                    </form>
+                </div>
             {% endfor %}
         </div>
+    {% block busqueda %}
+    {% endblock %}
     </div>
 {% endblock %}

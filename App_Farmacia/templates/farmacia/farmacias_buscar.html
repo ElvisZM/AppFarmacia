@@ -5,20 +5,22 @@
 
 {% block cabecera %}
     <div class ="cabecera">
-        <h1>FARMACIAS | Y GERENTES </h1>
+        <h1>FARMACIAS | DATOS Y ORDENADOS POR FECHA DE CREACION</h1>
     </div>
 {% endblock %}
 
 {% block contenido %}
+    {% block busqueda %}
+    {% endblock %}
     <div class="descripcion_body">
         <div class="descripcion_body-texto">
-            {% for farmacia in farmacias %}
+            {% for farmacia in farmacias_mostrar %}
                 <br>
                 {% include 'farmacia/farmacia.html' %}
-                <h2>Gerente: {{ farmacia.gerente.nombre_ger|truncatewords:2 }}
-                <h2>Correo: {{ farmacia.gerente.correo }}</h2>
+                <h2>Descripcion: {{ farmacia.datosfarmacia.descripcion }}</h2>
+                <h2>Horario: {{ farmacia.datosfarmacia.horario }}</h2>
+                <h2>Fecha Creacion: {{ farmacia.datosfarmacia.fecha_creacion|date:"m-d-Y" }}</h2>
             {% endfor %}
         </div>
     </div>
-
 {% endblock %}

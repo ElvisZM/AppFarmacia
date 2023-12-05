@@ -28,6 +28,7 @@
     <div class="descripcion_body">
         <div class="descripcion_body-texto">
             {% for producto in productos %}
+                <br>
                 {% include 'producto/producto.html' %}
                 {% if producto.prov_sum_prod.all %}
                     {% for suministro in producto.prov_sum_prod.all %}

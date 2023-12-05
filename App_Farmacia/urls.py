@@ -14,6 +14,16 @@ urlpatterns = [
     
     path('producto/eliminar/<int:producto_id>',views.producto_eliminar, name='producto_eliminar'),
     
+    path('farmacia/create',views.farmacia_create, name='farmacia_create'),
+    
+    path('farmacia/buscar/',views.farmacia_buscar, name='farmacia_buscar'),
+    
+    path('farmacia/buscar/avanzado/',views.farmacia_buscar_avanzado, name='farmacia_buscar_avanzado'),
+    
+    path('farmacia/editar/<int:farmacia_id>',views.farmacia_editar, name='farmacia_editar'),
+    
+    path('farmacia/eliminar/<int:farmacia_id>',views.farmacia_eliminar, name='farmacia_eliminar'),
+    
     path('farmacias/ordenadas',views.farmacia_ordenada_fecha,name='farmacias_ordenadas_fecha'),
     
     path('gerentes/<str:nombre_introducido>',views.gerente_nombre, name='gerentes_nombre'),
