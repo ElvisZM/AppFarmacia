@@ -103,7 +103,6 @@ def producto_buscar_avanzado(request):
                 
     else:
         formulario = BusquedaAvanzadaProductoForm(None)
-        print("No coge nada")
     return render(request, 'producto/busqueda_avanzada.html',{"formulario":formulario})
                 
 

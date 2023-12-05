@@ -164,6 +164,28 @@
     width: 170%;
 }
 
+.listacruds{ 
+    display: none; 
+    position: absolute; 
+    z-index: 1; 
+    left: -23.25%; 
+    top: 100%; 
+    text-align: left; 
+    width: 150%;
+    
+}
+
+.submenulista{
+    display: none; 
+    position: absolute; 
+    z-index: 1; 
+    left: 85%; 
+    top: 0; 
+    text-align: left; 
+    width: 150%;   
+}
+
+
 .login {
     position:relative;
 }
@@ -261,6 +283,10 @@
     display: none; 
 }
 
+.menu-expansible li .listacruds{ 
+    display: none; 
+}
+
 .menu-expansible li:hover .submenu{ 
     display: block; 
 }
@@ -270,6 +296,18 @@
 }
 
 .menu-expansible li:hover .submenucrud{ 
+    display: block; 
+}
+
+.menu-expansible li:hover .listacruds{ 
+    display: block; 
+}
+
+.listacruds li .submenulista{ 
+    display: none; 
+}
+
+.listacruds li:hover .submenulista{ 
     display: block; 
 }
 

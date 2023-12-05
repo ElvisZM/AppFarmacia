@@ -67,15 +67,15 @@ class BusquedaAvanzadaProductoForm(forms.Form):
     
     textoBusqueda = forms.CharField(required=False)
             
-    nombre_prod = forms.CharField (required=False)
+    nombre_prod = forms.CharField (required=False, label="Nombre del Producto")
     
     descripcion = forms.CharField (required=False)
     
     precio = forms.DecimalField(required=False)
     
-    farmacia_prod = forms.CharField (required=False)  
+    farmacia_prod = forms.CharField (required=False, label="Farmacia")  
     
-    prov_sum_prod = forms.CharField (required=False)
+    prov_sum_prod = forms.CharField (required=False, label="Proveedor")
     
     def clean(self):
         
