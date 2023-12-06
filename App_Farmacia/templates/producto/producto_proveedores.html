@@ -9,8 +9,16 @@
 {% endblock %}
 
 {% block cabecera %}
-    <div class ="cabecera">
-        <h1>PRODUCTOS | Y PROVEEDORES </h1>
+    <div class="d-flex justify-content-evenly">
+        <div class ="cabecera">
+            <h1>PRODUCTOS | Y PROVEEDORES </h1>
+        </div>
+        <div>
+            <form action="{% url 'producto_buscar' %}" class="d-flex" role="search" method="GET">
+                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí su producto" aria-label="Search">
+                <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+            </form>
+        </div>
     </div>
 {% endblock %}
 
@@ -28,7 +36,6 @@
     <div class="descripcion_body">
         <div class="descripcion_body-texto">
             {% for producto in productos %}
-                <br>
                 {% include 'producto/producto.html' %}
                 {% if producto.prov_sum_prod.all %}
                     {% for suministro in producto.prov_sum_prod.all %}
@@ -38,13 +45,22 @@
                 {% else %}
                     <h2>No hay proveedores para este producto.</h2>
                 {% endif %}
-                <div class="">
-                    <form action = "{% url 'producto_eliminar' producto.id %}" method="post">
-                        {% csrf_token %}
-                        <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                            <span>Eliminar este producto{% bs_icon 'trash' %}</span>
+                <div class="row btn-group">             
+                    <div class="mb-2 ">
+                        <button type="button" 
+                                class="btn btn-outline-primary"> 
+                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto {% bs_icon 'pencil' %}</span></a>
                         </button>
-                    </form>
+                    </div>
+
+                    <div class="">
+                        <form action = "{% url 'producto_eliminar' producto.id %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" onclick="return eliminar();" type="submit">
+                                <span>Eliminar este producto{% bs_icon 'trash' %}</span>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             {% endfor %}
         </div>

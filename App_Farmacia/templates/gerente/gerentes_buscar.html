@@ -6,7 +6,7 @@
 
 {% block cabecera %}
     <div class ="cabecera">
-        <h1>PRODUCTOS | LISTA</h1>
+        <h1>GERENTES | LISTA</h1>
     </div>
 {% endblock %}
 
@@ -15,27 +15,21 @@
     {% endblock %}
     <div class="descripcion_body">
         <div class="descripcion_body-texto">
-            {% for producto in productos_mostrar %}
-                {% include 'producto/producto.html' %}
-                {% if producto.prov_sum_prod.all %}
-                    {% for suministro in producto.prov_sum_prod.all %}
-                        <h2>Proveedor: {{ suministro.proveedor.nombre_prov|truncatewords:1 }}</h2>
-                        <h2>Dirección: {{ suministro.proveedor.direccion_prov|truncatewords:3}}</h2>
-                    {% endfor %}
-                {% endif %}
+            {% for gerente in gerentes_mostrar %}
+                {% include 'gerente/gerente.html' %}
                 <div class="row btn-group">             
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto {% bs_icon 'pencil' %}</span></a>
+                                <a class="text-decoration-none" href="{% url 'gerente_editar' gerente.id %}" ><span class="text-dark">Editar Gerente {% bs_icon 'pencil' %}</span></a>
                         </button>
                     </div>
 
                     <div class="">
-                        <form action = "{% url 'producto_eliminar' producto.id %}" method="post">
+                        <form action = "{% url 'gerente_eliminar' gerente.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar este producto{% bs_icon 'trash' %}</span>
+                                <span>Eliminar este gerente{% bs_icon 'trash' %}</span>
                             </button>
                         </form>
                     </div>
@@ -45,7 +39,7 @@
                 <br>
                 <br>
             {% empty %}
-                <h2> No se encontraron resultados de su busqueda. </h2>
+            <h2> No se encontraron resultados de su busqueda. </h2>
             {% endfor %}
         </div>
    

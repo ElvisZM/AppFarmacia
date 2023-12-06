@@ -45,7 +45,7 @@ def producto_create(request):
         producto_creado = crear_producto_modelo(formulario)
         if (producto_creado):
             messages.success(request, 'Se ha creado el producto '+formulario.cleaned_data.get('nombre_prod')+" correctamente")
-            return redirect("productos_con_proveedores")       
+            return redirect("lista_productos")       
 
     return render(request, 'producto/create.html', {'formulario':formulario})
 
@@ -123,7 +123,7 @@ def producto_editar(request, producto_id):
             try:
                 formulario.save()
                 messages.success(request, f"Se ha editado el producto {producto.nombre_prod} correctamente")
-                return redirect('productos_con_proveedores')
+                return redirect('lista_productos')
             except Exception as error:
                 print(error)
             
@@ -136,7 +136,7 @@ def producto_eliminar(request, producto_id):
         messages.success(request, f"Se ha eliminado el producto {producto.nombre_prod} correctamente.")
     except:
         pass
-    return redirect('productos_con_proveedores')
+    return redirect('lista_productos')
 
 
 def crear_farmacia_modelo(formulario):
@@ -162,7 +162,7 @@ def farmacia_create(request):
         
         if(farmacia_creada):
             messages.success(request, 'Se ha creado la farmacia '+formulario.cleaned_data.get('nombre_farm')+' correctamente.')
-            return redirect("farmacias_ordenadas_fecha")
+            return redirect("lista_farmacias")
     
     return render(request, 'farmacia/create_farmacia.html',{'formulario':formulario})
 
@@ -237,7 +237,8 @@ def farmacia_editar(request, farmacia_id):
             formulario.save()
             try:
                 formulario.save()
-                return redirect('farmacias_ordenadas_fecha')
+                messages.success(request, f"Se ha editado la farmacia {farmacia.nombre_farm} correctamente")
+                return redirect('lista_farmacias')
             except Exception as error:
                 pass
     return render(request, 'farmacia/actualizar_farmacia.html', {'formulario': formulario, 'farmacia':farmacia})    
@@ -248,10 +249,156 @@ def farmacia_eliminar(request, farmacia_id):
     farmacia = Farmacia.objects.get(id=farmacia_id)
     try:
         farmacia.delete()
+        messages.success(request, f"Se ha eliminado la farmacia {farmacia.nombre_farm} correctamente.")
     except:
         pass
-    return redirect('farmacias_ordenadas_fecha')
+    return redirect('lista_farmacias')
 
+
+def crear_gerente_modelo(formulario):
+        
+    gerente_creado = False
+    #Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            #Guarda el producto en la base de datos
+            formulario.save()
+            gerente_creado = True
+        except:
+            pass
+    return gerente_creado                
+
+def gerente_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario = request.POST
+    
+    formulario = GerenteModelForm(datosFormulario)
+    if (request.method == 'POST'):
+        gerente_creado = crear_gerente_modelo(formulario)
+        if (gerente_creado):
+            messages.success(request, 'Se ha añadido el gerente '+formulario.cleaned_data.get('nombre_ger')+" correctamente")
+            return redirect("lista_gerentes")       
+
+    return render(request, 'gerente/create_gerente.html', {'formulario':formulario})
+
+def gerente_buscar(request):
+    formulario = BusquedaGerenteForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        gerentes = Gerente.objects.all()
+        gerentes = gerentes.filter(nombre_ger__contains=texto).all()
+        return render(request, 'gerente/gerente_busqueda.html',{'gerentes_mostrar':gerentes, 'texto_busqueda':texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+    
+def gerente_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaGerenteForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSgerentes = Gerente.objects.all()
+            
+            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
+            nombre_ger = formulario.cleaned_data.get('nombre_ger')
+            correo = formulario.cleaned_data.get('correo')
+            fecha_inicio_gestion = formulario.cleaned_data.get('fecha_inicio_gestion')
+            gerente_farm = formulario.cleaned_data.get('gerente_farm')
+            
+            if (textoBusqueda != ""):
+                QSgerentes = QSgerentes.filter(nombre_ger__contains=textoBusqueda)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+textoBusqueda+"\n"
+                
+            if (nombre_ger != ""):
+                QSgerentes = QSgerentes.filter(nombre_ger__contains=nombre_ger)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_ger+"\n"
+                
+            if (correo != ""):
+                QSgerentes = QSgerentes.filter(correo__contains=correo)
+                mensaje_busqueda += "Direccion o que contenga la palabra "+correo+"\n"
+            
+            if (not fecha_inicio_gestion is None):
+                mensaje_busqueda += f"Fecha de inicio de gestion que sea igual o mayor a "+datetime.strftime(fecha_inicio_gestion, '%d-%m-%Y')+"\n"
+                QSgerentes = QSgerentes.filter(fecha_inicio_gestion__gte = fecha_inicio_gestion)
+                
+            gerentes = QSgerentes.all()
+            
+            return render(request, 'gerente/gerente_busqueda.html', {'gerentes_mostrar':gerentes, 'texto_busqueda':mensaje_busqueda})  
+                      
+    else:
+        formulario = BusquedaAvanzadaGerenteForm(None)
+        
+    return render(request, 'gerente/busqueda_avanzada_gerente.html',{'formulario':formulario})    
+    
+    
+def gerente_editar(request, gerente_id):
+    gerente = Gerente.objects.get(id=gerente_id)
+    
+    datosFormulario = None
+    
+    if (request.method == "POST"):
+        datosFormulario = request.POST
+        
+    formulario = GerenteModelForm(datosFormulario, instance = gerente)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                messages.success(request, f"Se ha editado el gerente {gerente.nombre_ger} correctamente")
+                return redirect('lista_gerentes')
+            except Exception as error:
+                pass
+    return render(request, 'gerente/actualizar_gerente.html', {'formulario': formulario, 'gerente':gerente})    
+    
+    
+    
+def gerente_eliminar(request, gerente_id):
+    gerente = Gerente.objects.get(id=gerente_id)
+    try:
+        gerente.delete()
+        messages.success(request, f"Se ha eliminado el gerente {gerente.nombre_ger} correctamente.")
+    except:
+        pass
+    return redirect('lista_gerentes')
+
+
+
+
+
+
+
+def farmacias_lista(request):
+    farmacias = Farmacia.objects.all()
+    
+    return render(request, 'farmacia/lista_farmacias.html', {'farmacias':farmacias})
+
+def gerentes_lista(request):
+    gerentes = Gerente.objects.prefetch_related('gerente_farm').all()
+    
+    return render(request, 'gerente/lista_gerentes.html', {'gerentes':gerentes})
+
+
+
+
+
+
+def productos_lista(request):
+    productos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod').all()
+
+    return render(request, 'producto/lista_productos.html', {'productos':productos})
 
 
 

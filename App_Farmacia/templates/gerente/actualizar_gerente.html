@@ -1,0 +1,35 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+{% load bootstrap5 %}
+
+<form action ="{% url 'gerente_editar' gerente.id %}" method = "post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="mb-4">
+            {% bootstrap_field formulario.nombre_ger show_label=True %}
+                {% spaceless %}
+                {% if formulario.is_bound %}
+                    {{ formulario.nombre_ger.value }}
+                {% endif %}
+                {% endspaceless %}
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.correo show_label=True %}
+        </div>
+            
+        <div class="mb-4">
+            {% bootstrap_field formulario.fecha_inicio_gestion show_label=True %}
+        </div>
+        
+        <div class="mb-4">
+            {% bootstrap_field formulario.gerente_farm show_label=True %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</form>
+
+
+{% endblock %}

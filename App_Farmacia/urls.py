@@ -24,6 +24,33 @@ urlpatterns = [
     
     path('farmacia/eliminar/<int:farmacia_id>',views.farmacia_eliminar, name='farmacia_eliminar'),
     
+    path('gerente/create',views.gerente_create, name='gerente_create'),
+    
+    path('gerente/buscar/',views.gerente_buscar, name='gerente_buscar'),
+    
+    path('gerente/buscar/avanzado/',views.gerente_buscar_avanzado, name='gerente_buscar_avanzado'),
+    
+    path('gerente/editar/<int:gerente_id>',views.gerente_editar, name='gerente_editar'),
+    
+    path('gerente/eliminar/<int:gerente_id>',views.gerente_eliminar, name='gerente_eliminar'),
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    path('farmacias/lista',views.farmacias_lista, name='lista_farmacias'),
+    
+    path('gerentes/lista',views.gerentes_lista, name='lista_gerentes'),
+    
+    
+    
+    path('productos/lista',views.productos_lista, name='lista_productos'),
+    
     path('farmacias/ordenadas',views.farmacia_ordenada_fecha,name='farmacias_ordenadas_fecha'),
     
     path('gerentes/<str:nombre_introducido>',views.gerente_nombre, name='gerentes_nombre'),

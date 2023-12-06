@@ -3,23 +3,19 @@
 {% load bootstrap_icons %}
 <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-{% block cabecera_extra %}
-    {% load static %}
-    <script type="text/javascript" src="{% static 'javascript/myjavascript.js' %}"></script>
-{% endblock %}
 
 {% block cabecera %}
-<div class="d-flex justify-content-evenly">
-    <div class ="cabecera">
-        <h1>FARMACIAS | DATOS Y ORDENADOS POR FECHA CREACION </h1>
+    <div class="d-flex justify-content-evenly">
+        <div class ="cabecera">
+            <h1>GERENTES | LISTA </h1>
+        </div>
+        <div>
+            <form action="{% url 'gerente_buscar' %}" class="d-flex" role="search" method="GET">
+                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí su gerente" aria-label="Search">
+                <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
+            </form>
+        </div>
     </div>
-    <div>
-        <form action="{% url 'farmacia_buscar' %}" class="d-flex" role="search" method="GET">
-            <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí su farmacia" aria-label="Search">
-            <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
-        </form>
-    </div>
-</div>
 {% endblock %}
 
 {% block contenido %}
@@ -34,29 +30,30 @@
     {% endif %}
 
     <div class="descripcion_body">
-        <div class="descripcion_body-texto">
-            {% for farmacia in farmacias %}
-                {% include 'farmacia/farmacia.html' %}
-                <h2>Descripcion: {{ farmacia.datosfarmacia.descripcion }}</h2>
-                <h2>Horario: {{ farmacia.datosfarmacia.horario }}</h2>
-                <h2>Fecha Creacion: {{ farmacia.datosfarmacia.fecha_creacion|date:"m-d-Y" }}</h2>
+        <div class="descripcion_body-texto">    
+            {% for gerente in gerentes %}
+                {% include 'gerente/gerente.html' %}
                 <div class="row btn-group">             
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'farmacia_editar' farmacia.id %}" ><span class="text-dark">Editar Producto {% bs_icon 'pencil' %}</span></a>
+                                <a class="text-decoration-none" href="{% url 'gerente_editar' gerente.id %}" ><span class="text-dark">Editar Gerente {% bs_icon 'pencil' %}</span></a>
                         </button>
                     </div>
 
                     <div class="">
-                        <form action = "{% url 'farmacia_eliminar' farmacia.id %}" method="post">
+                        <form action = "{% url 'gerente_eliminar' gerente.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar este producto{% bs_icon 'trash' %}</span>
+                                <span>Eliminar este gerente{% bs_icon 'trash' %}</span>
                             </button>
                         </form>
                     </div>
                 </div>
+                <br>
+                <br>
+                <br>
+                <br>
             {% endfor %}
         </div>
     {% block busqueda %}

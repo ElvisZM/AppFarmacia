@@ -2,6 +2,9 @@ from django import forms
 from django.forms import ModelForm
 from .models import *
 from decimal import Decimal
+from datetime import date
+import datetime
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 class ProductoModelForm(ModelForm):
     class Meta:
@@ -188,6 +191,111 @@ class BusquedaAvanzadaFarmaciaForm(forms.Form):
         else:
             if(textoBusqueda != "" and len(textoBusqueda) < 3):
                 self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+                
+        return self.cleaned_data
+    
+    
+class GerenteModelForm(ModelForm):
+    class Meta:
+        model = Gerente
+        fields = ['nombre_ger', 'correo', 'fecha_inicio_gestion', 'gerente_farm']
+        labels = {
+            "nombre_ger": 'Nombre del Gerente', 
+            "correo": 'Correo Electrónico',
+            "fecha_inicio_gestion" : 'Fecha de Inicio',
+            "gerente_farm" : 'Farmacia Asignada',
+        }
+        help_texts = {
+            "nombre_ger": '100 caracteres como máximo',
+            "correo" : 'Por favor, introduce tu dirección de correo electrónico en el formato nombre@ejemplo.com.',
+            "fecha_inicio_gestion" : 'Introduzca la fecha que inicia la gestion',
+            "gerente_farm": 'Asigne una farmacia',
+        }
+        widgets = {
+            "correo":forms.EmailInput(),
+            "fecha_inicio_gestion":forms.SelectDateWidget(years=range(2000,2040)),
+        }
+        localized_fields = ["fecha_inicio_gestion"]
+        
+        
+    def clean(self):
+    
+        super().clean()
+
+        nombre_ger = self.cleaned_data.get('nombre_ger')
+        correo = self.cleaned_data.get('correo')
+        fecha_inicio_gestion = self.cleaned_data.get('fecha_inicio_gestion')
+        gerente_farm = self.cleaned_data.get('gerente_farm')
+
+        #Comprobamos que no exista un gerente con ese nombre
+        gerenteNombre = Gerente.objects.filter(nombre_ger=nombre_ger).first()
+        if(not (gerenteNombre is None or (not self.instance is None and gerenteNombre.id == self.instance.id))):
+            self.add_error('nombre_ger','Ya existe un gerente con ese nombre')
+
+        #Comprobamos que se inserte un correo
+        if (correo is None):
+            self.add_error('correo','Debe especificar un correo electrónico para la farmacia')
+
+        #Comprobamos que la fecha de inicio de gestion no sea mayor a la de hoy.
+        fechaHoy = date.today()
+        if fechaHoy < fecha_inicio_gestion:
+            self.add_error('fecha_inicio_gestion','La fecha de inicio de gestión no puede ser mayor a la fecha actual.')
+            
+            
+        #Comprobamos que inserte una farmacia a gestionar    
+        if (gerente_farm is None):
+            self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
+            
+        #Comprobamos que la farmacia no tenga ya a un gerente que la gestione
+        farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).first()
+        if (farmaciaGestionada):
+            self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
+
+        return self.cleaned_data
+               
+
+class BusquedaGerenteForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
+    
+class BusquedaAvanzadaGerenteForm(forms.Form):
+    
+    textoBusqueda = forms.CharField(required=False)
+            
+    nombre_ger = forms.CharField (required=False, label="Nombre del Gerente")
+    
+    correo = forms.CharField (required=False, label="Correo Electronico")
+    
+    fecha_inicio_gestion = forms.DateField(required=False, widget= forms.SelectDateWidget())
+    
+    gerente_farm = forms.CharField (required=False, label="Farmacia Asignada")
+    
+    def clean(self):
+        
+        super().clean()
+        
+        textoBusqueda = self.cleaned_data.get('textoBusqueda')
+        nombre_ger = self.cleaned_data.get('nombre_ger')
+        fecha_inicio_gestion = self.cleaned_data.get('fecha_inicio_gestion')
+        correo = self.cleaned_data.get('correo')
+        gerente_farm = self.cleaned_data.get('gerente_farm')
+        fecha_hoy = date.today()
+        if(textoBusqueda == ""
+           and nombre_ger == ""
+           and fecha_inicio_gestion is None
+           and correo == ""
+           and gerente_farm == ""):
+            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('nombre_ger', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('fecha_inicio_gestion', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('correo', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('gerente_farm', 'Debe introducir al menos un valor en un campo del formulario')
+                    
+        else:
+            if(textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+                
+            if(fecha_inicio_gestion and fecha_inicio_gestion > fecha_hoy):
+                self.add_error('fecha_inicio_gestion','La busqueda por una fecha mayor a la de hoy no es válida, introduzca una fecha anterior.')
                 
         return self.cleaned_data
     
