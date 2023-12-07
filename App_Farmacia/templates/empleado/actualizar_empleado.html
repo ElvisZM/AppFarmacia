@@ -1,0 +1,35 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+{% load bootstrap5 %}
+
+<form action ="{% url 'empleado_editar' empleado.id %}" method = "post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="mb-4">
+            {% bootstrap_field formulario.nombre_emp show_label=True %}
+                {% spaceless %}
+                {% if formulario.is_bound %}
+                    {{ formulario.nombre_emp.value }}
+                {% endif %}
+                {% endspaceless %}
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.cargo show_label=True %}
+        </div>
+            
+        <div class="mb-4">
+            {% bootstrap_field formulario.salario show_label=True %}
+        </div>
+        
+        <div class="mb-4">
+            {% bootstrap_field formulario.farm_emp show_label=True %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</form>
+
+
+{% endblock %}

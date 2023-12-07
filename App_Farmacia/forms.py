@@ -299,3 +299,111 @@ class BusquedaAvanzadaGerenteForm(forms.Form):
                 
         return self.cleaned_data
     
+    
+    
+    
+    
+    
+    
+    
+class EmpleadoModelForm(ModelForm):
+    class Meta:
+        model = Empleado
+        fields = ['nombre_emp', 'cargo', 'salario', 'farm_emp']
+        labels = {
+            "nombre_emp": 'Nombre del Empleado', 
+            "cargo": 'Cargo del Empleado',
+            "salario" : 'Salario',
+            "farm_emp" : 'Farmacia Asignada',
+        }
+        help_texts = {
+            "nombre_emp": '100 caracteres como máximo',
+            "cargo" : 'Por favor, introduzca el cargo otorgado al empleado.',
+            "salario" : 'Introduzca el salario del empleado.',
+            "farm_emp": 'Asigne una farmacia',
+        }
+        widgets = {
+        }
+        
+        
+    def clean(self):
+    
+        super().clean()
+
+        nombre_emp = self.cleaned_data.get('nombre_emp')
+        cargo = self.cleaned_data.get('cargo')
+        salario = self.cleaned_data.get('salario')
+        farm_emp = self.cleaned_data.get('farm_emp')
+
+        #Comprobamos que no exista un empleado con ese nombre
+        empleadoNombre = Empleado.objects.filter(nombre_emp=nombre_emp).first()
+        if(not (empleadoNombre is None or (not self.instance is None and empleadoNombre.id == self.instance.id))):
+            self.add_error('nombre_emp','Ya existe un empleado con ese nombre.')
+
+        #Comprobamos que se inserte un cargo
+        if (cargo is None):
+            self.add_error('cargo','Debe especificar un cargo para el empleado.')
+
+        #Comprobamos que la fecha de inicio de gestion no sea mayor a la de hoy.
+        fechaHoy = date.today()
+        if fechaHoy < fecha_inicio_gestion:
+            self.add_error('fecha_inicio_gestion','La fecha de inicio de gestión no puede ser mayor a la fecha actual.')
+            
+            
+        #Comprobamos que inserte una farmacia a gestionar    
+        if (gerente_farm is None):
+            self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
+            
+        #Comprobamos que la farmacia no tenga ya a un gerente que la gestione
+        farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).first()
+        if (farmaciaGestionada):
+            self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
+
+        return self.cleaned_data
+               
+
+class BusquedaGerenteForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
+    
+class BusquedaAvanzadaGerenteForm(forms.Form):
+    
+    textoBusqueda = forms.CharField(required=False)
+            
+    nombre_ger = forms.CharField (required=False, label="Nombre del Gerente")
+    
+    correo = forms.CharField (required=False, label="Correo Electronico")
+    
+    fecha_inicio_gestion = forms.DateField(required=False, widget= forms.SelectDateWidget())
+    
+    gerente_farm = forms.CharField (required=False, label="Farmacia Asignada")
+    
+    def clean(self):
+        
+        super().clean()
+        
+        textoBusqueda = self.cleaned_data.get('textoBusqueda')
+        nombre_ger = self.cleaned_data.get('nombre_ger')
+        fecha_inicio_gestion = self.cleaned_data.get('fecha_inicio_gestion')
+        correo = self.cleaned_data.get('correo')
+        gerente_farm = self.cleaned_data.get('gerente_farm')
+        fecha_hoy = date.today()
+        if(textoBusqueda == ""
+           and nombre_ger == ""
+           and fecha_inicio_gestion is None
+           and correo == ""
+           and gerente_farm == ""):
+            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('nombre_ger', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('fecha_inicio_gestion', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('correo', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('gerente_farm', 'Debe introducir al menos un valor en un campo del formulario')
+                    
+        else:
+            if(textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+                
+            if(fecha_inicio_gestion and fecha_inicio_gestion > fecha_hoy):
+                self.add_error('fecha_inicio_gestion','La busqueda por una fecha mayor a la de hoy no es válida, introduzca una fecha anterior.')
+                
+        return self.cleaned_data
+    

@@ -380,6 +380,144 @@ def gerente_eliminar(request, gerente_id):
 
 
 
+
+
+
+def crear_empleado_modelo(formulario):
+        
+    empleado_creado = False
+    #Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            #Guarda el producto en la base de datos
+            formulario.save()
+            empleado_creado = True
+        except:
+            pass
+    return empleado_creado                
+
+def empleado_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario = request.POST
+    
+    formulario = EmpleadoModelForm(datosFormulario)
+    if (request.method == 'POST'):
+        empleado_creado = crear_empleado_modelo(formulario)
+        if (empleado_creado):
+            messages.success(request, 'Se ha añadido el '+formulario.cleaned_data.get('nombre_emp')+" correctamente")
+            return redirect("lista_empleados")       
+
+    return render(request, 'empleado/create_empleado.html', {'formulario':formulario})
+
+def empleado_buscar(request):
+    formulario = BusquedaEmpleadoForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        empleados = Empleado.objects.all()
+        empleados = empleados.filter(nombre_emp__contains=texto).all()
+        return render(request, 'empleado/empleado_busqueda.html',{'empleados_mostrar':empleados, 'texto_busqueda':texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+    
+def empleado_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaEmpleadoForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSempleados = Empleado.objects.all()
+            
+            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
+            nombre_emp = formulario.cleaned_data.get('nombre_emp')
+            cargo = formulario.cleaned_data.get('cargo')
+            salario = formulario.cleaned_data.get('salario')
+            farm_emp = formulario.cleaned_data.get('farm_emp')
+            
+            if (textoBusqueda != ""):
+                QSempleados = QSempleados.filter(nombre_emp__contains=textoBusqueda)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+textoBusqueda+"\n"
+                
+            if (nombre_emp != ""):
+                QSempleados = QSempleados.filter(nombre_emp__contains=nombre_emp)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_emp+"\n"
+                
+            if (cargo != ""):
+                QSempleados = QSempleados.filter(cargo__contains=cargo)
+                mensaje_busqueda += "Cargo o que contenga la palabra "+cargo+"\n"
+            
+            if (not salario is None):
+                mensaje_busqueda += f"Salario que sea igual o mayor a "+salario+"\n"
+                QSempleados = QSempleados.filter(salario__gte = salario)
+                
+            if (farm_emp != ""):
+                QSempleados = QSempleados.filter(farm_emp__contains=farm_emp)
+                mensaje_busqueda += "Farmacia o que contenga la palabra "+farm_emp+"\n"
+            
+            empleados = QSempleados.all()
+            
+            return render(request, 'empleado/empleado_busqueda.html', {'empleados_mostrar':empleados, 'texto_busqueda':mensaje_busqueda})  
+                      
+    else:
+        formulario = BusquedaAvanzadaEmpleadoForm(None)
+        
+    return render(request, 'empleado/busqueda_avanzada_empleado.html',{'formulario':formulario})    
+    
+    
+def empleado_editar(request, empleado_id):
+    empleado = Empleado.objects.get(id=empleado_id)
+    
+    datosFormulario = None
+    
+    if (request.method == "POST"):
+        datosFormulario = request.POST
+        
+    formulario = EmpleadoModelForm(datosFormulario, instance = empleado)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                messages.success(request, f"Se ha editado el empleado {empleado.nombre_emp} correctamente")
+                return redirect('lista_empleados')
+            except Exception as error:
+                pass
+    return render(request, 'empleado/actualizar_empleado.html', {'formulario': formulario, 'empleado':empleado})    
+        
+    
+def empleado_eliminar(request, empleado_id):
+    empleado = Empleado.objects.get(id=empleado_id)
+    try:
+        empleado.delete()
+        messages.success(request, f"Se ha eliminado el empleado {empleado.nombre_emp} correctamente.")
+    except:
+        pass
+    return redirect('lista_empleados')
+
+
+
+
+
+
+
+
+
+def empleados_lista(request):
+    empleados = Empleado.objects.select_related('farm_emp').all()
+    
+    return render(request, 'empleado/lista_empleados.html', {'empleados':empleados})
+
 def farmacias_lista(request):
     farmacias = Farmacia.objects.all()
     
