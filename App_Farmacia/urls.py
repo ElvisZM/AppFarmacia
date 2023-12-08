@@ -34,7 +34,15 @@ urlpatterns = [
     
     path('gerente/eliminar/<int:gerente_id>',views.gerente_eliminar, name='gerente_eliminar'),
     
+    path('empleado/create',views.empleado_create, name='empleado_create'),
     
+    path('empleado/buscar/',views.empleado_buscar, name='empleado_buscar'),
+    
+    path('empleado/buscar/avanzado/',views.empleado_buscar_avanzado, name='empleado_buscar_avanzado'),
+    
+    path('empleado/editar/<int:empleado_id>',views.empleado_editar, name='empleado_editar'),
+    
+    path('empleado/eliminar/<int:empleado_id>',views.empleado_eliminar, name='empleado_eliminar'),
     
     
     
@@ -47,7 +55,7 @@ urlpatterns = [
     
     path('gerentes/lista',views.gerentes_lista, name='lista_gerentes'),
     
-    
+    path('empleados/lista',views.empleados_lista, name='lista_empleados'),
     
     path('productos/lista',views.productos_lista, name='lista_productos'),
     

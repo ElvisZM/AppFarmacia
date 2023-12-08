@@ -44,7 +44,13 @@
                                 <li><a href="{% url 'lista_farmacias' %}">Ver Farmacias</a></li>
                             </ul>
                         </li>
-                        <li><a href="#">C.R.U.D. Empleado</a></li>
+                        <li><a href="#">Empleado</a>
+                            <ul class="submenulista">
+                                <li><a href="{% url 'empleado_create' %}">Crear Empleado</a></li>
+                                <li><a href="{% url 'empleado_buscar_avanzado' %}">Busq. Avanzada Empleado</a></li>
+                                <li><a href="{% url 'lista_empleados' %}">Ver Empleados</a></li>
+                            </ul>
+                        </li>
                         <li><a href="#">C.R.U.D. Proveedor</a></li>
                         <li><a href="#">C.R.U.D. Cliente</a></li>
                     </ul>
