@@ -4,6 +4,8 @@ from .models import *
 from decimal import Decimal
 from datetime import date
 import datetime
+from django.forms.widgets import DateInput
+
 from bootstrap_datepicker_plus.widgets import DatePickerInput
 
 class ProductoModelForm(ModelForm):
@@ -398,3 +400,99 @@ class BusquedaAvanzadaEmpleadoForm(forms.Form):
                 
         return self.cleaned_data
     
+    
+    
+    
+    
+class VotacionModelForm(ModelForm):
+    class Meta:
+        model = Votacion
+        fields = ['puntuacion', 'comenta_votacion','voto_producto','voto_cliente']
+        labels = {
+            "puntuacion": "Puntuacion del Producto",
+            "comenta_votacion": "Comentario sobre la Votacion",
+            "voto_producto": "Nombre del Producto",
+            "voto_cliente": "Nombre del Cliente",
+            
+        }
+        help_texts = {
+            "puntuacion": "Indique una puntuacion",
+            "comenta_votacion": "Indiquenos por qué ha dado esta puntuación",
+            "voto_producto": "Indique el nombre del producto",
+            "voto_cliente": "Indique su nombre",
+        }
+        widgets = {
+        }
+        
+    def clean(self):
+        
+        super().clean()
+        
+        #Obtenemos los campos
+        puntuacion = self.cleaned_data.get('puntuacion')
+        comenta_votacion = self.cleaned_data.get('comenta_votacion')
+        voto_producto = self.cleaned_data.get('voto_producto')
+        voto_cliente = self.cleaned_data.get('voto_cliente')
+        
+        
+        #Comprobamos que el comentario tiene al menos 10 carácteres.            
+        if len(comenta_votacion) < 10:
+            self.add_error('comenta_votacion','Al menos debes indicar 10 carácteres')
+                            
+        #Comprobamos que seleccione un Producto
+        if (voto_producto is None):
+            self.add_error('voto_producto','Debe seleccionar un producto')
+        
+        #Comprobamos que seleccione un cliente
+        if (voto_cliente is None):
+            self.add_error('voto_cliente','Debe seleccionar quien realizo la votación')
+        
+        #Siempre devolver los datos    
+        return self.cleaned_data
+    
+class BusquedaVotacionForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
+            
+class BusquedaAvanzadaVotacionForm(forms.Form):
+    
+    textoBusqueda = forms.CharField(required=False)
+            
+    puntuacion = forms.CharField (required=False, label="Nombre del Producto")
+    
+    fecha_votacion = forms.DateField (required=False, widget= forms.SelectDateWidget())
+    
+    comenta_votacion = forms.CharField(required=False)
+    
+    voto_producto = forms.CharField (required=False, label="Producto")  
+    
+    voto_cliente = forms.CharField (required=False, label="Cliente")
+    
+    def clean(self):
+        
+        super().clean()
+        
+        textoBusqueda = self.cleaned_data.get('textoBusqueda')
+        puntuacion = self.cleaned_data.get('puntuaciom')
+        fecha_desde = self.cleaned_data.get('fecha_desde')
+        fecha_hasta = self.cleaned_data.get('fecha_hasta')
+        voto_producto = self.cleaned_data.get('voto_producto')
+        voto_cliente = self.cleaned_data.get('voto_cliente')
+        
+        if(textoBusqueda == ""
+           and puntuacion == ""
+           and fecha_desde is None
+           and fecha_hasta is None
+           and voto_producto == ""
+           and voto_cliente == ""):
+            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('puntuacion', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('fecha_desde', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('fecha_hasta', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('voto_producto', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('voto_cliente', 'Debe introducir al menos un valor en un campo del formulario')
+                    
+        else:
+            if(textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+                
+        return self.cleaned_data

@@ -53,14 +53,14 @@ class Subscripcion(models.Model):
     
 class Votacion(models.Model):
     numeros = [
-        (1,"Uno"), 
-        (2,"Dos"), 
-        (3,"Tres"),
-        (4,"Cuatro"),
-        (5,"Cinco"),
+        (1,"1"), 
+        (2,"2"), 
+        (3,"3"),
+        (4,"4"),
+        (5,"5"),
         ]
-    puntuacion = models.CharField(max_length=1, choices=numeros)
-    fecha_votacion = models.DateField(null=True, blank=True)
+    puntuacion = models.IntegerField(choices=numeros)
+    fecha_votacion = models.DateField(default=timezone.now)
     comenta_votacion = models.TextField()
     voto_producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     voto_cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)

@@ -44,12 +44,20 @@ urlpatterns = [
     
     path('empleado/eliminar/<int:empleado_id>',views.empleado_eliminar, name='empleado_eliminar'),
     
+    path('votacion/create',views.votacion_create, name='votacion_create'),
+    
+    path('votacion/buscar/',views.votacion_buscar, name='votacion_buscar'),
+    
+    path('votacion/buscar/avanzado/',views.votacion_buscar_avanzado, name='votacion_buscar_avanzado'),
+    
+    path('votacion/editar/<int:votacion_id>',views.votacion_editar, name='votacion_editar'),
+    
+    path('votacion/eliminar/<int:votacion_id>',views.votacion_eliminar, name='votacion_eliminar'),
     
     
     
     
-    
-    
+    path('votaciones/lista',views.votaciones_lista, name='lista_votaciones'),
     
     path('farmacias/lista',views.farmacias_lista, name='lista_farmacias'),
     

@@ -508,10 +508,157 @@ def empleado_eliminar(request, empleado_id):
 
 
 
+def crear_votacion_modelo(formulario):
+        
+    votacion_creada = False
+    #Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            #Guarda el producto en la base de datos
+            formulario.save()
+            votacion_creada = True
+        except:
+            pass
+    return votacion_creada                
+
+def votacion_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario = request.POST
+    
+    formulario = VotacionModelForm(datosFormulario)
+    if (request.method == 'POST'):
+        votacion_creada = crear_votacion_modelo(formulario)
+        if (votacion_creada):
+            messages.success(request, 'Se ha añadido la votación al producto '+formulario.cleaned_data.get('voto_producto').nombre_prod+" correctamente")
+            return redirect("lista_votaciones")       
+
+    return render(request, 'votacion/create_votacion.html', {'formulario':formulario})
+
+def votacion_buscar(request):
+    formulario = BusquedaVotacionForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        votaciones = Votacion.objects.all()
+        votaciones = votaciones.filter(Q(comenta_votacion__contains=texto) | Q(voto_producto__nombre_prod__contains=texto)).all()
+        return render(request, 'votacion/votacion_busqueda.html',{'votaciones_mostrar':votaciones, 'texto_busqueda':texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+    
+def votacion_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaVotacionForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSvotaciones = Votacion.objects.all()
+            
+            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
+            puntuacion = formulario.cleaned_data.get('puntuacion')
+            fecha_votacion = formulario.cleaned_data.get('fecha_votacion')
+            comenta_votacion = formulario.cleaned_data.get('comenta_votacion')
+            voto_producto = formulario.cleaned_data.get('voto_producto')
+            voto_cliente = formulario.cleaned_data.get('voto_cliente')
+            
+            if (textoBusqueda != ""):
+                QSvotaciones = QSvotaciones.filter(comenta_votacion__contains=textoBusqueda)
+                mensaje_busqueda += "Que su comentario sea o contenga la palabra "+textoBusqueda+"\n"
+                
+            if (puntuacion != ""):
+                QSvotaciones = QSvotaciones.filter(puntuacion__contains=puntuacion)
+                mensaje_busqueda += "Puntuacion sea o que contenga la palabra "+puntuacion+"\n"
+                
+            if (not fecha_votacion is None):
+                QSvotaciones = QSvotaciones.filter(fecha_votacion=fecha_votacion)
+                mensaje_busqueda += "La fecha sea "+date.strftime(fecha_votacion, '%d-%m-%Y')+"\n"
+                
+            if (comenta_votacion != ""):
+                QSvotaciones = QSvotaciones.filter(comenta_votacion__contains=comenta_votacion)
+                mensaje_busqueda += "Comentario o que contenga la palabra "+comenta_votacion+"\n"
+            
+            if (voto_producto != ""):
+                QSvotaciones = QSvotaciones.filter(voto_producto__contains=voto_producto)
+                mensaje_busqueda += "Producto o que contenga la palabra "+voto_producto+"\n"
+                
+            if (voto_cliente != ""):
+                QSvotaciones = QSvotaciones.filter(voto_cliente__contains=voto_cliente)
+                mensaje_busqueda += "Cliente o que contenga la palabra "+voto_cliente+"\n"
+        
+            
+            votaciones = QSvotaciones.all()
+            
+            return render(request, 'votacion/votacion_busqueda.html', {'votaciones_mostrar':votaciones, 'texto_busqueda':mensaje_busqueda})  
+                      
+    else:
+        formulario = BusquedaAvanzadaVotacionForm(None)
+        
+    return render(request, 'votacion/busqueda_avanzada_votacion.html',{'formulario':formulario})    
+    
+    
+def votacion_editar(request, votacion_id):
+    votacion = Votacion.objects.get(id=votacion_id)
+    
+    datosFormulario = None
+    
+    if (request.method == "POST"):
+        datosFormulario = request.POST
+        
+    formulario = VotacionModelForm(datosFormulario, instance = votacion)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                messages.success(request, f"Se ha editado la votación al producto {votacion.voto_producto.nombre_prod} correctamente")
+                return redirect('lista_votaciones')
+            except Exception as error:
+                pass
+    return render(request, 'votacion/actualizar_votacion.html', {'formulario': formulario, 'votacion':votacion})    
+        
+    
+def votacion_eliminar(request, votacion_id):
+    votacion = Votacion.objects.get(id=votacion_id)
+    try:
+        votacion.delete()
+        messages.success(request, f"Se ha eliminado la votación al producto {votacion.voto_producto.nombre_prod} correctamente.")
+    except:
+        pass
+    return redirect('lista_votaciones')
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def votaciones_lista(request):
+    votaciones = Votacion.objects.select_related('voto_producto', 'voto_cliente').all()
+    
+    return render(request, 'votacion/lista_votaciones.html', {'votaciones': votaciones})
 
 def empleados_lista(request):
     empleados = Empleado.objects.select_related('farm_emp').all()
