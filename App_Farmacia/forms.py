@@ -563,7 +563,7 @@ class PromocionModelForm(ModelForm):
         
         #Comprobamos la fecha de expiración no sea inferior a la actual.
         fechaHoy = date.today()
-        if (fecha_fin_promo is None or fechaHoy > fecha_fin_promo):
+        if (fechaHoy > fecha_fin_promo):
             self.add_error('fecha_fin_promo','Debe seleccionar una fecha de expiración mayor a la de hoy.')
         
         #Siempre devolver los datos    
