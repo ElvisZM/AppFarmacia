@@ -7,11 +7,11 @@
 {% block cabecera %}
     <div class="d-flex justify-content-evenly">
         <div class ="cabecera">
-            <h1>GERENTES | LISTA </h1>
+            <h1>PROMOCIONES | LISTA </h1>
         </div>
         <div>
-            <form action="{% url 'gerente_buscar' %}" class="d-flex" role="search" method="GET">
-                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí su gerente" aria-label="Search">
+            <form action="{% url 'promocion_buscar' %}" class="d-flex" role="search" method="GET">
+                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí su Promocion" aria-label="Search">
                 <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
             </form>
         </div>
@@ -31,21 +31,21 @@
 
     <div class="descripcion_body">
         <div class="descripcion_body-texto">    
-            {% for gerente in gerentes %}
-                {% include 'gerente/gerente.html' %}
+            {% for promocion in promociones %}
+                {% include 'promocion/promocion.html' %}
                 <div class="row btn-group">             
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'gerente_editar' gerente.id %}" ><span class="text-dark">Editar Gerente {% bs_icon 'pencil' %}</span></a>
+                                <a class="text-decoration-none" href="{% url 'promocion_editar' promocion.id %}" ><span class="text-dark">Editar Promocion</span></a>
                         </button>
                     </div>
 
                     <div class="">
-                        <form action = "{% url 'gerente_eliminar' gerente.id %}" method="post">
+                        <form action = "{% url 'promocion_eliminar' promocion.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar este gerente{% bs_icon 'trash' %}</span>
+                                <span>Eliminar esta promocion</span>
                             </button>
                         </form>
                     </div>
@@ -54,7 +54,8 @@
                 <br>
                 <br>
                 <br>
-            
+            {% empty %}
+            <h2> No se encontraron promociones creadas. </h2>
             {% endfor %}
         </div>
     {% block busqueda %}

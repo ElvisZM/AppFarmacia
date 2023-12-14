@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 
 # Create your models here.
 
@@ -113,3 +115,10 @@ class DetalleProducto(models.Model):
     producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
     cantidad_stock = models.IntegerField(default=0)
     fecha_vencimiento = models.DateField(null=True, blank=True)
+    
+class Promocion(models.Model):
+    nombre_promo = models.CharField(max_length=100)
+    descripcion_promo = models.TextField()
+    valor_promo = models.IntegerField(default=0)
+    fecha_fin_promo = models.DateField()
+    cliente_promo = models.OneToOneField(Cliente, on_delete=models.CASCADE)

@@ -496,3 +496,138 @@ class BusquedaAvanzadaVotacionForm(forms.Form):
                 self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
                 
         return self.cleaned_data
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+class PromocionModelForm(ModelForm):
+    class Meta:
+        model = Promocion
+        fields = ['nombre_promo', 'descripcion_promo','valor_promo','fecha_fin_promo','cliente_promo']
+        labels = {
+            "nombre_promo": "Nombre de la Promocion",
+            "descripcion_promo": "Describe la Promocion",
+            "valor_promo": "Valor de la Promocion",
+            "fecha_fin_promo": "Indique fin de la promocion",
+            "cliente_promo": "Seleccione al cliente beneficiado",
+            
+        }
+        help_texts = {
+            "nombre_promo": "Nombre la promocion",
+            "descripcion_promo": "Describa la promocion",
+            "valor_promo": "Indique de cuanto es la promoción",
+            "fecha_fin_promo": "Fecha de expiración de la promoción",
+            "cliente_promo": "Seleccione al cliente beneficiado",
+        }
+        widgets = {
+            "fecha_fin_promo":forms.SelectDateWidget(),
+        }
+        
+    def clean(self):
+        
+        super().clean()
+        
+        #Obtenemos los campos
+        nombre_promo = self.cleaned_data.get('nombre_promo')
+        descripcion_promo = self.cleaned_data.get('descripcion_promo')
+        valor_promo = self.cleaned_data.get('valor_promo')
+        fecha_fin_promo = self.cleaned_data.get('fecha_fin_promo')
+        cliente_promo = self.cleaned_data.get('cliente_promo')
+        
+        
+        #Nombre de la Promoción es único
+        promocionNombre = Promocion.objects.filter(nombre_promo=nombre_promo).first()
+        if(not (promocionNombre is None or (not self.instance is None and promocionNombre.id == self.instance.id))):
+            self.add_error('nombre_promo','Ya existe una promocion con ese nombre')
+        
+        #Comprobamos que la descripción tiene al menos 100 carácteres.            
+        if len(descripcion_promo) < 100:
+            self.add_error('descripcion_promo','Al menos debes indicar 100 carácteres')
+            
+        #Comprobamos que el cliente no tenga ya la misma promoción aplicada
+        mismaPromocionFalse = Promocion.objects.filter(cliente_promo=cliente_promo, nombre_promo=nombre_promo).exists()
+        
+        if (mismaPromocionFalse):
+            self.add_error('nombre_promo','El cliente ya tiene esta promoción aplicada.')    
+        
+        #Comprobamos que el valor del descuento sea un entero entre 0 y 100
+        if (valor_promo is None or valor_promo not in range(0,101)):
+            self.add_error('valor_promo','Debe introducir un valor entero entre 0 y 100')
+        
+        #Comprobamos la fecha de expiración no sea inferior a la actual.
+        fechaHoy = date.today()
+        if (fecha_fin_promo is None or fechaHoy > fecha_fin_promo):
+            self.add_error('fecha_fin_promo','Debe seleccionar una fecha de expiración mayor a la de hoy.')
+        
+        #Siempre devolver los datos    
+        return self.cleaned_data
+    
+class BusquedaPromocionForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
+            
+class BusquedaAvanzadaPromocionForm(forms.Form):
+    
+    textoBusqueda = forms.CharField(required=False)
+            
+    nombre_promo = forms.CharField (required=False, label="Nombre de la Promocion")
+    
+    descripcion_promo = forms.CharField(required=False)
+    
+    valor_promo = forms.IntegerField (required=False)
+    
+    fecha_desde = forms.DateField(label="Fecha Desde",
+                                required=False,
+                                widget= forms.SelectDateWidget(years=range(1990,2030))
+                                )
+    
+    fecha_hasta = forms.DateField(label="Fecha Hasta",
+                                  required=False,
+                                  widget= forms.SelectDateWidget(years=range(1990,2030))
+                                )       
+                                  
+    cliente_promo = forms.CharField(required=False, widget=forms.CheckboxSelectMultiple)
+    
+    def clean(self):
+        
+        super().clean()
+        
+        textoBusqueda = self.cleaned_data.get('textoBusqueda')
+        nombre_promo = self.cleaned_data.get('nombre_promo')
+        descripcion_promo = self.cleaned_data.get('descripcion_promo')
+        valor_promo = self.cleaned_data.get('valor_promo')
+        fecha_desde = self.cleaned_data.get('fecha_desde')
+        fecha_hasta = self.cleaned_data.get('fecha_hasta')
+        cliente_promo = self.cleaned_data.get('voto_cliente')
+        
+        if(textoBusqueda == ""
+           and nombre_promo == ""
+           and descripcion_promo == ""
+           and valor_promo is None
+           and fecha_desde is None
+           and fecha_hasta is None
+           and len(cliente_promo) == 0):
+            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('nombre_promo', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('descripcion_promo', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('valor_promo', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('fecha_desde', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('fecha_hasta', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('cliente_promo', 'Debe introducir al menos un valor en un campo del formulario')
+            
+                    
+        else:
+            if(textoBusqueda != "" and len(textoBusqueda) < 3):
+                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+            
+            if(not fecha_desde is None  and not fecha_hasta is None and fecha_hasta < fecha_desde):
+                self.add_error('fecha_desde','La fecha hasta no puede ser menor que la fecha desde')
+                self.add_error('fecha_hasta','La fecha hasta no puede ser menor que la fecha desde')
+                
+        return self.cleaned_data

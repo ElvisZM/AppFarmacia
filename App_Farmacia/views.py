@@ -506,8 +506,6 @@ def empleado_eliminar(request, empleado_id):
     return redirect('lista_empleados')
 
 
-
-
 def crear_votacion_modelo(formulario):
         
     votacion_creada = False
@@ -647,12 +645,155 @@ def votacion_eliminar(request, votacion_id):
 
 
 
+def crear_promocion_modelo(formulario):
+        
+    promocion_creada = False
+    #Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            #Guarda el producto en la base de datos
+            formulario.save()
+            promocion_creada = True
+        except:
+            pass
+    return promocion_creada                
+
+def promocion_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario = request.POST
+    
+    formulario = PromocionModelForm(datosFormulario)
+    if (request.method == 'POST'):
+        promocion_creada = crear_promocion_modelo(formulario)
+        if (promocion_creada):
+            messages.success(request, 'Se ha añadido la promocion '+formulario.cleaned_data.get('nombre_promo')+" correctamente")
+            return redirect("lista_promociones")       
+
+    return render(request, 'promocion/create_promocion.html', {'formulario':formulario})
+
+def promocion_buscar(request):
+    formulario = BusquedaPromocionForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        promociones = Promocion.objects.all()
+        promociones = promociones.filter(Q(nombre_promo__contains=texto) | Q(descripcion_promo__contains=texto)).all()
+        return render(request, 'promocion/promocion_busqueda.html',{'promociones_mostrar':promociones, 'texto_busqueda':texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+    
+def promocion_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaPromocionForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSpromociones = Promocion.objects.all()
+            
+            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
+            nombre_promo = formulario.cleaned_data.get('nombre_promo')
+            descripcion_promo = formulario.cleaned_data.get('descripcion_promo')
+            valor_promo = formulario.cleaned_data.get('valor_promo')
+            fechaDesde = formulario.cleaned_data.get('fecha_desde')
+            fechaHasta = formulario.cleaned_data.get('fecha_hasta')
+            cliente_promo = formulario.cleaned_data.get('cliente_promo')
+            
+            if (textoBusqueda != ""):
+                QSvotaciones = QSvotaciones.filter(Q(nombre_promo__contains=textoBusqueda) | Q(descripcion_promo__contains=textoBusqueda))
+                mensaje_busqueda += "Que su comentario sea o contenga la palabra "+textoBusqueda+"\n"
+                
+            if (nombre_promo != ""):
+                QSpromociones = QSpromociones.filter(nombre_promo__contains=nombre_promo)
+                mensaje_busqueda += "Nombre sea o que contenga la palabra "+nombre_promo+"\n"
+                
+            if(not fechaDesde is None):
+                mensaje_busqueda +=" La fecha sea mayor a "+date.strftime(fechaDesde,'%d-%m-%Y')+"\n"
+                QSpromociones = QSpromociones.filter(fecha_fin_promo__gte=fechaDesde)
+            
+            if(not fechaHasta is None):
+                mensaje_busqueda +=" La fecha sea menor a "+date.strftime(fechaHasta,'%d-%m-%Y')+"\n"
+                QSpromociones = QSpromociones.filter(fecha_fin_promo__lte=fechaHasta)
+            
+                
+            if (descripcion_promo != ""):
+                QSpromociones = QSpromociones.filter(descripcion_promo__contains=descripcion_promo)
+                mensaje_busqueda += "Descripcion sea o que contenga la palabra "+descripcion_promo+"\n"
+            
+            if (not valor_promo is None):
+                QSpromociones = QSpromociones.filter(valor_promo__gte=valor_promo)
+                mensaje_busqueda += "Promociones que sean mayor a "+valor_promo+"\n"
+                
+            if (cliente_promo != ""):
+                QSpromociones = QSpromociones.filter(cliente_promo=cliente_promo)
+                mensaje_busqueda += "Cliente/s que tienen promociones "+cliente_promo+"\n"
+        
+            
+            promociones = QSpromociones.all()
+            
+            return render(request, 'promocion/promocion_busqueda.html', {'promociones_mostrar':promociones, 'texto_busqueda':mensaje_busqueda})  
+                      
+    else:
+        formulario = BusquedaAvanzadaPromocionForm(None)
+        
+    return render(request, 'promocion/busqueda_avanzada_promocion.html',{'formulario':formulario})    
+    
+    
+def promocion_editar(request, promocion_id):
+    promocion = Promocion.objects.get(id=promocion_id)
+    
+    datosFormulario = None
+    
+    if (request.method == "POST"):
+        datosFormulario = request.POST
+        
+    formulario = PromocionModelForm(datosFormulario, instance = promocion)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                messages.success(request, f"Se ha editado la promocion {promocion.nombre_promo} correctamente")
+                return redirect('lista_promociones')
+            except Exception as error:
+                pass
+    return render(request, 'promocion/actualizar_promocion.html', {'formulario': formulario, 'promocion':promocion})    
+        
+    
+def promocion_eliminar(request, promocion_id):
+    promocion = Promocion.objects.get(id=promocion_id)
+    try:
+        promocion.delete()
+        messages.success(request, f"Se ha eliminado la promocion {promocion.nombre_promo} correctamente.")
+    except:
+        pass
+    return redirect('lista_promociones')
 
 
 
 
 
 
+
+
+
+
+
+
+def promociones_lista(request):
+    promociones = Promocion.objects.select_related('cliente_promo').all()
+    
+    return render(request, 'promocion/lista_promociones.html', {'promociones': promociones})
 
 
 def votaciones_lista(request):

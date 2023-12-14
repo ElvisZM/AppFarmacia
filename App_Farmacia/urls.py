@@ -57,6 +57,24 @@ urlpatterns = [
     
     
     
+    
+    path('promocion/create',views.promocion_create, name='promocion_create'),
+    
+    path('promocion/buscar/',views.promocion_buscar, name='promocion_buscar'),
+    
+    path('promocion/buscar/avanzado/',views.promocion_buscar_avanzado, name='promocion_buscar_avanzado'),
+    
+    path('promocion/editar/<int:promocion_id>',views.promocion_editar, name='promocion_editar'),
+    
+    path('promocion/eliminar/<int:promocion_id>',views.promocion_eliminar, name='promocion_eliminar'),
+    
+    path('promociones/lista',views.promociones_lista, name='lista_promociones'),
+    
+    
+    
+    
+    
+    
     path('votaciones/lista',views.votaciones_lista, name='lista_votaciones'),
     
     path('farmacias/lista',views.farmacias_lista, name='lista_farmacias'),

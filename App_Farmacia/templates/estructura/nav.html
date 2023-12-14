@@ -60,6 +60,13 @@
                         </li>
                         <li><a href="#">C.R.U.D. Proveedor</a></li>
                         <li><a href="#">C.R.U.D. Cliente</a></li>
+                        <li><a href="#">EXAMEN - PROMOCION</a>
+                            <ul class="submenulista">
+                                <li><a href="{% url 'promocion_create' %}">Crear Promocion</a></li>
+                                <li><a href="{% url 'promocion_buscar_avanzado' %}">Busq. Avanzada Promociones</a></li>
+                                <li><a href="{% url 'lista_promociones' %}">Ver Promociones</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li><a href="#">Productos</a>
