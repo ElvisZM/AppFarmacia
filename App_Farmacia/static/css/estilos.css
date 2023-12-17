@@ -41,47 +41,16 @@
     color: #1a1d32;
 }
 
-.container-formulario {
-    width: 50%;
-    margin-top: 6%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 15%;
+.bodyformulario {
+    background-color: rgb(255, 160, 122, 0.2);
+    height: 49rem;
 }
 
-.formulario{
-    width: 100%;
-    color: #1a1d32;
-    font-family: Arial, Helvetica, sans-serif;
-    margin: auto 19%;
-}
-
-.formulario > h1{
-    font-weight: lighter;
-    
-}
-
-.formulario > label {
+.botonformulario {
     display: block;
-    margin-top: 5%;
-}
-
-.formulario > label > h4{
-    font-weight:600;
-}
-
-.formulario > input {
-    margin-top: 2%;
-    width: 60%;
-    padding: 2.5%;
-    border-radius: 10px;
-}
-
-.formulario > button {
-    display: block;
-    margin-top: 4%;
-    width: 60%;
-    padding: 2.5%;
+    margin-top: 1%;
+    width:20%;
+    padding: 1.5%;
     border-radius: 10px;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
@@ -193,7 +162,7 @@
 .submenulogin {
     display: inline-block;
     position: absolute;
-    z-index: 1;
+    z-index: 999;
     top:100%;
     right:0%;
     width: 220%;
@@ -202,10 +171,17 @@
 }
 
 .submenulogin > li {
-    margin: auto;
     text-align: left;
     background-color: white;
     z-index:1;
+    margin: 0;
+}
+
+.submenulogin form {
+    margin: auto;
+    text-align: left;
+    background-color: white;
+    z-index:;
 }
 
 .submenulogin > li > i{
@@ -213,7 +189,21 @@
     text-align: center;
 }
 
+.submenulogin form i{
+    padding-top: 5%;
+    text-align: center;
+}
+
+
 .submenulogin > li > input {
+    border-radius: 15px;
+    text-align: center;
+    width: 58%;
+    margin-left: 21%;
+    padding: 3%;
+}
+
+.submenulogin form input {
     border-radius: 15px;
     text-align: center;
     width: 58%;
@@ -231,17 +221,23 @@
     border-radius: 15px;
     cursor: pointer;
 }
-.submenulogin > li > a {
-    width: 90%;
-    margin-left: 5%;
-    border-radius: 15px;
 
+.submenulogin form button {  
+    width: 100%;
+    padding: 3%;
+    font-size: large;
+    background-color: rgb(255, 160, 122, 1);
+    /*background: linear-gradient(to bottom, #262b4f 0%, rgba(48, 124, 126, 0.938) 100%); /*Con la funcion linear-gradient dentro del background, puedo hacer que el boton empiece por un color y termine en otro. En esta línea indico que se ejecutará desde arriba hacia abajo de modo que empieze por el color azul marino y termine en un azul clarito*/
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    margin: 0;
 }
 
 
 .submenulogin > li > h4 {
-    margin-top: 5%;
-    padding-left: 3%;
+    padding-left: 12%;
+    margin: 0;
 }
 
 .submenulogin > li > p {

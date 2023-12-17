@@ -11,11 +11,11 @@ from django.contrib.auth.forms import UserCreationForm
 
 class RegistroForm(UserCreationForm):
     roles = (
-                (Usuario.CLIENTE, 'cliente'),
-                (Usuario.EMPLEADO, 'empleado'),
-                (Usuario.GERENTE, 'gerente'),
+                (Usuario.CLIENTE, 'Cliente'),
+                (Usuario.EMPLEADO, 'Empleado'),
+                (Usuario.GERENTE, 'Gerente'),
     )
-    rol = forms.ChoiceField(choices=roles)
+    rol = forms.ChoiceField(choices=roles, label="Tipo de Usuario")
     class Meta:
         model = Usuario
         fields = ('username', 'email', 'password1', 'password2', 'rol')

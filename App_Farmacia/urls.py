@@ -126,5 +126,5 @@ urlpatterns = [
     path('clientes_nunca_votaron',views.clientes_nunca_votaron, name='clientes_nunca_votaron'),
     
     path('cuentas_bancarias_propietario_nombre/<str:nombre_propietario>/',views.cuentas_bancarias_propietario_nombre, name='cuentas_bancarias'),
-    
+   
 ]

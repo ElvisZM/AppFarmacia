@@ -40,9 +40,12 @@ def registrar_usuario(request):
             if (rol == Usuario.GERENTE):
                 gerente = Gerente.objects.create(usuario = user)
                 gerente.save()
+                
+            login(request, user)
+            return redirect('index')
         
-        else:
-            formulario = RegistroForm()
+    else:
+        formulario = RegistroForm()
     
     return render(request, 'registration/signup.html', {'formulario': formulario})
 
