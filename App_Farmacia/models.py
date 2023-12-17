@@ -31,8 +31,8 @@ class Gerente(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     nombre_ger = models.CharField(max_length=200)
     correo = models.EmailField(blank=True)
-    fecha_inicio_gestion = models.DateField(null=False, blank=False)
-    gerente_farm = models.OneToOneField(Farmacia, on_delete=models.CASCADE)
+    fecha_inicio_gestion = models.DateField(null=True, blank=False)
+    gerente_farm = models.OneToOneField(Farmacia, on_delete=models.CASCADE, null=True)
 
 class Empleado(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)

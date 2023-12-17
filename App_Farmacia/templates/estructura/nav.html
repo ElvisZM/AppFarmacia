@@ -4,6 +4,9 @@
 <div class="container-menu">
     <div class="text-center">
         <h6>Fecha Inicio: {{ request.session.fecha_inicio}}</h5>
+        {% if request.user.is_authenticated %}
+        <h5>¡Hola, {{ request.user.first_name }}!</h5>
+        {% endif %}
     </div>
     <div class="header">
         <div class="logo">
@@ -34,15 +37,15 @@
                 </li>
                 <li><a href="#">Lista de C.R.U.D.S</a>
                     <ul class="listacruds">
+                        {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}
                         <li><a href="#">Gerentes</a>
                             <ul class="submenulista">
-                                {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}
                                 <li><a href="{% url 'gerente_create' %}">Crear Gerente</a></li>
                                 <li><a href="{% url 'gerente_buscar_avanzado' %}">Busq. Avanzada Gerente</a></li>
                                 <li><a href="{% url 'lista_gerentes' %}">Ver Gerentes</a></li>
-                                {% endif %}
                             </ul>
                         </li>
+                        {% endif %}
                         <li><a href="#">Farmacias</a>
                             <ul class="submenulista">
                                 {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}

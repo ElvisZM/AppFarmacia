@@ -11,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Group
+from django.contrib.auth.decorators import permission_required
 
 
 def index(request):
@@ -51,7 +52,7 @@ def registrar_usuario(request):
 
 
 # PARA FORMULARIOS 
-
+@permission_required('App_Farmacia.add_producto')
 def crear_producto_modelo(formulario):
         
     producto_creado = False
@@ -65,6 +66,7 @@ def crear_producto_modelo(formulario):
             pass
     return producto_creado                
 
+@permission_required('App_Farmacia.add_producto')
 def producto_create(request):
     
     # Si la petición es GET se creará el formulario Vacio
@@ -82,6 +84,7 @@ def producto_create(request):
 
     return render(request, 'producto/create.html', {'formulario':formulario})
 
+
 def producto_buscar(request):
     
     formulario = BusquedaProductoForm(request.GET)
@@ -95,7 +98,7 @@ def producto_buscar(request):
         return redirect(request.META["HTTP_REFERER"])
     else:
         return redirect("index")
-    
+
 def producto_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -143,7 +146,7 @@ def producto_buscar_avanzado(request):
         formulario = BusquedaAvanzadaProductoForm(None)
     return render(request, 'producto/busqueda_avanzada.html',{"formulario":formulario})
                 
-
+@permission_required('App_Farmacia.change_producto')
 def producto_editar(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
 
@@ -167,6 +170,7 @@ def producto_editar(request, producto_id):
             
     return render(request, 'producto/actualizar.html',{"formulario":formulario, "producto":producto})
 
+@permission_required('App_Farmacia.delete_producto')
 def producto_eliminar(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
     try:
@@ -176,7 +180,7 @@ def producto_eliminar(request, producto_id):
         pass
     return redirect('lista_productos')
 
-
+@permission_required('App_Farmacia.add_farmacia')
 def crear_farmacia_modelo(formulario):
     farmacia_creada = False
     
@@ -188,6 +192,7 @@ def crear_farmacia_modelo(formulario):
             pass
     return farmacia_creada
 
+@permission_required('App_Farmacia.add_farmacia')
 def farmacia_create(request):
     datosFormulario = None
     if (request.method == 'POST'):
@@ -204,7 +209,7 @@ def farmacia_create(request):
     
     return render(request, 'farmacia/create_farmacia.html',{'formulario':formulario})
 
-
+@permission_required('App_Farmacia.view_farmacia')
 def farmacia_buscar(request):
     formulario = BusquedaFarmaciaForm(request.GET)
     
@@ -219,6 +224,7 @@ def farmacia_buscar(request):
         return redirect("index")
     
     
+@permission_required('App_Farmacia.view_farmacia')
 def farmacia_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -259,6 +265,7 @@ def farmacia_buscar_avanzado(request):
     return render(request, 'farmacia/busqueda_avanzada_farmacia.html',{'formulario':formulario})    
     
     
+@permission_required('App_Farmacia.change_farmacia')
 def farmacia_editar(request, farmacia_id):
     farmacia = Farmacia.objects.get(id=farmacia_id)
     
@@ -283,6 +290,7 @@ def farmacia_editar(request, farmacia_id):
     
     
     
+@permission_required('App_Farmacia.delete_farmacia')
 def farmacia_eliminar(request, farmacia_id):
     farmacia = Farmacia.objects.get(id=farmacia_id)
     try:
@@ -293,6 +301,7 @@ def farmacia_eliminar(request, farmacia_id):
     return redirect('lista_farmacias')
 
 
+@permission_required('App_Farmacia.add_gerente')
 def crear_gerente_modelo(formulario):
         
     gerente_creado = False
@@ -306,6 +315,7 @@ def crear_gerente_modelo(formulario):
             pass
     return gerente_creado                
 
+@permission_required('App_Farmacia.add_gerente')
 def gerente_create(request):
     
     # Si la petición es GET se creará el formulario Vacio
@@ -323,6 +333,7 @@ def gerente_create(request):
 
     return render(request, 'gerente/create_gerente.html', {'formulario':formulario})
 
+@permission_required('App_Farmacia.view_gerente')
 def gerente_buscar(request):
     formulario = BusquedaGerenteForm(request.GET)
     
@@ -337,6 +348,7 @@ def gerente_buscar(request):
         return redirect("index")
     
     
+@permission_required('App_Farmacia.view_gerente')
 def gerente_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -383,6 +395,7 @@ def gerente_buscar_avanzado(request):
     return render(request, 'gerente/busqueda_avanzada_gerente.html',{'formulario':formulario})    
     
     
+@permission_required('App_Farmacia.change_gerente')
 def gerente_editar(request, gerente_id):
     gerente = Gerente.objects.get(id=gerente_id)
     
@@ -407,6 +420,7 @@ def gerente_editar(request, gerente_id):
     
     
     
+@permission_required('App_Farmacia.delete_gerente')
 def gerente_eliminar(request, gerente_id):
     gerente = Gerente.objects.get(id=gerente_id)
     try:
@@ -425,6 +439,7 @@ def gerente_eliminar(request, gerente_id):
 
 
 
+@permission_required('App_Farmacia.add_empleado')
 def crear_empleado_modelo(formulario):
         
     empleado_creado = False
@@ -438,6 +453,7 @@ def crear_empleado_modelo(formulario):
             pass
     return empleado_creado                
 
+@permission_required('App_Farmacia.add_empleado')
 def empleado_create(request):
     
     # Si la petición es GET se creará el formulario Vacio
@@ -455,6 +471,7 @@ def empleado_create(request):
 
     return render(request, 'empleado/create_empleado.html', {'formulario':formulario})
 
+@permission_required('App_Farmacia.view_empleado')
 def empleado_buscar(request):
     formulario = BusquedaEmpleadoForm(request.GET)
     
@@ -469,6 +486,7 @@ def empleado_buscar(request):
         return redirect("index")
     
     
+@permission_required('App_Farmacia.view_empleado')
 def empleado_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -510,6 +528,7 @@ def empleado_buscar_avanzado(request):
     return render(request, 'empleado/busqueda_avanzada_empleado.html',{'formulario':formulario})    
     
     
+@permission_required('App_Farmacia.change_empleado')
 def empleado_editar(request, empleado_id):
     empleado = Empleado.objects.get(id=empleado_id)
     
@@ -533,6 +552,7 @@ def empleado_editar(request, empleado_id):
     return render(request, 'empleado/actualizar_empleado.html', {'formulario': formulario, 'empleado':empleado})    
         
     
+@permission_required('App_Farmacia.delete_empleado')
 def empleado_eliminar(request, empleado_id):
     empleado = Empleado.objects.get(id=empleado_id)
     try:
@@ -543,6 +563,7 @@ def empleado_eliminar(request, empleado_id):
     return redirect('lista_empleados')
 
 
+@permission_required('App_Farmacia.add_votacion')
 def crear_votacion_modelo(formulario):
         
     votacion_creada = False
@@ -556,6 +577,7 @@ def crear_votacion_modelo(formulario):
             pass
     return votacion_creada                
 
+@permission_required('App_Farmacia.add_votacion')
 def votacion_create(request):
     
     # Si la petición es GET se creará el formulario Vacio
@@ -573,6 +595,7 @@ def votacion_create(request):
 
     return render(request, 'votacion/create_votacion.html', {'formulario':formulario})
 
+@permission_required('App_Farmacia.view_votacion')
 def votacion_buscar(request):
     formulario = BusquedaVotacionForm(request.GET)
     
@@ -587,6 +610,7 @@ def votacion_buscar(request):
         return redirect("index")
     
     
+@permission_required('App_Farmacia.view_votacion')
 def votacion_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -639,6 +663,7 @@ def votacion_buscar_avanzado(request):
     return render(request, 'votacion/busqueda_avanzada_votacion.html',{'formulario':formulario})    
     
     
+@permission_required('App_Farmacia.change_votacion')
 def votacion_editar(request, votacion_id):
     votacion = Votacion.objects.get(id=votacion_id)
     
@@ -662,6 +687,7 @@ def votacion_editar(request, votacion_id):
     return render(request, 'votacion/actualizar_votacion.html', {'formulario': formulario, 'votacion':votacion})    
         
     
+@permission_required('App_Farmacia.delete_votacion')
 def votacion_eliminar(request, votacion_id):
     votacion = Votacion.objects.get(id=votacion_id)
     try:
@@ -674,6 +700,7 @@ def votacion_eliminar(request, votacion_id):
 
 
 
+@permission_required('App_Farmacia.add_cliente')
 def crear_cliente_modelo(formulario):
         
     cliente_creado = False
@@ -687,6 +714,7 @@ def crear_cliente_modelo(formulario):
             pass
     return cliente_creado                
 
+@permission_required('App_Farmacia.add_cliente')
 def cliente_create(request):
     
     # Si la petición es GET se creará el formulario Vacio
@@ -705,6 +733,7 @@ def cliente_create(request):
 
     return render(request, 'cliente/create_cliente.html', {'formulario':formulario})
 
+@permission_required('App_Farmacia.view_cliente')
 def cliente_buscar(request):
     formulario = BusquedaClienteForm(request.GET)
     
@@ -719,6 +748,7 @@ def cliente_buscar(request):
         return redirect("index")
     
     
+@permission_required('App_Farmacia.view_cliente')
 def cliente_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -765,6 +795,7 @@ def cliente_buscar_avanzado(request):
     return render(request, 'cliente/busqueda_avanzada_cliente.html',{'formulario':formulario})    
     
     
+@permission_required('App_Farmacia.change_cliente')
 def cliente_editar(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     
@@ -788,6 +819,7 @@ def cliente_editar(request, cliente_id):
     return render(request, 'cliente/actualizar_cliente.html', {'formulario': formulario, 'cliente':cliente})    
         
     
+@permission_required('App_Farmacia.delete_cliente')
 def cliente_eliminar(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     try:
@@ -813,6 +845,7 @@ def cliente_eliminar(request, cliente_id):
 
 
 
+@permission_required('App_Farmacia.add_promocion')
 def crear_promocion_modelo(formulario):
         
     promocion_creada = False
@@ -826,6 +859,7 @@ def crear_promocion_modelo(formulario):
             pass
     return promocion_creada                
 
+@permission_required('App_Farmacia.add_promocion')
 def promocion_create(request):
     
     # Si la petición es GET se creará el formulario Vacio
@@ -843,6 +877,7 @@ def promocion_create(request):
 
     return render(request, 'promocion/create_promocion.html', {'formulario':formulario})
 
+@permission_required('App_Farmacia.view_promocion')
 def promocion_buscar(request):
     formulario = BusquedaPromocionForm(request.GET)
     
@@ -857,6 +892,7 @@ def promocion_buscar(request):
         return redirect("index")
     
     
+@permission_required('App_Farmacia.view_promocion')
 def promocion_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -915,6 +951,7 @@ def promocion_buscar_avanzado(request):
     return render(request, 'promocion/busqueda_avanzada_promocion.html',{'formulario':formulario})    
     
     
+@permission_required('App_Farmacia.change_promocion')
 def promocion_editar(request, promocion_id):
     promocion = Promocion.objects.get(id=promocion_id)
     
@@ -938,6 +975,7 @@ def promocion_editar(request, promocion_id):
     return render(request, 'promocion/actualizar_promocion.html', {'formulario': formulario, 'promocion':promocion})    
         
     
+@permission_required('App_Farmacia.delete_promocion')
 def promocion_eliminar(request, promocion_id):
     promocion = Promocion.objects.get(id=promocion_id)
     try:
@@ -955,6 +993,7 @@ def promocion_eliminar(request, promocion_id):
 
 
 
+@permission_required('App_Farmacia.view_cliente')
 def clientes_lista(request):
     clientes = Cliente.objects.select_related('usuario').prefetch_related('productos_favoritos', 'votacion_prod').all()
     
@@ -967,21 +1006,25 @@ def promociones_lista(request):
     return render(request, 'promocion/lista_promociones.html', {'promociones': promociones})
 
 
+@permission_required('App_Farmacia.view_votacion')
 def votaciones_lista(request):
     votaciones = Votacion.objects.select_related('voto_producto', 'voto_cliente').all()
     
     return render(request, 'votacion/lista_votaciones.html', {'votaciones': votaciones})
 
+@permission_required('App_Farmacia.view_empleado')
 def empleados_lista(request):
     empleados = Empleado.objects.select_related('farm_emp', 'usuario').all()
     
     return render(request, 'empleado/lista_empleados.html', {'empleados':empleados})
 
+@permission_required('App_Farmacia.view_farmacia')
 def farmacias_lista(request):
     farmacias = Farmacia.objects.all()
     
     return render(request, 'farmacia/lista_farmacias.html', {'farmacias':farmacias})
 
+@permission_required('App_Farmacia.view_gerente')
 def gerentes_lista(request):
     gerentes = Gerente.objects.select_related('gerente_farm','usuario').all()
     

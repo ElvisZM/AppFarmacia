@@ -17,11 +17,12 @@
 {% block contenido %}
 <form class="bodyformulario" action = "{% url 'login' %}" method = "post">
     {% csrf_token %}
-    <div class="container pd-5">
-        <div class="mb-4">
+    <div class="container text-center">
+        <div class="mt-5 mb-4">
             <input type="text" name="username" id="usuario" placeholder="Usuario">
         </div>
-        <div class="w-50">
+        <div class="mb-40">
+            <label>
             <input type="password" name="password" id="contraseña" placeholder="********">
         </div>
         

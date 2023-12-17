@@ -18,7 +18,10 @@ class RegistroForm(UserCreationForm):
     rol = forms.ChoiceField(choices=roles, label="Tipo de Usuario")
     class Meta:
         model = Usuario
-        fields = ('username', 'email', 'password1', 'password2', 'rol')
+        fields = ('username', 'first_name', 'email', 'password1', 'password2', 'rol')
+        labels = {
+            "first_name": "Nombre y Apellidos", 
+        }
 
 
 class ProductoModelForm(ModelForm):
