@@ -73,17 +73,12 @@ def producto_buscar_avanzado(request):
             
             QSproductos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod')
             
-            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
             nombre_prod = formulario.cleaned_data.get('nombre_prod')
             descripcion = formulario.cleaned_data.get('descripcion')
             precio = formulario.cleaned_data.get('precio')
             farmacia_prod = formulario.cleaned_data.get('farmacia_prod')
             prov_sum_prod = formulario.cleaned_data.get('prov_sum_prod')
-            
-            if (textoBusqueda != ""):
-                QSproductos = QSproductos.filter(Q(nombre_prod__contains=textoBusqueda) | Q(descripcion__contains=textoBusqueda))
-                mensaje_busqueda += "Nombre o descripcion que contenga la palabra "+textoBusqueda+"\n"
-                
+                            
             if (nombre_prod != ""):
                 QSproductos = QSproductos.filter(Q(nombre_prod__contains=nombre_prod) | Q(descripcion__contains=nombre_prod))
                 mensaje_busqueda += "Nombre o descripcion que contenga la palabra "+nombre_prod+"\n"
@@ -93,8 +88,18 @@ def producto_buscar_avanzado(request):
                 mensaje_busqueda += "Nombre o descripcion que contenga la palabra "+descripcion+"\n"
             
             if (not precio is None):
-                QSproductos = QSproductos.filter(precio = precio)
-                mensaje_busqueda += f"Precio que sea igual a {precio}\n"
+                QSproductos = QSproductos.filter(precio__gte= precio)
+                mensaje_busqueda += f"Precio que sea igual o mayor a {precio}\n"
+            
+            if (not farmacia_prod is None):
+                QSproductos = QSproductos.filter(farmacia_prod=farmacia_prod)
+                mensaje_busqueda += "Que la farmacia a la que pertence sea "+farmacia_prod.nombre_farm+"\n"
+                
+            if (not prov_sum_prod is None):
+                QSproductos = QSproductos.filter(prov_sum_prod=prov_sum_prod)
+                mensaje_busqueda += "Que el proveedor sea "+prov_sum_prod.nombre_prov+"\n"
+        
+            
             
             productos = QSproductos.all()
             
@@ -331,6 +336,10 @@ def gerente_buscar_avanzado(request):
                 mensaje_busqueda += f"Fecha de inicio de gestion que sea igual o mayor a "+datetime.strftime(fecha_inicio_gestion, '%d-%m-%Y')+"\n"
                 QSgerentes = QSgerentes.filter(fecha_inicio_gestion__gte = fecha_inicio_gestion)
                 
+            if (not gerente_farm is None):
+                mensaje_busqueda += "Gerente que tenga asignado la farmacia "+gerente_farm.nombre_farm+"\n"
+                QSgerentes = QSgerentes.filter(gerente_farm=gerente_farm)
+                
             gerentes = QSgerentes.all()
             
             return render(request, 'gerente/gerente_busqueda.html', {'gerentes_mostrar':gerentes, 'texto_busqueda':mensaje_busqueda})  
@@ -437,16 +446,11 @@ def empleado_buscar_avanzado(request):
             
             QSempleados = Empleado.objects.all()
             
-            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
             nombre_emp = formulario.cleaned_data.get('nombre_emp')
             cargo = formulario.cleaned_data.get('cargo')
             salario = formulario.cleaned_data.get('salario')
             farm_emp = formulario.cleaned_data.get('farm_emp')
             
-            if (textoBusqueda != ""):
-                QSempleados = QSempleados.filter(nombre_emp__contains=textoBusqueda)
-                mensaje_busqueda += "Nombre o que contenga la palabra "+textoBusqueda+"\n"
-                
             if (nombre_emp != ""):
                 QSempleados = QSempleados.filter(nombre_emp__contains=nombre_emp)
                 mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_emp+"\n"
@@ -456,12 +460,12 @@ def empleado_buscar_avanzado(request):
                 mensaje_busqueda += "Cargo o que contenga la palabra "+cargo+"\n"
             
             if (not salario is None):
-                mensaje_busqueda += f"Salario que sea igual o mayor a "+salario+"\n"
+                mensaje_busqueda += f"Salario que sea igual o mayor a "+str(salario)+"\n"
                 QSempleados = QSempleados.filter(salario__gte = salario)
                 
-            if (farm_emp != ""):
-                QSempleados = QSempleados.filter(farm_emp__contains=farm_emp)
-                mensaje_busqueda += "Farmacia o que contenga la palabra "+farm_emp+"\n"
+            if (not farm_emp is None):
+                QSempleados = QSempleados.filter(farm_emp=farm_emp)
+                mensaje_busqueda += "Que este asignado/a a la Farmacia "+farm_emp.nombre_farm+"\n"
             
             empleados = QSempleados.all()
             
@@ -560,36 +564,36 @@ def votacion_buscar_avanzado(request):
             
             QSvotaciones = Votacion.objects.all()
             
-            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
             puntuacion = formulario.cleaned_data.get('puntuacion')
-            fecha_votacion = formulario.cleaned_data.get('fecha_votacion')
+            fechaDesde = formulario.cleaned_data.get('fecha_desde')
+            fechaHasta = formulario.cleaned_data.get('fecha_hasta')
             comenta_votacion = formulario.cleaned_data.get('comenta_votacion')
             voto_producto = formulario.cleaned_data.get('voto_producto')
             voto_cliente = formulario.cleaned_data.get('voto_cliente')
             
-            if (textoBusqueda != ""):
-                QSvotaciones = QSvotaciones.filter(comenta_votacion__contains=textoBusqueda)
-                mensaje_busqueda += "Que su comentario sea o contenga la palabra "+textoBusqueda+"\n"
-                
-            if (puntuacion != ""):
-                QSvotaciones = QSvotaciones.filter(puntuacion__contains=puntuacion)
+            if (not puntuacion is None):
+                QSvotaciones = QSvotaciones.filter(puntuacion=puntuacion)
                 mensaje_busqueda += "Puntuacion sea o que contenga la palabra "+puntuacion+"\n"
                 
-            if (not fecha_votacion is None):
-                QSvotaciones = QSvotaciones.filter(fecha_votacion=fecha_votacion)
-                mensaje_busqueda += "La fecha sea "+date.strftime(fecha_votacion, '%d-%m-%Y')+"\n"
-                
+            if(not fechaDesde is None):
+                mensaje_busqueda +=" La fecha sea mayor a "+date.strftime(fechaDesde,'%d-%m-%Y')+"\n"
+                QSpromociones = QSpromociones.filter(fecha_fin_promo__gte=fechaDesde)
+            
+            if(not fechaHasta is None):
+                mensaje_busqueda +=" La fecha sea menor a "+date.strftime(fechaHasta,'%d-%m-%Y')+"\n"
+                QSpromociones = QSpromociones.filter(fecha_fin_promo__lte=fechaHasta)
+            
             if (comenta_votacion != ""):
                 QSvotaciones = QSvotaciones.filter(comenta_votacion__contains=comenta_votacion)
                 mensaje_busqueda += "Comentario o que contenga la palabra "+comenta_votacion+"\n"
             
-            if (voto_producto != ""):
-                QSvotaciones = QSvotaciones.filter(voto_producto__contains=voto_producto)
-                mensaje_busqueda += "Producto o que contenga la palabra "+voto_producto+"\n"
+            if (not voto_producto is None):
+                QSvotaciones = QSvotaciones.filter(voto_producto=voto_producto)
+                mensaje_busqueda += "Que el producto sea "+voto_producto.nombre_prod+"\n"
                 
-            if (voto_cliente != ""):
-                QSvotaciones = QSvotaciones.filter(voto_cliente__contains=voto_cliente)
-                mensaje_busqueda += "Cliente o que contenga la palabra "+voto_cliente+"\n"
+            if (not voto_cliente is None):
+                QSvotaciones = QSvotaciones.filter(voto_cliente=voto_cliente)
+                mensaje_busqueda += "Que el cliente sea "+voto_cliente.nombre_cli+"\n"
         
             
             votaciones = QSvotaciones.all()
@@ -710,13 +714,13 @@ def cliente_buscar_avanzado(request):
                 mensaje_busqueda += f"Que la direccion sea o contenga la palabra "+direccion_cli+"\n"
                 QSclientes = QSclientes.filter(direccion_cli__contains = direccion_cli)
                 
-            if (productos_favoritos != ""):
-                QSclientes = QSclientes.filter(productos_favoritos__nombre_prod__contains=productos_favoritos)
-                mensaje_busqueda += "Que el producto favorito sea o que contenga la palabra "+productos_favoritos+"\n"
+            if (not productos_favoritos is None):
+                QSclientes = QSclientes.filter(productos_favoritos=productos_favoritos)
+                mensaje_busqueda += "Que el producto favorito sea "+productos_favoritos.nombre_prod+"\n"
             
-            if (votacion_prod != ""):
-                QSclientes = QSclientes.filter(votacion_prod__nombre_prod__contains=votacion_prod)
-                mensaje_busqueda += "Que el producto que ha votado sea o que contenga la palabra "+votacion_prod+"\n"
+            if (not votacion_prod is None):
+                QSclientes = QSclientes.filter(votacion_prod=votacion_prod)
+                mensaje_busqueda += "Que el producto que ha votado sea  "+votacion_prod.nombre_prod+"\n"
             
             clientes = QSclientes.all()
             
@@ -863,9 +867,9 @@ def promocion_buscar_avanzado(request):
                 QSpromociones = QSpromociones.filter(valor_promo__gte=valor_promo)
                 mensaje_busqueda += "Promociones que sean mayor a "+valor_promo+"\n"
                 
-            if (cliente_promo != ""):
+            if (not cliente_promo is None):
                 QSpromociones = QSpromociones.filter(cliente_promo=cliente_promo)
-                mensaje_busqueda += "Cliente/s que tienen promociones "+cliente_promo+"\n"
+                mensaje_busqueda += "Cliente/s que tienen promociones "+cliente_promo.nombre_cli+"\n"
         
             
             promociones = QSpromociones.all()
@@ -950,11 +954,6 @@ def gerentes_lista(request):
     
     return render(request, 'gerente/lista_gerentes.html', {'gerentes':gerentes})
 
-
-
-
-
-
 def productos_lista(request):
     productos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod').all()
 
@@ -963,8 +962,8 @@ def productos_lista(request):
 
 
 def farmacia_ordenada_fecha(request):
-    farmacias = Farmacia.objects.select_related('datosfarmacia').order_by('datosfarmacia__fecha_creacion')
-    return render(request, 'farmacia/farmaciaydatos.html', {'farmacias':farmacias})
+    datos = DatosFarmacia.objects.select_related("farmacia_datos").order_by("fecha_creacion").all()
+    return render(request, 'farmacia/farmaciaydatos.html', {'farmacias_fecha':datos})
 
 def gerente_nombre(request, nombre_introducido):
     gerentes = Gerente.objects.select_related('gerente_farm').filter(nombre_ger__contains=nombre_introducido)
@@ -979,8 +978,8 @@ def productos_con_proveedores(request):
     return render(request, 'producto/producto_proveedores.html', {'productos':productos})
 
 def empleado_compras(request):
-    empleados = Empleado.objects.select_related('farm_emp').all()
-    return render(request, 'empleado/empleado_y_compras.html', {'compras_empleados':empleados})
+    compras = Compra.objects.select_related("empleado_compra").prefetch_related("producto_compra").all()
+    return render(request, 'empleado/empleado_y_compras.html', {'compras_empleados':compras})
 
 def detalle_compra(request):
     compra = Compra.objects.select_related('cliente_compra', 'empleado_compra').prefetch_related('producto_compra').all()

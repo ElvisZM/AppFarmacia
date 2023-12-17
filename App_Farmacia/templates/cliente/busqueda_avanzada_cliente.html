@@ -14,16 +14,20 @@
             {% bootstrap_field formulario.telefono_cli show_label=True %}
         </div>
             
-        <div class="w-25 ">
+        <div class="mb-4">
             {% bootstrap_field formulario.direccion_cli show_label=True %}
         </div>
 
-        <div class="w-25 ">
-            {% bootstrap_field formulario.productos_favoritos show_label=True %}
-        </div>
+        <div class="d-flex mb-4 justify-content-around">
 
-        <div class="w-25 ">
-            {% bootstrap_field formulario.votacion_prod show_label=True %}
+            <div class="w-25 ">
+                {% bootstrap_field formulario.productos_favoritos show_label=True %}
+            </div>
+
+            <div class="w-25 ">
+                {% bootstrap_field formulario.votacion_prod show_label=True %}
+            </div>
+
         </div>
 
         {% buttons %}

@@ -70,36 +70,31 @@ class BusquedaProductoForm(forms.Form):
             
 class BusquedaAvanzadaProductoForm(forms.Form):
     
-    textoBusqueda = forms.CharField(required=False)
-            
     nombre_prod = forms.CharField (required=False, label="Nombre del Producto")
     
     descripcion = forms.CharField (required=False)
     
     precio = forms.DecimalField(required=False)
     
-    farmacia_prod = forms.CharField (required=False, label="Farmacia")  
+    farmacia_prod = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia", widget=forms.Select())  
     
-    prov_sum_prod = forms.CharField (required=False, label="Proveedor")
+    prov_sum_prod = forms.ModelChoiceField (queryset=Proveedor.objects.all(), required=False, label="Proveedor", widget=forms.Select())
     
     def clean(self):
         
         super().clean()
         
-        textoBusqueda = self.cleaned_data.get('textoBusqueda')
         nombre_prod = self.cleaned_data.get('nombre_prod')
         descripcion = self.cleaned_data.get('descripcion')
         precio = self.cleaned_data.get('precio')
         farmacia_prod = self.cleaned_data.get('farmacia_prod')
         prov_sum_prod = self.cleaned_data.get('prov_sum_prod')
         
-        if(textoBusqueda == ""
-           and nombre_prod == ""
+        if(nombre_prod == ""
            and descripcion == ""
-           and farmacia_prod == ""
-           and prov_sum_prod == ""
+           and farmacia_prod is None
+           and prov_sum_prod is None
            and precio is None):
-            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('nombre_prod', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('descripcion', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('farmacia_prod', 'Debe introducir al menos un valor en un campo del formulario')
@@ -107,8 +102,11 @@ class BusquedaAvanzadaProductoForm(forms.Form):
             self.add_error('precio', 'Debe introducir al menos un valor en un campo del formulario')
                     
         else:
-            if(textoBusqueda != "" and len(textoBusqueda) < 3):
-                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+            if(nombre_prod != "" and len(nombre_prod) < 3):
+                self.add_error('nombre_prod', 'Debe introducir al menos 3 caracteres')
+                
+            if(descripcion != "" and len(descripcion) < 10):
+                self.add_error('nombre_prod', 'Debe introducir al menos 10 caracteres')
                 
         return self.cleaned_data
     
@@ -269,7 +267,7 @@ class BusquedaAvanzadaGerenteForm(forms.Form):
     
     fecha_inicio_gestion = forms.DateField(required=False, widget= forms.SelectDateWidget())
     
-    gerente_farm = forms.CharField (required=False, label="Farmacia Asignada")
+    gerente_farm = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
     
     def clean(self):
         
@@ -285,7 +283,7 @@ class BusquedaAvanzadaGerenteForm(forms.Form):
            and nombre_ger == ""
            and fecha_inicio_gestion is None
            and correo == ""
-           and gerente_farm == ""):
+           and gerente_farm is None):
             self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('nombre_ger', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('fecha_inicio_gestion', 'Debe introducir al menos un valor en un campo del formulario')
@@ -371,32 +369,29 @@ class BusquedaAvanzadaEmpleadoForm(forms.Form):
     
     salario = forms.FloatField(required=False, label="Salario del Empleado")
     
-    farm_emp = forms.CharField (required=False, label="Farmacia Asignada")
+    farm_emp = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
     
     def clean(self):
         
         super().clean()
         
-        textoBusqueda = self.cleaned_data.get('textoBusqueda')
         nombre_emp = self.cleaned_data.get('nombre_emp')
         cargo = self.cleaned_data.get('cargo')
         salario = self.cleaned_data.get('salario')
         farm_emp = self.cleaned_data.get('farm_emp')
 
-        if(textoBusqueda == ""
-           and nombre_emp == ""
+        if(nombre_emp == ""
            and cargo == ""
            and salario is None
-           and farm_emp == ""):
-            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
+           and farm_emp is None):
             self.add_error('nombre_emp', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('cargo', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('salario', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('farm_emp', 'Debe introducir al menos un valor en un campo del formulario')
                     
         else:
-            if(textoBusqueda != "" and len(textoBusqueda) < 3):
-                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+            if(nombre_emp != "" and len(nombre_emp) < 3):
+                self.add_error('nombre_emp', 'Debe introducir al menos 3 caracteres')
                 
         return self.cleaned_data
     
@@ -455,45 +450,51 @@ class BusquedaVotacionForm(forms.Form):
             
 class BusquedaAvanzadaVotacionForm(forms.Form):
     
-    textoBusqueda = forms.CharField(required=False)
-            
-    puntuacion = forms.CharField (required=False, label="Nombre del Producto")
+    puntuacion = forms.IntegerField (required=False, label="Puntuacion")
     
-    fecha_votacion = forms.DateField (required=False, widget= forms.SelectDateWidget())
+    fecha_desde = forms.DateField(label="Fecha Desde",
+                                required=False,
+                                widget= forms.SelectDateWidget(years=range(1990,2030))
+                                )
+    
+    fecha_hasta = forms.DateField(label="Fecha Hasta",
+                                  required=False,
+                                  widget= forms.SelectDateWidget(years=range(1990,2030))
+                                )       
     
     comenta_votacion = forms.CharField(required=False)
     
-    voto_producto = forms.CharField (required=False, label="Producto")  
+    voto_producto = forms.ModelChoiceField (queryset=Producto.objects.all(), required=False, label="Producto", widget=forms.Select())  
     
-    voto_cliente = forms.CharField (required=False, label="Cliente")
+    voto_cliente = forms.ModelChoiceField (queryset=Cliente.objects.all(), required=False, label="Cliente", widget=forms.Select())
     
     def clean(self):
         
         super().clean()
         
-        textoBusqueda = self.cleaned_data.get('textoBusqueda')
         puntuacion = self.cleaned_data.get('puntuaciom')
         fecha_desde = self.cleaned_data.get('fecha_desde')
         fecha_hasta = self.cleaned_data.get('fecha_hasta')
+        comenta_votacion = self.cleaned_data.get('comenta_votacion')
         voto_producto = self.cleaned_data.get('voto_producto')
         voto_cliente = self.cleaned_data.get('voto_cliente')
         
-        if(textoBusqueda == ""
-           and puntuacion == ""
+        if(puntuacion is None
            and fecha_desde is None
            and fecha_hasta is None
-           and voto_producto == ""
-           and voto_cliente == ""):
-            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
+           and comenta_votacion == ""
+           and voto_producto is None
+           and voto_cliente is None):
             self.add_error('puntuacion', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('fecha_desde', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('fecha_hasta', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('comenta_votacion', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('voto_producto', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('voto_cliente', 'Debe introducir al menos un valor en un campo del formulario')
                     
         else:
-            if(textoBusqueda != "" and len(textoBusqueda) < 3):
-                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
+            if(comenta_votacion != "" and len(comenta_votacion) < 3):
+                self.add_error('comenta_votacion', 'Debe introducir al menos 3 caracteres')
                 
         return self.cleaned_data
     
@@ -517,6 +518,7 @@ class ClienteModelForm(ModelForm):
             "productos_favoritos" : 'Indique producto favorito del cliente.',
         }
         widgets = {
+            
         }
         
         
@@ -561,9 +563,9 @@ class BusquedaAvanzadaClienteForm(forms.Form):
     
     direccion_cli = forms.CharField (required=False, label="Direccion del Cliente")
     
-    productos_favoritos = forms.CharField(required=False, label="Producto Favorito del Cliente")
+    productos_favoritos = forms.ModelChoiceField(queryset=Producto.objects.all(), required=False, label="Producto Favorito del Cliente", widget=forms.Select())
     
-    votacion_prod = forms.CharField (required=False, label="Productos Votados por el Cliente")
+    votacion_prod = forms.ModelChoiceField (queryset=Producto.objects.all(), required=False, label="Productos Votados por el Cliente", widget=forms.Select())
     
     def clean(self):
         
@@ -704,7 +706,7 @@ class BusquedaAvanzadaPromocionForm(forms.Form):
                                   widget= forms.SelectDateWidget(years=range(1990,2030))
                                 )       
                                   
-    cliente_promo = forms.CharField(required=False, widget=forms.CheckboxSelectMultiple)
+    cliente_promo = forms.ModelChoiceField(queryset=Cliente.objects.all() ,required=False, label="Cliente con promoción", widget=forms.Select())
     
     def clean(self):
         
@@ -716,7 +718,7 @@ class BusquedaAvanzadaPromocionForm(forms.Form):
         valor_promo = self.cleaned_data.get('valor_promo')
         fecha_desde = self.cleaned_data.get('fecha_desde')
         fecha_hasta = self.cleaned_data.get('fecha_hasta')
-        cliente_promo = self.cleaned_data.get('voto_cliente')
+        cliente_promo = self.cleaned_data.get('cliente_promo')
         
         if(textoBusqueda == ""
            and nombre_promo == ""
@@ -724,7 +726,7 @@ class BusquedaAvanzadaPromocionForm(forms.Form):
            and valor_promo is None
            and fecha_desde is None
            and fecha_hasta is None
-           and len(cliente_promo) == 0):
+           and cliente_promo is None):
             self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('nombre_promo', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('descripcion_promo', 'Debe introducir al menos un valor en un campo del formulario')

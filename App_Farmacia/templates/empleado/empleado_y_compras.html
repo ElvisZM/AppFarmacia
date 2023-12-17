@@ -13,9 +13,11 @@
 
     <div class="descripcion_body">
         <div class="descripcion_body-texto">    
-            {% for empleado in compras_empleados %}
-                {% include 'empleado/empleado.html' %}
-                {% include 'compra/compra_detalle_empleado.html' %}
+            {% for compra in compras_empleados %}
+                {% include 'compra/compra.html' %}
+                <br>
+                <br>
+                <br>
             {% empty %}
             <h2>Lo sentimos, no hay información que mostrar</h2>
             {% endfor %}

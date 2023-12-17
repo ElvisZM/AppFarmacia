@@ -37,14 +37,10 @@
         <div class="descripcion_body-texto">
             {% for producto in productos %}
                 {% include 'producto/producto.html' %}
-                {% if producto.prov_sum_prod.all %}
-                    {% for suministro in producto.prov_sum_prod.all %}
-                        <h2>Proveedor: {{ suministro.proveedor.nombre_prov|truncatewords:1 }}</h2>
-                        <h2>Dirección: {{ suministro.proveedor.direccion_prov|truncatewords:3}}</h2>
-                    {% endfor %}
-                {% else %}
-                    <h2>No hay proveedores para este producto.</h2>
-                {% endif %}
+                {% for proveedor in producto.prov_sum_prod.all %}
+                    <h2>Proveedor: {{ proveedor.nombre_prov|truncatewords:1 }}</h2>
+                    <h2>Dirección: {{ proveedor.direccion_prov|truncatewords:3}}</h2>
+                {% endfor %}
             {% endfor %}
         </div>
     {% block busqueda %}

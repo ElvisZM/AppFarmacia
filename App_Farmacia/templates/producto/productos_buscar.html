@@ -17,17 +17,15 @@
         <div class="descripcion_body-texto">
             {% for producto in productos_mostrar %}
                 {% include 'producto/producto.html' %}
-                {% if producto.prov_sum_prod.all %}
-                    {% for suministro in producto.prov_sum_prod.all %}
-                        <h2>Proveedor: {{ suministro.proveedor.nombre_prov|truncatewords:1 }}</h2>
-                        <h2>Dirección: {{ suministro.proveedor.direccion_prov|truncatewords:3}}</h2>
-                    {% endfor %}
-                {% endif %}
+                {% for proveedor in producto.prov_sum_prod.all %}
+                    <h2>Proveedor: {{ proveedor.nombre_prov|truncatewords:1 }}</h2>
+                    <h2>Dirección: {{ proveedor.direccion_prov|truncatewords:3}}</h2>
+                {% endfor %}
                 <div class="row btn-group">             
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto {% bs_icon 'pencil' %}</span></a>
+                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto </span></a>
                         </button>
                     </div>
 
@@ -35,7 +33,7 @@
                         <form action = "{% url 'producto_eliminar' producto.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar este producto{% bs_icon 'trash' %}</span>
+                                <span>Eliminar Producto</span>
                             </button>
                         </form>
                     </div>
