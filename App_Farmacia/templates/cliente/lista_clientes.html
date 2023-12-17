@@ -7,11 +7,11 @@
 {% block cabecera %}
     <div class="d-flex justify-content-evenly">
         <div class ="cabecera">
-            <h1>PROMOCIONES | LISTA </h1>
+            <h1>CLIENTES | LISTA </h1>
         </div>
         <div>
-            <form action="{% url 'promocion_buscar' %}" class="d-flex" role="search" method="GET">
-                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí su promocion" aria-label="Search">
+            <form action="{% url 'cliente_buscar' %}" class="d-flex" role="search" method="GET">
+                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí al cliente" aria-label="Search">
                 <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
             </form>
         </div>
@@ -31,21 +31,21 @@
 
     <div class="descripcion_body">
         <div class="descripcion_body-texto">    
-            {% for promocion in promociones %}
-                {% include 'promocion/promocion.html' %}
+            {% for cliente in clientes %}
+                {% include 'cliente/cliente.html' %}
                 <div class="row btn-group">             
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'promocion_editar' promocion.id %}" ><span class="text-dark">Editar Promocion</span></a>
+                                <a class="text-decoration-none" href="{% url 'cliente_editar' cliente.id %}" ><span class="text-dark">Editar Cliente</span></a>
                         </button>
                     </div>
 
                     <div class="">
-                        <form action = "{% url 'promocion_eliminar' promocion.id %}" method="post">
+                        <form action = "{% url 'cliente_eliminar' cliente.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar esta promocion</span>
+                                <span>Eliminar Cliente</span>
                             </button>
                         </form>
                     </div>
@@ -55,7 +55,7 @@
                 <br>
                 <br>
             {% empty %}
-            <h2> No se encontraron promociones creadas. </h2>
+            <h2> No se encontraron datos. </h2>
             {% endfor %}
         </div>
     {% block busqueda %}

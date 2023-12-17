@@ -1,0 +1,30 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+{% load bootstrap5 %}
+
+<form action ="{% url 'cliente_create' %}" method = "post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="mb-4">
+            {% bootstrap_field formulario.nombre_cli show_label=True %}
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.telefono_cli show_label=True %}
+        </div>
+            
+        <div class="mb-4">
+            {% bootstrap_field formulario.direccion_cli show_label=True %}
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.productos_favoritos show_label=True %}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </div>
+</form>
+
+
+{% endblock %}

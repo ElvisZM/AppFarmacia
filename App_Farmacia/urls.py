@@ -54,6 +54,17 @@ urlpatterns = [
     
     path('votacion/eliminar/<int:votacion_id>',views.votacion_eliminar, name='votacion_eliminar'),
     
+    path('cliente/create',views.cliente_create, name='cliente_create'),
+    
+    path('cliente/buscar/',views.cliente_buscar, name='cliente_buscar'),
+    
+    path('cliente/buscar/avanzado/',views.cliente_buscar_avanzado, name='cliente_buscar_avanzado'),
+    
+    path('cliente/editar/<int:cliente_id>',views.cliente_editar, name='cliente_editar'),
+    
+    path('cliente/eliminar/<int:cliente_id>',views.cliente_eliminar, name='cliente_eliminar'),
+    
+    
     
     
     
@@ -74,6 +85,7 @@ urlpatterns = [
     
     
     
+    path('clientes/lista',views.clientes_lista, name='lista_clientes'),
     
     path('votaciones/lista',views.votaciones_lista, name='lista_votaciones'),
     

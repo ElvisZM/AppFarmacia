@@ -1,0 +1,35 @@
+{% extends "principal.html" %}
+
+{% block contenido %}
+{% load bootstrap5 %}
+
+<form action ="{% url 'cliente_editar' cliente.id %}" method = "post">
+    {% csrf_token %}
+    <div class="container">
+        <div class="mb-4">
+            {% bootstrap_field formulario.nombre_cli show_label=True %}
+                {% spaceless %}
+                {% if formulario.is_bound %}
+                    {{ formulario.nombre_cli.value }}
+                {% endif %}
+                {% endspaceless %}
+        </div>
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.telefono_cli show_label=True %}
+        </div>
+            
+        <div class="mb-4">
+            {% bootstrap_field formulario.direccion_cli show_label=True %}
+        </div>
+
+        <div class="mb-4 w-50">
+            {% bootstrap_field formulario.productos_favoritos show_label=True %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Actualizar</button>
+    </div>
+</form>
+
+
+{% endblock %}

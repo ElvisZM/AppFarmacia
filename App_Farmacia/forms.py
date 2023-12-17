@@ -497,9 +497,121 @@ class BusquedaAvanzadaVotacionForm(forms.Form):
                 
         return self.cleaned_data
     
+  
     
     
+class ClienteModelForm(ModelForm):
+    class Meta:
+        model = Cliente
+        fields = ['nombre_cli', 'telefono_cli', 'direccion_cli', 'productos_favoritos']
+        labels = {
+            "nombre_cli": 'Nombre del Cliente', 
+            "telefono_cli": 'Telefono del Cliente',
+            "direccion_cli" : 'Direccion del Cliente',
+            "productos_favoritos" : 'Productos Favoritos del Cliente',
+        }
+        help_texts = {
+            "nombre_cli": '100 caracteres como máximo',
+            "telefono_cli" : 'Número de teléfono del cliente.',
+            "direccion_cli" : 'Introduzca la dirección del cliente.',
+            "productos_favoritos" : 'Indique producto favorito del cliente.',
+        }
+        widgets = {
+        }
+        
+        
+    def clean(self):
     
+        super().clean()
+
+        nombre_cli = self.cleaned_data.get('nombre_cli')
+        telefono_cli = self.cleaned_data.get('telefono_cli')
+        direccion_cli = self.cleaned_data.get('direccion_cli')
+        productos_favoritos = self.cleaned_data.get('productos_favoritos')
+
+        #Comprobamos que no exista un cliente con ese nombre
+        clienteNombre = Cliente.objects.filter(nombre_cli=nombre_cli).first()
+        if(not (clienteNombre is None or (not self.instance is None and clienteNombre.id == self.instance.id))):
+            self.add_error('nombre_cli','Ya existe un cliente con ese nombre.')
+
+        #Comprobamos que se inserte una dirección para el cliente.
+        if (direccion_cli is None):
+            self.add_error('direccion_cli', 'Debe especificar una direccioón para el cliente.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        if (str(telefono_cli)[0] not in ('6','7','9') or len(str(telefono_cli)) != 9):
+            self.add_error('telefono_cli','Debe especificar un número español de 9 dígitos.')
+        
+        #Comprobamos que el numero no exista en otro cliente.
+        clienteTelefono = Cliente.objects.filter(telefono_cli=telefono_cli).first()    
+        if (not clienteTelefono is None):
+            self.add_error('telefono_cli','Ya existe un cliente con ese teléfono.')
+                
+        return self.cleaned_data
+               
+
+class BusquedaClienteForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
+    
+class BusquedaAvanzadaClienteForm(forms.Form):
+    
+    nombre_cli = forms.CharField (required=False, label="Nombre del Cliente")
+    
+    telefono_cli = forms.IntegerField (required=False, label="Teléfono del Cliente")
+    
+    direccion_cli = forms.CharField (required=False, label="Direccion del Cliente")
+    
+    productos_favoritos = forms.CharField(required=False, label="Producto Favorito del Cliente")
+    
+    votacion_prod = forms.CharField (required=False, label="Productos Votados por el Cliente")
+    
+    def clean(self):
+        
+        super().clean()
+        
+        nombre_cli = self.cleaned_data.get('nombre_cli')
+        telefono_cli = self.cleaned_data.get('telefono_cli')
+        direccion_cli = self.cleaned_data.get('direccion_cli')
+        productos_favoritos = self.cleaned_data.get('productos_favoritos')
+        votacion_prod = self.cleaned_data.get('votacion_prod')
+
+        if(nombre_cli == ""
+           and telefono_cli is None
+           and direccion_cli == ""
+           and productos_favoritos is None
+           and votacion_prod is None):
+            self.add_error('nombre_cli', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('telefono_cli', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('direccion_cli', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('productos_favoritos', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('votacion_prod', 'Debe introducir al menos un valor en un campo del formulario')
+                    
+        else:
+            if(nombre_cli != "" and len(nombre_cli) < 3):
+                self.add_error('nombre_cli', 'Debe introducir al menos 3 caracteres')
+                
+            if(direccion_cli != "" and len(direccion_cli) < 10):
+                self.add_error('direccion_cli', 'Debe introducir al menos 10 caracteres')
+                
+        return self.cleaned_data
+        
+    
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
     
     
     

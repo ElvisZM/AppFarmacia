@@ -2,4 +2,10 @@
     <h2>Nombre Cliente: {{ cliente.nombre_cli|truncatewords:1 }}</h2>
     <h2>Telefono Cliente: {{ cliente.telefono_cli }}</h2>
     <h2>Direccion Cliente: {{ cliente.direccion_cli|truncatewords:3 }}</h2>
+    {% for productofav in cliente.productos_favoritos.all %}
+        <h2>Producto Favorito: {{ productofav.nombre_prod }}</h2>
+    {% endfor %}
+    {% for productovoto in cliente.votacion_prod.all %}
+        <h2>Producto Votado: {{ productovoto.nombre_prod|truncatewords:3 }}<!-- :{{productovoto.voto_producto.puntuacion}}</h2>   -->
+    {% endfor%}
 </div>

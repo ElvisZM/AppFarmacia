@@ -37,7 +37,7 @@
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'gerente_editar' gerente.id %}" ><span class="text-dark">Editar Gerente {% bs_icon 'pencil' %}</span></a>
+                                <a class="text-decoration-none" href="{% url 'gerente_editar' gerente.id %}" ><span class="text-dark">Editar Gerente</span></a>
                         </button>
                     </div>
 
@@ -45,7 +45,7 @@
                         <form action = "{% url 'gerente_eliminar' gerente.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar este gerente{% bs_icon 'trash' %}</span>
+                                <span>Eliminar este gerente</span>
                             </button>
                         </form>
                     </div>

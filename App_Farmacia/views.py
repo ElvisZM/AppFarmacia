@@ -637,6 +637,137 @@ def votacion_eliminar(request, votacion_id):
 
 
 
+def crear_cliente_modelo(formulario):
+        
+    cliente_creado = False
+    #Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            #Guarda el producto en la base de datos
+            formulario.save()
+            cliente_creado = True
+        except:
+            pass
+    return cliente_creado                
+
+def cliente_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario = request.POST
+    
+    formulario = ClienteModelForm(datosFormulario)
+    if (request.method == 'POST'):
+        cliente_creado = crear_cliente_modelo(formulario)
+        
+        if (cliente_creado):
+            messages.success(request, 'Se ha añadido el cliente '+formulario.cleaned_data.get('nombre_cli')+" correctamente")
+            return redirect("lista_clientes")       
+
+    return render(request, 'cliente/create_cliente.html', {'formulario':formulario})
+
+def cliente_buscar(request):
+    formulario = BusquedaClienteForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        clientes = Cliente.objects.all()
+        clientes = clientes.filter(nombre_cli__contains=texto).all()
+        return render(request, 'cliente/cliente_busqueda.html',{'clientes_mostrar':clientes, 'texto_busqueda':texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+    
+def cliente_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaClienteForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSclientes = Cliente.objects.all()
+            
+            nombre_cli = formulario.cleaned_data.get('nombre_cli')
+            telefono_cli = formulario.cleaned_data.get('telefono_cli')
+            direccion_cli = formulario.cleaned_data.get('direccion_cli')
+            productos_favoritos = formulario.cleaned_data.get('productos_favoritos')
+            votacion_prod = formulario.cleaned_data.get('votacion_prod')
+                
+            if (nombre_cli != ""):
+                QSclientes = QSclientes.filter(nombre_cli__contains=nombre_cli)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_cli+"\n"
+                
+            if (not telefono_cli is None):
+                QSclientes = QSclientes.filter(telefono_cli=telefono_cli)
+                mensaje_busqueda += "Que el teléfono sea "+telefono_cli+"\n"
+            
+            if (direccion_cli != ""):
+                mensaje_busqueda += f"Que la direccion sea o contenga la palabra "+direccion_cli+"\n"
+                QSclientes = QSclientes.filter(direccion_cli__contains = direccion_cli)
+                
+            if (productos_favoritos != ""):
+                QSclientes = QSclientes.filter(productos_favoritos__nombre_prod__contains=productos_favoritos)
+                mensaje_busqueda += "Que el producto favorito sea o que contenga la palabra "+productos_favoritos+"\n"
+            
+            if (votacion_prod != ""):
+                QSclientes = QSclientes.filter(votacion_prod__nombre_prod__contains=votacion_prod)
+                mensaje_busqueda += "Que el producto que ha votado sea o que contenga la palabra "+votacion_prod+"\n"
+            
+            clientes = QSclientes.all()
+            
+            return render(request, 'cliente/cliente_busqueda.html', {'clientes_mostrar':clientes, 'texto_busqueda':mensaje_busqueda})  
+                      
+    else:
+        formulario = BusquedaAvanzadaClienteForm(None)
+        
+    return render(request, 'cliente/busqueda_avanzada_cliente.html',{'formulario':formulario})    
+    
+    
+def cliente_editar(request, cliente_id):
+    cliente = Cliente.objects.get(id=cliente_id)
+    
+    datosFormulario = None
+    
+    if (request.method == "POST"):
+        datosFormulario = request.POST
+        
+    formulario = ClienteModelForm(datosFormulario, instance = cliente)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                messages.success(request, f"Se ha editado el cliente {cliente.nombre_cli} correctamente")
+                return redirect('lista_clientes')
+            except Exception as error:
+                pass
+    return render(request, 'cliente/actualizar_cliente.html', {'formulario': formulario, 'cliente':cliente})    
+        
+    
+def cliente_eliminar(request, cliente_id):
+    cliente = Cliente.objects.get(id=cliente_id)
+    try:
+        cliente.delete()
+        messages.success(request, f"Se ha eliminado el cliente {cliente.nombre_cli} correctamente.")
+    except:
+        pass
+    return redirect('lista_clientes')
+
+
+
+
+
+
+
+
+
 
 
 
@@ -787,7 +918,10 @@ def promocion_eliminar(request, promocion_id):
 
 
 
-
+def clientes_lista(request):
+    clientes = Cliente.objects.prefetch_related('productos_favoritos', 'votacion_prod').all()
+    
+    return render(request, 'cliente/lista_clientes.html', {'clientes': clientes})
 
 
 def promociones_lista(request):
@@ -894,29 +1028,16 @@ def ultimo_voto_producto_concreto(request, producto_id):
     return render(request, 'votacion/ultimo_voto.html', {'votacion':ultimo_voto})
 
 
-#def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
-    
-    cliente = Cliente.objects.prefetch_related("productos_favoritos", "votacion_prod").get(pk=cliente_id)
-    productos_con_votos = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod").filter(votacion_prod__puntuacion=3, votacion_prod__voto_cliente=cliente)
-    
-    return render(request, 'producto/productos_con_3.html', {'productos_con_votos': productos_con_votos})
 
-
-    from django.db.models import F
 
 def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
     cliente = Cliente.objects.prefetch_related("productos_favoritos", "votacion_prod").get(pk=cliente_id)
-
-    # Filtrar por votos con puntuación 3 y cliente específico
-    productos_con_votos = Producto.objects.filter(votacion_prod__puntuacion=3, votacion_prod__voto_cliente=cliente)
-
-    # Seleccionar campos relacionados
-    productos_con_votos = productos_con_votos.select_related("farmacia_prod").prefetch_related("prov_sum_prod")
-
+    
+    votaciones_cliente = Votacion.objects.filter(voto_cliente=cliente, puntuacion=3).values_list('id', flat=True)
+    
+    productos_con_votos = Producto.objects.filter(votacion_prod__in=votaciones_cliente).all()
+    
     return render(request, 'producto/productos_con_3.html', {'productos_con_votos': productos_con_votos})
-
-
-
 
     
 def clientes_nunca_votaron(request):

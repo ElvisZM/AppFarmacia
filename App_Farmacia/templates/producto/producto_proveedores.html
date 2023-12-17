@@ -45,23 +45,6 @@
                 {% else %}
                     <h2>No hay proveedores para este producto.</h2>
                 {% endif %}
-                <div class="row btn-group">             
-                    <div class="mb-2 ">
-                        <button type="button" 
-                                class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto {% bs_icon 'pencil' %}</span></a>
-                        </button>
-                    </div>
-
-                    <div class="">
-                        <form action = "{% url 'producto_eliminar' producto.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar este producto{% bs_icon 'trash' %}</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
             {% endfor %}
         </div>
     {% block busqueda %}

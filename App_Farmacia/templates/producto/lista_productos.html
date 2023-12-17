@@ -43,7 +43,7 @@
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto {% bs_icon 'pencil' %}</span></a>
+                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto</span></a>
                         </button>
                     </div>
 
@@ -51,7 +51,7 @@
                         <form action = "{% url 'producto_eliminar' producto.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar Producto{% bs_icon 'trash' %}</span>
+                                <span>Eliminar Producto</span>
                             </button>
                         </form>
                     </div>

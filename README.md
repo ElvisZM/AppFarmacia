@@ -4,13 +4,16 @@ Aplicacion Web - Creacion URLs, Views & QuerySet
 
 LAS URLS:
 
-    Se encuentran en App_Farmacia/urls.py y abarcan las lineas 61 y 71
-
     create: promocion/create
+
     buscar: promocion/buscar/
+
     buscar avanzado: promocion/buscar/avanzado/
+
     editar: promocion/editar/<int:promocion_id>
+
     eliminar: promocion/eliminar/<int:promocion_id>
+
     lista: promociones/lista
 
 LAS VIEWS:
