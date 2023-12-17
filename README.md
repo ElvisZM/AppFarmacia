@@ -1,8 +1,9 @@
 # AppFarmacia
-Aplicacion Web - Creacion URLs, Views & QuerySet
+
+# APLICACION WEB | PROYECTO DE FIN DE GRADO - 2ºDAW
 
 
-CRUD | "PRODUCTOS"
+# CRUD | "PRODUCTOS"
 
 
 
@@ -28,7 +29,6 @@ URLs y VIEWS:
 
         path('producto/eliminar/<int:producto_id>',views.producto_eliminar, name='producto_eliminar')
 
-
     * LISTA:
 
         path('productos/lista',views.productos_lista, name='lista_productos')
@@ -51,7 +51,7 @@ TEMPLATES:
 
     * EDITAR:
 
-        'producto/actualizar.html'
+        'producto/actualizar_promocion.html'
 
     * ELIMINAR Y LISTA:
 
@@ -87,10 +87,96 @@ VALIDACIONES:
 
 
 
+# CRUD | "GERENTES"
 
 
 
-EXAMEN CRUD | "PROMOCION"
+URLs y VIEWS:
+
+    * CREATE:
+        
+        path('gerente/create',views.gerente_create, name='gerente_create')
+
+    * BUSCAR:
+
+        path('gerente/buscar/',views.gerente_buscar, name='gerente_buscar')
+
+    * BUSQUEDA AVANZADA:
+        
+        path('gerente/buscar/avanzado/',views.gerente_buscar_avanzado, name='gerente_buscar_avanzado')
+
+    * EDITAR:
+
+        path('gerente/editar/<int:gerente_id>',views.gerente_editar, name='gerente_editar')
+
+    * ELIMINAR:
+
+        path('gerente/eliminar/<int:gerente_id>',views.gerente_eliminar, name='gerente_eliminar')
+
+    * LISTA:
+
+       path('gerentes/lista',views.gerentes_lista, name='lista_gerentes')
+
+
+TEMPLATES:
+
+
+    * CREATE:
+
+        'gerente/create_gerente.html'
+
+    * BUSQUEDA RÁPIDA:
+
+        'gerente/gerente_busqueda.html'
+
+    * BUSQUEDA AVANZADA:
+
+        'gerente/busqueda_avanzada_gerente.html'
+
+    * EDITAR:
+
+        'gerente/actualizar_gerente.html'
+
+    * ELIMINAR Y LISTA:
+
+        'gerente/lista_gerentes.html'
+
+
+FORMULARIOS:
+
+
+    * CREATE:
+    
+        class GerenteModelForm(ModelForm)
+
+    * BÚSQUEDA RÁPIDA:
+
+        class BusquedaGerenteForm(forms.Form)
+
+    * BÚSQUEDA AVANZADA:
+    
+        class BusquedaAvanzadaGerenteForm(forms.Form)
+
+
+VALIDACIONES:
+
+
+    * Comprobamos que no exista un gerente con ese nombre
+
+    * Comprobamos que se inserte un correo
+
+    * Comprobamos que la fecha de inicio de gestion no sea mayor a la de hoy.
+
+    * Comprobamos que inserte una farmacia a gestionar 
+
+    * Comprobamos que la farmacia no tenga ya a un gerente que la gestione
+
+
+
+
+
+
+# EXAMEN CRUD | "PROMOCION"
 
 14/12/2023
 
@@ -134,11 +220,11 @@ TEMPLATES:
 
     * BUSQUEDA AVANZADA:
 
-        'promocion/promocion_busqueda.html'
+        'promocion/busqueda_avanzada_promocion.html'
 
     * EDITAR:
 
-        'promocion/actualizar.html'
+        'promocion/actualizar_promocion.html'
 
     * ELIMINAR Y LISTA:
 
@@ -208,15 +294,18 @@ VALIDACIONES:
         producto_detalle = models.ForeignKey(Producto, on_delete=models.CASCADE)
 
 
-    Si quisieramos acceder desde compra a un dato que no esta en nuestro modelo, si es una ForeignKey, podemos acceder facilmente recorriendo el nombre de la variable que recoge esta relacion con:
+    Si quisieramos acceder desde compra a un dato que no esta en nuestro modelo, si es una ForeignKey, podemos acceder 
+    facilmente recorriendo el nombre de la variable que recoge esta relacion con:
     
     "compra.empleado_compra"
 
-    Esto nos situa en el campo que la relaciona, en este caso Empleado. Una vez estamos situados en ese campo, es tan fácil como seleccionar que información queremos mostrar (en mi caso nombre del empleado) y la agregamos.
+    Esto nos situa en el campo que la relaciona, en este caso Empleado. Una vez estamos situados en ese campo, es tan 
+    fácil como seleccionar que información queremos mostrar (en mi caso nombre del empleado) y la agregamos.
 
     "compra.empleado_compra.nombre_emp"
 
-    Si quisieramos acceder desde compra a un dato de DetalleCompra, al ser esta una relación inversa, lo que se me ocurrio fue recoger todos los datos Producto mediante producto_compra y dentro de producto hacer una relacion inversa para coger los datos de DetalleCompra usando 
+    Si quisieramos acceder desde compra a un dato de DetalleCompra, al ser esta una relación inversa, lo que se me 
+    ocurrio fue recoger todos los datos Producto mediante producto_compra y dentro de producto hacer una relacion inversa para coger los datos de DetalleCompra usando 
     
     "for det in producto.detallecompra_set.all".
     

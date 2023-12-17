@@ -240,8 +240,7 @@ class GerenteModelForm(ModelForm):
         fechaHoy = date.today()
         if fechaHoy < fecha_inicio_gestion:
             self.add_error('fecha_inicio_gestion','La fecha de inicio de gestión no puede ser mayor a la fecha actual.')
-            
-            
+               
         #Comprobamos que inserte una farmacia a gestionar    
         if (gerente_farm is None):
             self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
