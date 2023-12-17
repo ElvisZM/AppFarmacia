@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from django.db.models import Q, Prefetch
 from django.views.defaults import page_not_found
-from datetime import datetime, date
+from datetime import datetime as dt, date
 from django.db.models import Avg
 from .forms import *
 from django.contrib import messages
@@ -1003,8 +1003,8 @@ def productos_disponibles_farmacia_especifica(request, id_farmacia):
     return render(request, 'farmacia/farmaciayproductos.html', {'productos':productos, 'farmacia': farmacia})
 
 def compras_entre_fechas(request, fecha_inicio, fecha_fin):
-    fecha_inicio = datetime.strptime(fecha_inicio, '%Y-%m-%d')
-    fecha_fin = datetime.strptime(fecha_fin, '%Y-%m-%d')
+    fecha_inicio = dt.strptime(fecha_inicio, '%Y-%m-%d').date()
+    fecha_fin = dt.strptime(fecha_fin, '%Y-%m-%d').date()
     compras = Compra.objects.select_related('cliente_compra', 'empleado_compra').prefetch_related('producto_compra').filter(fecha_compra__gte=fecha_inicio, fecha_compra__lte=fecha_fin)
     return render(request, 'compra/compra_entre_fechas.html', {'compras':compras})
 
