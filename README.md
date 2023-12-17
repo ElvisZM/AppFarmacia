@@ -11,11 +11,11 @@ URLs y VIEWS:
         
         path('producto/create',views.producto_create,name='producto_create')
 
-    * BUSCAR:
+    * BÚSQUEDA RÁPIDA:
 
         path('producto/buscar/',views.producto_buscar, name='producto_buscar')
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
         
         path('producto/buscar/avanzado/',views.producto_buscar_avanzado, name='producto_buscar_avanzado'),
 
@@ -95,11 +95,11 @@ URLs y VIEWS:
         
         path('gerente/create',views.gerente_create, name='gerente_create')
 
-    * BUSCAR:
+    * BÚSQUEDA RÁPIDA:
 
         path('gerente/buscar/',views.gerente_buscar, name='gerente_buscar')
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
         
         path('gerente/buscar/avanzado/',views.gerente_buscar_avanzado, name='gerente_buscar_avanzado')
 
@@ -123,11 +123,11 @@ TEMPLATES:
 
         'gerente/create_gerente.html'
 
-    * BUSQUEDA RÁPIDA:
+    * BÚSQUEDA RÁPIDA:
 
         'gerente/gerente_busqueda.html'
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
 
         'gerente/busqueda_avanzada_gerente.html'
 
@@ -181,11 +181,11 @@ URLs y VIEWS:
         
         path('farmacia/create',views.farmacia_create, name='farmacia_create'),
 
-    * BUSCAR:
+    * BÚSQUEDA RÁPIDA:
 
         path('farmacia/buscar/',views.farmacia_buscar, name='farmacia_buscar'),
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
         
         path('farmacia/buscar/avanzado/',views.farmacia_buscar_avanzado, name='farmacia_buscar_avanzado'),
 
@@ -209,11 +209,11 @@ TEMPLATES:
 
         'farmacia/create_farmacia.html'
 
-    * BUSQUEDA RÁPIDA:
+    * BÚSQUEDA RÁPIDA:
 
         'farmacia/farmacia_busqueda.html'
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
 
         'farmacia/busqueda_avanzada_farmacia.html'
 
@@ -267,11 +267,11 @@ URLs y VIEWS:
         
         path('empleado/create',views.empleado_create, name='empleado_create'),
 
-    * BUSCAR:
+    * BÚSQUEDA RÁPIDA:
 
         path('empleado/buscar/',views.empleado_buscar, name='empleado_buscar'),
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
         
         path('empleado/buscar/avanzado/',views.empleado_buscar_avanzado, name='empleado_buscar_avanzado'),
 
@@ -295,11 +295,11 @@ TEMPLATES:
 
         'empleado/create_empleado.html'
 
-    * BUSQUEDA RÁPIDA:
+    * BÚSQUEDA RÁPIDA:
 
         'empleado/empleado_busqueda.html'
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
 
         'empleado/busqueda_avanzada_empleado.html'
 
@@ -351,11 +351,11 @@ URLs y VIEWS:
         
         path('votacion/create',views.votacion_create, name='votacion_create'),
 
-    * BUSCAR:
+    * BÚSQUEDA RÁPIDA:
 
         path('votacion/buscar/',views.votacion_buscar, name='votacion_buscar'),
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
         
         path('votacion/buscar/avanzado/',views.votacion_buscar_avanzado, name='votacion_buscar_avanzado'),
 
@@ -379,11 +379,11 @@ TEMPLATES:
 
         'votacion/create_votacion.html'
 
-    * BUSQUEDA RÁPIDA:
+    * BÚSQUEDA RÁPIDA:
 
         'votacion/votacion_busqueda.html'
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
 
         'votacion/busqueda_avanzada_votacion.html'
 
@@ -433,11 +433,11 @@ URLs y VIEWS:
         
         path('cliente/create',views.cliente_create, name='cliente_create'),
 
-    * BUSCAR:
+    * BÚSQUEDA RÁPIDA:
 
         path('cliente/buscar/',views.cliente_buscar, name='cliente_buscar'),
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
         
         path('cliente/buscar/avanzado/',views.cliente_buscar_avanzado, name='cliente_buscar_avanzado'),
 
@@ -461,11 +461,11 @@ TEMPLATES:
 
         'cliente/create_cliente.html'
 
-    * BUSQUEDA RÁPIDA:
+    * BÚSQUEDA RÁPIDA:
 
         'cliente/cliente_busqueda.html'
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
 
         'cliente/busqueda_avanzada_cliente.html'
 
@@ -519,11 +519,11 @@ URLs y VIEWS:
         
         path('promocion/create',views.promocion_create, name='promocion_create')
 
-    * BUSCAR:
+    * BÚSQUEDA RÁPIDA:
 
         path('promocion/buscar/',views.promocion_buscar, name='promocion_buscar')
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
         
         path('promocion/buscar/avanzado/',views.promocion_buscar_avanzado, name='promocion_buscar_avanzado')
 
@@ -547,11 +547,11 @@ TEMPLATES:
 
         'promocion/create_promocion.html'
 
-    * BUSQUEDA RÁPIDA:
+    * BÚSQUEDA RÁPIDA:
 
         'promocion/promocion_busqueda.html'
 
-    * BUSQUEDA AVANZADA:
+    * BÚSQUEDA AVANZADA:
 
         'promocion/busqueda_avanzada_promocion.html'
 
