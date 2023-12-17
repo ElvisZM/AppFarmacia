@@ -4,7 +4,8 @@ Aplicacion Web - Creacion URLs, Views & QuerySet
 
 LAS URLS:
 
-    create: promocion/create
+    CREATE:
+            promocion/create
 
     buscar: promocion/buscar/
 
