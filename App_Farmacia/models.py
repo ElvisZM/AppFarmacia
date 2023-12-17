@@ -2,9 +2,25 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import AbstractUser
 
 
 # Create your models here.
+
+class Usuario(AbstractUser):
+    ADMINISTRADOR = 1
+    CLIENTE = 2
+    EMPLEADO = 3
+    GERENTE = 4
+    ROLES = (
+        (ADMINISTRADOR, 'administrador'),
+        (CLIENTE, 'cliente'),
+        (EMPLEADO, 'empleado'),
+        (GERENTE, 'gerente'),
+    )
+    
+    rol = models.PositiveSmallIntegerField(choices=ROLES, default=1)
+
 
 class Farmacia(models.Model):
     nombre_farm = models.CharField(max_length=200)
@@ -12,12 +28,14 @@ class Farmacia(models.Model):
     telefono_farm = models.IntegerField(null=True, blank=True)
 
 class Gerente(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     nombre_ger = models.CharField(max_length=200)
     correo = models.EmailField(blank=True)
     fecha_inicio_gestion = models.DateField(null=False, blank=False)
     gerente_farm = models.OneToOneField(Farmacia, on_delete=models.CASCADE)
 
 class Empleado(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     nombre_emp = models.CharField(max_length=200)
     cargo = models.CharField(max_length=200)
     salario = models.FloatField(default=1020.40, db_column="salario_empleado")
@@ -42,6 +60,7 @@ class SuministroProducto(models.Model):
     proveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
 
 class Cliente(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     nombre_cli = models.CharField(max_length=200)
     telefono_cli = models.IntegerField(null=True, blank=True, )
     direccion_cli = models.CharField(max_length=200, null=True, blank=True)

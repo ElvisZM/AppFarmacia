@@ -4,6 +4,8 @@ from .import views
 urlpatterns = [
     path('',views.index,name='index'),
     
+    path('registrar',views.registrar_usuario, name='registrar_usuario'),
+    
     path('producto/create',views.producto_create,name='producto_create'),
     
     path('producto/buscar/',views.producto_buscar, name='producto_buscar'),
@@ -124,7 +126,5 @@ urlpatterns = [
     path('clientes_nunca_votaron',views.clientes_nunca_votaron, name='clientes_nunca_votaron'),
     
     path('cuentas_bancarias_propietario_nombre/<str:nombre_propietario>/',views.cuentas_bancarias_propietario_nombre, name='cuentas_bancarias'),
-    
-    path('signup',views.signup, name='signup'),
     
 ]

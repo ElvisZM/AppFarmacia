@@ -5,8 +5,21 @@ from decimal import Decimal
 from datetime import date
 import datetime
 from django.forms.widgets import DateInput
-
 from bootstrap_datepicker_plus.widgets import DatePickerInput
+from django.contrib.auth.forms import UserCreationForm
+
+
+class RegistroForm(UserCreationForm):
+    roles = (
+                (Usuario.CLIENTE, 'cliente'),
+                (Usuario.EMPLEADO, 'empleado'),
+                (Usuario.GERENTE, 'gerente'),
+    )
+    rol = forms.ChoiceField(choices=roles)
+    class Meta:
+        model = Usuario
+        fields = ('username', 'email', 'password1', 'password2', 'rol')
+
 
 class ProductoModelForm(ModelForm):
     class Meta:

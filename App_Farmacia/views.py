@@ -8,13 +8,43 @@ from datetime import datetime as dt, date
 from django.db.models import Avg
 from .forms import *
 from django.contrib import messages
+from django.contrib.auth import login
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.models import Group
 
 
 def index(request):
+    if(not "fecha_inicio" in request.session):
+        request.session["fecha_inicio"] = dt.now().strftime("%d/%m/%Y %H:%M")
+    
     return render(request, 'index.html')
 
-def signup(request):
-    return render(request, 'signup.html')
+def borrar_sesion(request):
+    del request.session["fecha_inicio"]
+    
+    return render(request, 'index.html')
+
+def registrar_usuario(request):
+    
+    if request.method == "POST":
+        formulario = RegistroForm(request.POST)
+        if formulario.is_valid():
+            user = formulario.save()
+            rol = int(formulario.cleaned_data.get('rol'))
+            if (rol == Usuario.CLIENTE):
+                cliente = Cliente.objects.create(usuario = user)
+                cliente.save()
+            if (rol == Usuario.EMPLEADO):
+                empleado = Empleado.objects.create(usuario = user)
+                empleado.save()
+            if (rol == Usuario.GERENTE):
+                gerente = Gerente.objects.create(usuario = user)
+                gerente.save()
+        
+        else:
+            formulario = RegistroForm()
+    
+    return render(request, 'registration/signup.html', {'formulario': formulario})
 
 
 # PARA FORMULARIOS 
@@ -923,7 +953,7 @@ def promocion_eliminar(request, promocion_id):
 
 
 def clientes_lista(request):
-    clientes = Cliente.objects.prefetch_related('productos_favoritos', 'votacion_prod').all()
+    clientes = Cliente.objects.select_related('usuario').prefetch_related('productos_favoritos', 'votacion_prod').all()
     
     return render(request, 'cliente/lista_clientes.html', {'clientes': clientes})
 
@@ -940,7 +970,7 @@ def votaciones_lista(request):
     return render(request, 'votacion/lista_votaciones.html', {'votaciones': votaciones})
 
 def empleados_lista(request):
-    empleados = Empleado.objects.select_related('farm_emp').all()
+    empleados = Empleado.objects.select_related('farm_emp', 'usuario').all()
     
     return render(request, 'empleado/lista_empleados.html', {'empleados':empleados})
 
@@ -950,7 +980,7 @@ def farmacias_lista(request):
     return render(request, 'farmacia/lista_farmacias.html', {'farmacias':farmacias})
 
 def gerentes_lista(request):
-    gerentes = Gerente.objects.prefetch_related('gerente_farm').all()
+    gerentes = Gerente.objects.select_related('gerente_farm','usuario').all()
     
     return render(request, 'gerente/lista_gerentes.html', {'gerentes':gerentes})
 
@@ -966,7 +996,7 @@ def farmacia_ordenada_fecha(request):
     return render(request, 'farmacia/farmaciaydatos.html', {'farmacias_fecha':datos})
 
 def gerente_nombre(request, nombre_introducido):
-    gerentes = Gerente.objects.select_related('gerente_farm').filter(nombre_ger__contains=nombre_introducido)
+    gerentes = Gerente.objects.select_related('gerente_farm', 'usuario').filter(nombre_ger__contains=nombre_introducido)
     return render(request, 'gerente/gerentes_filtrado_nombre.html', {'gerentes':gerentes})
 
 def farmacias_con_gerentes(request):
@@ -990,11 +1020,11 @@ def detalle_compra_id(request, id_compra):
     return render(request, 'compra/compraydetalles_id.html', {'compras_id':compra})
 
 def clientes_productosfavoritos(request):
-    clientes = Cliente.objects.prefetch_related('productos_favoritos').all()
+    clientes = Cliente.objects.select_related('usuario').prefetch_related('productos_favoritos').all()
     return render(request, 'cliente/cliente_prod_fav.html', {'clientes':clientes})
 
 def empleado_salariosuperior(request, cantidad_salario):
-    empleados = Empleado.objects.filter(salario__gte=cantidad_salario).all()   #IMPORTANTE gte = mayor o igual que  y  lte = menor o igual que
+    empleados = Empleado.objects.select_related('usuario', 'farm_emp').filter(salario__gte=cantidad_salario).all()   #IMPORTANTE gte = mayor o igual que  y  lte = menor o igual que
     return render(request, 'empleado/empleados_salario_superior.html', {'empleados':empleados})
 
 def productos_disponibles_farmacia_especifica(request, id_farmacia):
@@ -1030,7 +1060,7 @@ def ultimo_voto_producto_concreto(request, producto_id):
 
 
 def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
-    cliente = Cliente.objects.prefetch_related("productos_favoritos", "votacion_prod").get(pk=cliente_id)
+    cliente = Cliente.objects.select_related('usuario').prefetch_related("productos_favoritos", "votacion_prod").get(pk=cliente_id)
     
     votaciones_cliente = Votacion.objects.filter(voto_cliente=cliente, puntuacion=3).values_list('id', flat=True)
     
@@ -1040,7 +1070,7 @@ def productos_con_puntuacion_3_cliente_concreto(request, cliente_id):
 
     
 def clientes_nunca_votaron(request):
-    clientes_no_votaron = Cliente.objects.prefetch_related("productos_favoritos").filter(votacion__isnull=True).all()
+    clientes_no_votaron = Cliente.objects.select_related('usuario').prefetch_related("productos_favoritos", "votacion_prod").filter(votacion__isnull=True).all()
     return render(request, 'cliente/clientesinvoto.html', {'clientes_no_votaron':clientes_no_votaron})    
 
 def cuentas_bancarias_propietario_nombre(request, nombre_propietario):
