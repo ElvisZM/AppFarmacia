@@ -1,5 +1,5 @@
 # APLICACION WEB FARMACIA | PROYECTO DE FIN DE GRADO
-## 2-DAW
+
 
 ## CRUD | "PRODUCTOS"
 
@@ -169,6 +169,341 @@ VALIDACIONES:
 
     * Comprobamos que la farmacia no tenga ya a un gerente que la gestione
 
+
+
+## CRUD | "FARMACIAS"
+
+
+
+URLs y VIEWS:
+
+    * CREATE:
+        
+        path('farmacia/create',views.farmacia_create, name='farmacia_create'),
+
+    * BUSCAR:
+
+        path('farmacia/buscar/',views.farmacia_buscar, name='farmacia_buscar'),
+
+    * BUSQUEDA AVANZADA:
+        
+        path('farmacia/buscar/avanzado/',views.farmacia_buscar_avanzado, name='farmacia_buscar_avanzado'),
+
+    * EDITAR:
+
+        path('farmacia/editar/<int:farmacia_id>',views.farmacia_editar, name='farmacia_editar'),
+
+    * ELIMINAR:
+
+        path('farmacia/eliminar/<int:farmacia_id>',views.farmacia_eliminar, name='farmacia_eliminar'),
+
+    * LISTA:
+
+        path('farmacias/lista',views.farmacias_lista, name='lista_farmacias'),
+
+
+TEMPLATES:
+
+
+    * CREATE:
+
+        'farmacia/create_farmacia.html'
+
+    * BUSQUEDA RÁPIDA:
+
+        'farmacia/farmacia_busqueda.html'
+
+    * BUSQUEDA AVANZADA:
+
+        'farmacia/busqueda_avanzada_farmacia.html'
+
+    * EDITAR:
+
+        'farmacia/actualizar_farmacia.html'
+
+    * ELIMINAR Y LISTA:
+
+        'farmacia/lista_farmacias.html'
+
+
+FORMULARIOS:
+
+
+    * CREATE:
+    
+        class FarmaciaModelForm(ModelForm)
+
+    * BÚSQUEDA RÁPIDA:
+
+        class BusquedaFarmaciaForm(forms.Form)
+
+    * BÚSQUEDA AVANZADA:
+    
+        class BusquedaAvanzadaFarmaciaForm(forms.Form)
+
+
+VALIDACIONES:
+
+
+    * Comprobamos que no exista una farmacia con ese nombre
+
+    * Comprobamos que se inserte una dirección
+
+    * Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+
+    * Comprobamos que el numero no exista en otra farmacia.
+
+
+
+
+
+## CRUD | "EMPLEADOS"
+
+
+
+URLs y VIEWS:
+
+    * CREATE:
+        
+        path('empleado/create',views.empleado_create, name='empleado_create'),
+
+    * BUSCAR:
+
+        path('empleado/buscar/',views.empleado_buscar, name='empleado_buscar'),
+
+    * BUSQUEDA AVANZADA:
+        
+        path('empleado/buscar/avanzado/',views.empleado_buscar_avanzado, name='empleado_buscar_avanzado'),
+
+    * EDITAR:
+
+        path('empleado/editar/<int:empleado_id>',views.empleado_editar, name='empleado_editar'),
+
+    * ELIMINAR:
+
+        path('empleado/eliminar/<int:empleado_id>',views.empleado_eliminar, name='empleado_eliminar'),
+
+    * LISTA:
+
+        path('empleados/lista',views.empleados_lista, name='lista_empleados'),
+
+
+TEMPLATES:
+
+
+    * CREATE:
+
+        'empleado/create_empleado.html'
+
+    * BUSQUEDA RÁPIDA:
+
+        'empleado/empleado_busqueda.html'
+
+    * BUSQUEDA AVANZADA:
+
+        'empleado/busqueda_avanzada_empleado.html'
+
+    * EDITAR:
+
+        'empleado/actualizar_empleado.html'
+
+    * ELIMINAR Y LISTA:
+
+        'empleado/lista_empleados.html'
+
+
+FORMULARIOS:
+
+
+    * CREATE:
+    
+        class EmpleadoModelForm(ModelForm)
+
+    * BÚSQUEDA RÁPIDA:
+
+        class BusquedaEmpleadoForm(forms.Form)
+
+    * BÚSQUEDA AVANZADA:
+    
+        class BusquedaAvanzadaEmpleadoForm(forms.Form)
+
+
+VALIDACIONES:
+
+
+    * Comprobamos que no exista un empleado con ese nombre
+
+    * Comprobamos que se inserte un cargo para el empleado.
+
+    * Comprobamos que se inserte un salario para el empleado.
+
+    * Comprobamos que se le asigne una farmacia al empleado.
+
+
+
+## CRUD | "VOTACIONES"
+
+
+
+URLs y VIEWS:
+
+    * CREATE:
+        
+        path('votacion/create',views.votacion_create, name='votacion_create'),
+
+    * BUSCAR:
+
+        path('votacion/buscar/',views.votacion_buscar, name='votacion_buscar'),
+
+    * BUSQUEDA AVANZADA:
+        
+        path('votacion/buscar/avanzado/',views.votacion_buscar_avanzado, name='votacion_buscar_avanzado'),
+
+    * EDITAR:
+
+        path('votacion/editar/<int:votacion_id>',views.votacion_editar, name='votacion_editar'),
+
+    * ELIMINAR:
+
+        path('votacion/eliminar/<int:votacion_id>',views.votacion_eliminar, name='votacion_eliminar'),
+
+    * LISTA:
+
+        path('votaciones/lista',views.votaciones_lista, name='lista_votaciones'),
+
+
+TEMPLATES:
+
+
+    * CREATE:
+
+        'votacion/create_votacion.html'
+
+    * BUSQUEDA RÁPIDA:
+
+        'votacion/votacion_busqueda.html'
+
+    * BUSQUEDA AVANZADA:
+
+        'votacion/busqueda_avanzada_votacion.html'
+
+    * EDITAR:
+
+        'votacion/actualizar_votacion.html'
+
+    * ELIMINAR Y LISTA:
+
+        'votacion/lista_votaciones.html'
+
+
+FORMULARIOS:
+
+
+    * CREATE:
+    
+        class VotacionModelForm(ModelForm)
+
+    * BÚSQUEDA RÁPIDA:
+
+        class BusquedaVotacionForm(forms.Form)
+
+    * BÚSQUEDA AVANZADA:
+    
+        class BusquedaAvanzadaVotacionForm(forms.Form)
+
+
+VALIDACIONES:
+
+
+    * Comprobamos que el comentario tiene al menos 10 carácteres.
+
+    * Comprobamos que seleccione un Producto
+
+    * Comprobamos que seleccione un cliente
+
+
+
+## CRUD | "CLIENTES"
+
+
+
+URLs y VIEWS:
+
+    * CREATE:
+        
+        path('cliente/create',views.cliente_create, name='cliente_create'),
+
+    * BUSCAR:
+
+        path('cliente/buscar/',views.cliente_buscar, name='cliente_buscar'),
+
+    * BUSQUEDA AVANZADA:
+        
+        path('cliente/buscar/avanzado/',views.cliente_buscar_avanzado, name='cliente_buscar_avanzado'),
+
+    * EDITAR:
+
+        path('cliente/editar/<int:cliente_id>',views.cliente_editar, name='cliente_editar'),
+
+    * ELIMINAR:
+
+        path('cliente/eliminar/<int:cliente_id>',views.cliente_eliminar, name='cliente_eliminar'),
+
+    * LISTA:
+
+        path('clientes/lista',views.clientes_lista, name='lista_clientes'),
+
+
+TEMPLATES:
+
+
+    * CREATE:
+
+        'cliente/create_cliente.html'
+
+    * BUSQUEDA RÁPIDA:
+
+        'cliente/cliente_busqueda.html'
+
+    * BUSQUEDA AVANZADA:
+
+        'cliente/busqueda_avanzada_cliente.html'
+
+    * EDITAR:
+
+        'cliente/actualizar_cliente.html'
+
+    * ELIMINAR Y LISTA:
+
+        'cliente/lista_clientes.html'
+
+
+FORMULARIOS:
+
+
+    * CREATE:
+    
+        class ClienteModelForm(ModelForm)
+
+    * BÚSQUEDA RÁPIDA:
+
+        class BusquedaClienteForm(forms.Form)
+
+    * BÚSQUEDA AVANZADA:
+    
+        class BusquedaAvanzadaClienteForm(forms.Form)
+
+
+VALIDACIONES:
+
+
+    * Comprobamos que no exista un cliente con ese nombre
+
+    * Comprobamos que se inserte una dirección para el cliente.
+
+    * Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+
+    * Comprobamos que el numero no exista en otro cliente.
 
 
 

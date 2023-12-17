@@ -348,7 +348,7 @@ class EmpleadoModelForm(ModelForm):
             self.add_error('salario','Debe especificar un salario para el empleado.')
     
             
-        #Comprobamos que inserte una farmacia a gestionar    
+        #Comprobamos que se le asigne una farmacia al empleado.    
         if (farm_emp is None):
             self.add_error('farm_emp','Debe asignar una farmacia al empleado.')
 
