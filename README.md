@@ -269,7 +269,7 @@ VALIDACIONES:
 
 
 
-#PEQUEÑA ANOTACIÓN, NO OLVIDAR!!!:
+## PEQUEÑA ANOTACIÓN, NO OLVIDAR!!!:
 
     En las templates, se puede acceder a los datos de cualquier campo siempre y cuando tengan relacion entre ellos.
 
