@@ -2,20 +2,32 @@
 Aplicacion Web - Creacion URLs, Views & QuerySet
 
 
-LAS URLS:
+LAS URLS
 
-    CREATE:
-            promocion/create
+    * CREATE:
+        
+        promocion/create
 
-    buscar: promocion/buscar/
+    * BUSCAR:
 
-    buscar avanzado: promocion/buscar/avanzado/
+        promocion/buscar/
 
-    editar: promocion/editar/<int:promocion_id>
+    * BUSQUEDA AVANZADA:
+        
+        promocion/buscar/avanzado/
 
-    eliminar: promocion/eliminar/<int:promocion_id>
+    * EDITAR:
 
-    lista: promociones/lista
+        promocion/editar/<int:promocion_id>
+
+    * ELIMINAR:
+
+        promocion/eliminar/<int:promocion_id>
+
+    * LISTA:
+
+        promociones/lista
+
 
 LAS VIEWS:
 
