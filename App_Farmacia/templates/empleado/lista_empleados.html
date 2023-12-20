@@ -33,6 +33,7 @@
         <div class="descripcion_body-texto">    
             {% for empleado in empleados %}
                 {% include 'empleado/empleado.html' %}
+                {% if request.user.is_authenticated and perms.App_Farmacia.add_empleado %}
                 <div class="row btn-group">             
                     <div class="mb-2 ">
                         <button type="button" 
@@ -50,10 +51,13 @@
                         </form>
                     </div>
                 </div>
+                {% endif %}
                 <br>
                 <br>
                 <br>
-                <br>
+                <hr>
+            {% empty %}
+            <h2> No se encontraron datos. </h2>
             {% endfor %}
         </div>
     {% block busqueda %}

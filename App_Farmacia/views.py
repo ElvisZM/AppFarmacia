@@ -8,10 +8,11 @@ from datetime import datetime as dt, date
 from django.db.models import Avg
 from .forms import *
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import permission_required
+
 
 
 def index(request):
@@ -49,6 +50,23 @@ def registrar_usuario(request):
         formulario = RegistroForm()
     
     return render(request, 'registration/signup.html', {'formulario': formulario})
+
+def login_menu (request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Credenciales incorrectas. Por favor, inténtalo de nuevo.')
+
+            return redirect('index')
+        
+    return render(request, 'registration/login_menu.html')
 
 
 # PARA FORMULARIOS 
@@ -209,7 +227,6 @@ def farmacia_create(request):
     
     return render(request, 'farmacia/create_farmacia.html',{'formulario':formulario})
 
-@permission_required('App_Farmacia.view_farmacia')
 def farmacia_buscar(request):
     formulario = BusquedaFarmaciaForm(request.GET)
     
@@ -224,7 +241,6 @@ def farmacia_buscar(request):
         return redirect("index")
     
     
-@permission_required('App_Farmacia.view_farmacia')
 def farmacia_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -289,7 +305,7 @@ def farmacia_editar(request, farmacia_id):
     return render(request, 'farmacia/actualizar_farmacia.html', {'formulario': formulario, 'farmacia':farmacia})    
     
     
-    
+
 @permission_required('App_Farmacia.delete_farmacia')
 def farmacia_eliminar(request, farmacia_id):
     farmacia = Farmacia.objects.get(id=farmacia_id)
@@ -526,7 +542,7 @@ def empleado_buscar_avanzado(request):
         formulario = BusquedaAvanzadaEmpleadoForm(None)
         
     return render(request, 'empleado/busqueda_avanzada_empleado.html',{'formulario':formulario})    
-    
+  
     
 @permission_required('App_Farmacia.change_empleado')
 def empleado_editar(request, empleado_id):
@@ -551,7 +567,6 @@ def empleado_editar(request, empleado_id):
                 pass
     return render(request, 'empleado/actualizar_empleado.html', {'formulario': formulario, 'empleado':empleado})    
         
-    
 @permission_required('App_Farmacia.delete_empleado')
 def empleado_eliminar(request, empleado_id):
     empleado = Empleado.objects.get(id=empleado_id)
@@ -595,7 +610,6 @@ def votacion_create(request):
 
     return render(request, 'votacion/create_votacion.html', {'formulario':formulario})
 
-@permission_required('App_Farmacia.view_votacion')
 def votacion_buscar(request):
     formulario = BusquedaVotacionForm(request.GET)
     
@@ -610,7 +624,6 @@ def votacion_buscar(request):
         return redirect("index")
     
     
-@permission_required('App_Farmacia.view_votacion')
 def votacion_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -794,8 +807,7 @@ def cliente_buscar_avanzado(request):
         
     return render(request, 'cliente/busqueda_avanzada_cliente.html',{'formulario':formulario})    
     
-    
-@permission_required('App_Farmacia.change_cliente')
+@permission_required('App_Farmacia.change_cliente')    
 def cliente_editar(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     
@@ -818,8 +830,7 @@ def cliente_editar(request, cliente_id):
                 pass
     return render(request, 'cliente/actualizar_cliente.html', {'formulario': formulario, 'cliente':cliente})    
         
-    
-@permission_required('App_Farmacia.delete_cliente')
+@permission_required('App_Farmacia.delete_cliente')      
 def cliente_eliminar(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     try:
@@ -877,7 +888,6 @@ def promocion_create(request):
 
     return render(request, 'promocion/create_promocion.html', {'formulario':formulario})
 
-@permission_required('App_Farmacia.view_promocion')
 def promocion_buscar(request):
     formulario = BusquedaPromocionForm(request.GET)
     
@@ -892,7 +902,6 @@ def promocion_buscar(request):
         return redirect("index")
     
     
-@permission_required('App_Farmacia.view_promocion')
 def promocion_buscar_avanzado(request):
     
     if (len(request.GET) > 0):
@@ -1006,7 +1015,6 @@ def promociones_lista(request):
     return render(request, 'promocion/lista_promociones.html', {'promociones': promociones})
 
 
-@permission_required('App_Farmacia.view_votacion')
 def votaciones_lista(request):
     votaciones = Votacion.objects.select_related('voto_producto', 'voto_cliente').all()
     
@@ -1018,7 +1026,6 @@ def empleados_lista(request):
     
     return render(request, 'empleado/lista_empleados.html', {'empleados':empleados})
 
-@permission_required('App_Farmacia.view_farmacia')
 def farmacias_lista(request):
     farmacias = Farmacia.objects.all()
     

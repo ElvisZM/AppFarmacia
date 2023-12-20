@@ -5,7 +5,7 @@
     <div class="text-center">
         <h6>Fecha Inicio: {{ request.session.fecha_inicio}}</h5>
         {% if request.user.is_authenticated %}
-        <h5>¡Hola, {{ request.user.first_name }}!</h5>
+        <h5>¡Hola, {{ request.user.username }}!</h5>
         {% endif %}
     </div>
     <div class="header">
@@ -37,7 +37,7 @@
                 </li>
                 <li><a href="#">Lista de C.R.U.D.S</a>
                     <ul class="listacruds">
-                        {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}
+                        {% if request.user.is_authenticated and perms.App_Farmacia.add_gerente %}
                         <li><a href="#">Gerentes</a>
                             <ul class="submenulista">
                                 <li><a href="{% url 'gerente_create' %}">Crear Gerente</a></li>
@@ -48,53 +48,47 @@
                         {% endif %}
                         <li><a href="#">Farmacias</a>
                             <ul class="submenulista">
-                                {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}
+                                {% if request.user.is_authenticated and perms.App_Farmacia.add_farmacia %}
                                 <li><a href="{% url 'farmacia_create' %}">Crear Farmacia</a></li>
                                 {% endif %}
-                                {% if not request.user.is_authenticated %}
                                 <li><a href="{% url 'farmacia_buscar_avanzado' %}">Busq. Avanzada Farmacia</a></li>
                                 <li><a href="{% url 'lista_farmacias' %}">Ver Farmacias</a></li>
-                                {% endif %}
                             </ul>
                         </li>
+                        {% if request.user.is_authenticated and perms.App_Farmacia.add_empleado%}
                         <li><a href="#">Empleados</a>
                             <ul class="submenulista">
-                                {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}
                                 <li><a href="{% url 'empleado_create' %}">Crear Empleado</a></li>
                                 <li><a href="{% url 'empleado_buscar_avanzado' %}">Busq. Avanzada Empleado</a></li>
                                 <li><a href="{% url 'lista_empleados' %}">Ver Empleados</a></li>
-                                {% endif %}
                             </ul>
                         </li>
+                        {% endif %}
                         <li><a href="#">Votaciones</a>
                             <ul class="submenulista">
                                 {% if request.user.is_authenticated %}
                                 <li><a href="{% url 'votacion_create' %}">Crear Votacion</a></li>
+                                {% endif %}
                                 <li><a href="{% url 'votacion_buscar_avanzado' %}">Busq. Avanzada Votaciones</a></li>
                                 <li><a href="{% url 'lista_votaciones' %}">Ver Votaciones</a></li>
-                                {% endif %}
                             </ul>
                         </li>
+                        {% if request.user.is_authenticated and perms.App_Farmacia.add_cliente%}
                         <li><a href="#">Clientes</a>
                             <ul class="submenulista">
-                                {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}
                                 <li><a href="{% url 'cliente_create' %}">Crear Cliente</a></li>
-                                {% endif %}
-                                {% if request.user.is_authenticated %}
                                 <li><a href="{% url 'cliente_buscar_avanzado' %}">Busq. Avanzada Clientes</a></li>
                                 <li><a href="{% url 'lista_clientes' %}">Ver Clientes</a></li>
-                                {% endif %}
                             </ul>
                         </li>
+                        {% endif %}
                         <li><a href="#">EXAMEN - PROMOCION</a>
                             <ul class="submenulista">
                                 {% if request.user.is_authenticated and perms.App_Farmacia.add_promocion %}
                                 <li><a href="{% url 'promocion_create' %}">Crear Promocion</a></li>
                                 {% endif %}
-                                {% if not request.user.is_authenticated %}
                                 <li><a href="{% url 'promocion_buscar_avanzado' %}">Busq. Avanzada Promociones</a></li>
                                 <li><a href="{% url 'lista_promociones' %}">Ver Promociones</a></li>
-                                {% endif %}
                             </ul>
                         </li>
                     </ul>
@@ -104,10 +98,8 @@
                         {% if request.user.is_authenticated and perms.App_Farmacia.add_producto %}
                         <li><a href="{% url 'producto_create' %}">Crear Producto</a></li>
                         {% endif %}
-                        {% if not request.user.is_authenticated%}
                         <li><a href="{% url 'producto_buscar_avanzado' %}">Busq. Avanzada Producto</a></li>
                         <li><a href="{% url 'lista_productos' %}">Ver Productos</a></li>
-                        {% endif %}
                     </ul>
                 </li>
                 <!-- Elemento del menú "Busqueda" -->
@@ -117,20 +109,11 @@
                     <input name="textoBusqueda" class="form-control" type="search" placeholder="Busque aquí su producto" aria-label="Search">
                     <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
                     </form>
-                </li>
-     
-                
+                </li>           
                 <li class="login mt-2"><a href="#"><i class="fa-regular fa-user"></i> Cuenta </a>
                     <ul class="submenulogin">
                         {% if not request.user.is_authenticated %}
-                        <form action= "{% url 'login' %}" method="post">
-                            {% csrf_token %}
-                            <li><i class="fa-solid fa-user"></i> </li>
-                            <li><input type="text" name="username" id="usuario" placeholder="Usuario"></li>
-                            <li><i class="fa-solid fa-lock"></i> </li>
-                            <li><input type="password" name="password" id="contraseña" placeholder="********"></li>
-                            <li><button type="submit">Acceder</button></li>
-                        </form>
+                        {% include 'registration/login_menu.html' %}
                         <li><h4>¿Nuevo cliente?</h4></li>
                         <li><p>Crea una cuenta en segundos.</p></li>
                         <li><a href="{% url 'registrar_usuario' %}"><button>Crear Cuenta</button></a></li>
@@ -144,7 +127,7 @@
                         </li>
                         {% endif%}
                         {% if request.user.is_authenticated %}
-                        <li><a class="btn btn-outline-warning" href="{% url 'logout' %}">Desconectarse</a></li>
+                        <li><a class="desconectarse mt-4" href="{% url 'logout' %}"><button>Desconectarse</button></a></li>
                         {% endif %}
                     </ul>
                 </li>

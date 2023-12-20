@@ -54,7 +54,8 @@
                 <br>
                 <br>
                 <br>
-            
+            {% empty %}
+            <h2> No se encontraron datos. </h2>
             {% endfor %}
         </div>
     {% block busqueda %}

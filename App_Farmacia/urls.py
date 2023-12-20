@@ -6,6 +6,8 @@ urlpatterns = [
     
     path('registrar',views.registrar_usuario, name='registrar_usuario'),
     
+    path('login_menu',views.login_menu, name='login_menu'),
+    
     path('producto/create',views.producto_create,name='producto_create'),
     
     path('producto/buscar/',views.producto_buscar, name='producto_buscar'),
