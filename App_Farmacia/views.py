@@ -70,7 +70,6 @@ def login_menu (request):
 
 
 # PARA FORMULARIOS 
-@permission_required('App_Farmacia.add_producto')
 def crear_producto_modelo(formulario):
         
     producto_creado = False
@@ -198,7 +197,6 @@ def producto_eliminar(request, producto_id):
         pass
     return redirect('lista_productos')
 
-@permission_required('App_Farmacia.add_farmacia')
 def crear_farmacia_modelo(formulario):
     farmacia_creada = False
     
@@ -317,7 +315,6 @@ def farmacia_eliminar(request, farmacia_id):
     return redirect('lista_farmacias')
 
 
-@permission_required('App_Farmacia.add_gerente')
 def crear_gerente_modelo(formulario):
         
     gerente_creado = False
@@ -448,14 +445,6 @@ def gerente_eliminar(request, gerente_id):
 
 
 
-
-
-
-
-
-
-
-@permission_required('App_Farmacia.add_empleado')
 def crear_empleado_modelo(formulario):
         
     empleado_creado = False
@@ -463,10 +452,24 @@ def crear_empleado_modelo(formulario):
     if formulario.is_valid():
         try:
             #Guarda el producto en la base de datos
-            formulario.save()
+            usuario = Usuario.objects.create(
+                 username=formulario.cleaned_data.get('username'),
+                first_name=formulario.cleaned_data.get('first_name'),
+                email=formulario.cleaned_data.get('email'),
+                date_joined=formulario.cleaned_data.get('date_joined'),
+                rol=Usuario.EMPLEADO
+            )
+            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.save()
+            empleado = Empleado.objects.create(
+                usuario= usuario,
+                salario= formulario.cleaned_data.get("salario"),
+                farm_emp= formulario.cleaned_data.get("farm_emp"),
+            )
+            empleado.save() 
             empleado_creado = True
-        except:
-            pass
+        except Exception as e: 
+            print(e)
     return empleado_creado                
 
 @permission_required('App_Farmacia.add_empleado')
@@ -482,7 +485,7 @@ def empleado_create(request):
     if (request.method == 'POST'):
         empleado_creado = crear_empleado_modelo(formulario)
         if (empleado_creado):
-            messages.success(request, 'Se ha añadido el '+formulario.cleaned_data.get('nombre_emp')+" correctamente")
+            messages.success(request, 'Se ha añadido el '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_empleados")       
 
     return render(request, 'empleado/create_empleado.html', {'formulario':formulario})
@@ -578,7 +581,6 @@ def empleado_eliminar(request, empleado_id):
     return redirect('lista_empleados')
 
 
-@permission_required('App_Farmacia.add_votacion')
 def crear_votacion_modelo(formulario):
         
     votacion_creada = False
@@ -713,7 +715,6 @@ def votacion_eliminar(request, votacion_id):
 
 
 
-@permission_required('App_Farmacia.add_cliente')
 def crear_cliente_modelo(formulario):
         
     cliente_creado = False
@@ -856,7 +857,6 @@ def cliente_eliminar(request, cliente_id):
 
 
 
-@permission_required('App_Farmacia.add_promocion')
 def crear_promocion_modelo(formulario):
         
     promocion_creada = False

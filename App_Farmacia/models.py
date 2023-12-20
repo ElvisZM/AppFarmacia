@@ -36,8 +36,6 @@ class Gerente(models.Model):
 
 class Empleado(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
-    nombre_emp = models.CharField(max_length=200)
-    cargo = models.CharField(max_length=200)
     salario = models.FloatField(default=1020.40, db_column="salario_empleado")
     farm_emp = models.ForeignKey(Farmacia, on_delete=models.CASCADE) 
     

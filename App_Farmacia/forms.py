@@ -211,7 +211,7 @@ class BusquedaAvanzadaFarmaciaForm(forms.Form):
         return self.cleaned_data
     
     
-class GerenteModelForm(ModelForm):
+class GerenteModelForm(forms.Form):
     class Meta:
         model = Gerente
         fields = ['nombre_ger', 'correo', 'fecha_inicio_gestion', 'gerente_farm']
@@ -319,51 +319,31 @@ class BusquedaAvanzadaGerenteForm(forms.Form):
     
     
     
+
+class EmpleadoModelForm(UserCreationForm):
     
+    email = forms.EmailField(label="Eamil del empleado")
     
-class EmpleadoModelForm(ModelForm):
+    salario = forms.FloatField(label="Salario", required=True, help_text='Salario del Empleado')
+    
+    farm_emp = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=True, label='Farmacia Asignada', widget=forms.Select())
+
+    
     class Meta:
-        model = Empleado
-        fields = ['nombre_emp', 'cargo', 'salario', 'farm_emp']
-        labels = {
-            "nombre_emp": 'Nombre del Empleado', 
-            "cargo": 'Cargo del Empleado',
-            "salario" : 'Salario',
-            "farm_emp" : 'Farmacia Asignada',
-        }
-        help_texts = {
-            "nombre_emp": '100 caracteres como máximo',
-            "cargo" : 'Por favor, introduzca el cargo otorgado al empleado.',
-            "salario" : 'Introduzca el salario del empleado.',
-            "farm_emp": 'Asigne una farmacia',
-        }
-        widgets = {
-        }
-        
-        
+        model = Usuario
+        fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'salario','farm_emp')
+    
     def clean(self):
     
         super().clean()
 
-        nombre_emp = self.cleaned_data.get('nombre_emp')
-        cargo = self.cleaned_data.get('cargo')
         salario = self.cleaned_data.get('salario')
         farm_emp = self.cleaned_data.get('farm_emp')
-
-        #Comprobamos que no exista un empleado con ese nombre
-        empleadoNombre = Empleado.objects.filter(nombre_emp=nombre_emp).first()
-        if(not (empleadoNombre is None or (not self.instance is None and empleadoNombre.id == self.instance.id))):
-            self.add_error('nombre_emp','Ya existe un empleado con ese nombre.')
-
-        #Comprobamos que se inserte un cargo para el empleado.
-        if (cargo is None):
-            self.add_error('cargo','Debe especificar un cargo para el empleado.')
 
         #Comprobamos que se inserte un salario para el empleado.
         if (salario is None):
             self.add_error('salario','Debe especificar un salario para el empleado.')
-    
-            
+        
         #Comprobamos que se le asigne una farmacia al empleado.    
         if (farm_emp is None):
             self.add_error('farm_emp','Debe asignar una farmacia al empleado.')
@@ -376,8 +356,6 @@ class BusquedaEmpleadoForm(forms.Form):
     
 class BusquedaAvanzadaEmpleadoForm(forms.Form):
     
-    textoBusqueda = forms.CharField(required=False)
-            
     nombre_emp = forms.CharField (required=False, label="Nombre del Empleado")
     
     cargo = forms.CharField (required=False, label="Cargo del Empleado")
