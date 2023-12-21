@@ -35,14 +35,14 @@ class Gerente(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     direccion_ger = models.CharField(max_length=200)
     telefono_ger = models.IntegerField(null=True, blank=True)
-    salario_ger = models.FloatField()
+    salario_ger = models.FloatField(default=2100.0)
     gerente_farm = models.OneToOneField(Farmacia, on_delete=models.CASCADE, null=True)
 
 class Empleado(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     direccion_emp = models.CharField(max_length=200)
     telefono_emp = models.IntegerField(null=True, blank=True)
-    salario = models.FloatField()
+    salario = models.FloatField(default=1024.0)
     farm_emp = models.ForeignKey(Farmacia, on_delete=models.CASCADE, null=True, blank=True) 
     
 class Proveedor(models.Model):
