@@ -214,7 +214,7 @@ def administrador_eliminar(request, administrador_id):
         pass
     return redirect('lista_administradores')
 
-
+@permission_required('App_Farmacia.view_administrador')
 def administradores_lista(request):
     
     administradores = Administrador.objects.select_related('usuario').all()
