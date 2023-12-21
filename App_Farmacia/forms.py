@@ -24,6 +24,101 @@ class RegistroForm(UserCreationForm):
         }
 
 
+
+
+
+   
+class AdministradorModelForm(UserCreationForm):
+    
+    
+    email = forms.EmailField(label="Email del administrador")
+    
+    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
+    
+    direccion_admin = forms.CharField(label="Direccion", required=True)
+    
+    telefono_admin = forms.IntegerField(label="Telefono", required=True)
+    
+    
+    class Meta:
+        model = Usuario
+        fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'direccion_admin', 'telefono_admin')
+
+    
+    def clean(self):
+    
+        super().clean()
+
+        salario_ger = self.cleaned_data.get('salario_ger')
+        direccion_admin = self.cleaned_data.get('direccion_admin')
+        telefono_admin = self.cleaned_data.get('telefono_admin')
+
+        #Comprobamos que se inserte una dirección
+        if (direccion_admin is None):
+            self.add_error('direccion_admin','Debe indicar una dirección de contacto para el administrador.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        if (str(telefono_admin)[0] not in ('6','7','9') or len(str(telefono_admin)) != 9):
+            self.add_error('telefono_admin','Debe especificar un número español de 9 dígitos.')
+        
+        #Comprobamos que el numero no exista en otro gerente.
+        administradorTelefono = Administrador.objects.filter(telefono_admin=telefono_admin).first()    
+        if (not administradorTelefono is None):
+            self.add_error('telefono_admin','Ya existe un administrador con ese teléfono.')
+            
+           
+        return self.cleaned_data
+               
+
+class BusquedaAdministradorForm(forms.Form):
+    textoBusqueda = forms.CharField(required=True)
+    
+class BusquedaAvanzadaAdministradorForm(forms.Form):
+    
+    first_name = forms.CharField (required=False, label="Nombre del Administrador")
+    
+    email = forms.EmailField(required=False, label="Email del Administrador")
+    
+    date_joined = forms.DateTimeField (required=False, label="Fecha de Registro | dd-mm-yyyy", widget=forms.DateTimeInput())
+    
+    direccion_admin = forms.CharField(label="Direccion", required=False)
+    
+    telefono_admin = forms.IntegerField(label="Telefono", required=False)
+    
+    def clean(self):
+        
+        super().clean()
+        
+        first_name = self.cleaned_data.get('first_name')
+        email = self.cleaned_data.get('email')
+        direccion_admin = self.cleaned_data.get('direccion_admin')
+        date_joined = self.cleaned_data.get('date_joined')
+        telefono_admin = self.cleaned_data.get('telefono_admin')
+        if(first_name == ""
+           and email == ""
+           and direccion_admin == ""
+           and date_joined is None
+           and telefono_admin is None):
+            self.add_error('first_name', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('email', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('direccion_admin', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('date_joined', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('telefono_admin', 'Debe introducir al menos un valor en un campo del formulario')
+                    
+        else:
+            if(first_name != "" and len(first_name) < 3):
+                self.add_error('first_name', 'Debe introducir al menos 3 caracteres')
+                
+        return self.cleaned_data
+
+
+
+
+
+
+
+
+
 class ProductoModelForm(ModelForm):
     class Meta:
         model = Producto
@@ -209,54 +304,60 @@ class BusquedaAvanzadaFarmaciaForm(forms.Form):
                 self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
                 
         return self.cleaned_data
+
+
+
+
+  
+    
+class GerenteModelForm(UserCreationForm):
     
     
-class GerenteModelForm(forms.Form):
+    email = forms.EmailField(label="Email del gerente")
+    
+    salario_ger = forms.FloatField(label="Salario", required=True, help_text='Salario del Gerente')
+    
+    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
+    
+    direccion_ger = forms.CharField(label="Direccion", required=True)
+    
+    telefono_ger = forms.IntegerField(label="Telefono", required=True)
+    
+    gerente_farm = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
+
+    
     class Meta:
-        model = Gerente
-        fields = ['nombre_ger', 'correo', 'fecha_inicio_gestion', 'gerente_farm']
-        labels = {
-            "nombre_ger": 'Nombre del Gerente', 
-            "correo": 'Correo Electrónico',
-            "fecha_inicio_gestion" : 'Fecha de Inicio',
-            "gerente_farm" : 'Farmacia Asignada',
-        }
-        help_texts = {
-            "nombre_ger": '100 caracteres como máximo',
-            "correo" : 'Por favor, introduce tu dirección de correo electrónico en el formato nombre@ejemplo.com.',
-            "fecha_inicio_gestion" : 'Introduzca la fecha que inicia la gestion',
-            "gerente_farm": 'Asigne una farmacia',
-        }
-        widgets = {
-            "correo":forms.EmailInput(),
-            "fecha_inicio_gestion":forms.SelectDateWidget(years=range(2000,2040)),
-        }
-        localized_fields = ["fecha_inicio_gestion"]
-        
-        
+        model = Usuario
+        fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'direccion_ger', 'telefono_ger', 'salario_ger','gerente_farm')
+
+    
     def clean(self):
     
         super().clean()
 
-        nombre_ger = self.cleaned_data.get('nombre_ger')
-        correo = self.cleaned_data.get('correo')
-        fecha_inicio_gestion = self.cleaned_data.get('fecha_inicio_gestion')
+        salario_ger = self.cleaned_data.get('salario_ger')
         gerente_farm = self.cleaned_data.get('gerente_farm')
+        direccion_ger = self.cleaned_data.get('direccion_ger')
+        telefono_ger = self.cleaned_data.get('telefono_ger')
 
-        #Comprobamos que no exista un gerente con ese nombre
-        gerenteNombre = Gerente.objects.filter(nombre_ger=nombre_ger).first()
-        if(not (gerenteNombre is None or (not self.instance is None and gerenteNombre.id == self.instance.id))):
-            self.add_error('nombre_ger','Ya existe un gerente con ese nombre')
-
-        #Comprobamos que se inserte un correo
-        if (correo is None):
-            self.add_error('correo','Debe especificar un correo electrónico para la farmacia')
-
-        #Comprobamos que la fecha de inicio de gestion no sea mayor a la de hoy.
-        fechaHoy = date.today()
-        if fechaHoy < fecha_inicio_gestion:
-            self.add_error('fecha_inicio_gestion','La fecha de inicio de gestión no puede ser mayor a la fecha actual.')
-               
+        #Comprobamos que se inserte un salario para el gerente.
+        if (salario_ger is None):
+            self.add_error('salario_ger','Debe especificar un salario para el gerente.')
+            
+        #Comprobamos que se inserte una dirección
+        if (direccion_ger is None):
+            self.add_error('direccion_ger','Debe indicar una dirección de contacto para el gerente.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        if (str(telefono_ger)[0] not in ('6','7','9') or len(str(telefono_ger)) != 9):
+            self.add_error('telefono_emp','Debe especificar un número español de 9 dígitos.')
+        
+        #Comprobamos que el numero no exista en otro gerente.
+        gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).first()    
+        if (not gerenteTelefono is None):
+            self.add_error('telefono_ger','Ya existe un gerente con ese teléfono.')
+            
+           
         #Comprobamos que inserte una farmacia a gestionar    
         if (gerente_farm is None):
             self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
@@ -274,13 +375,17 @@ class BusquedaGerenteForm(forms.Form):
     
 class BusquedaAvanzadaGerenteForm(forms.Form):
     
-    textoBusqueda = forms.CharField(required=False)
-            
-    nombre_ger = forms.CharField (required=False, label="Nombre del Gerente")
+    first_name = forms.CharField (required=False, label="Nombre del Gerente")
     
-    correo = forms.CharField (required=False, label="Correo Electronico")
+    email = forms.EmailField(required=False, label="Email del Gerente")
     
-    fecha_inicio_gestion = forms.DateField(required=False, widget= forms.SelectDateWidget())
+    date_joined = forms.DateTimeField (required=False, label="Fecha de Registro | dd-mm-yyyy", widget=forms.DateTimeInput())
+    
+    salario_ger = forms.FloatField(required=False, label="Salario del Gerente")
+    
+    direccion_ger = forms.CharField(label="Direccion", required=False)
+    
+    telefono_ger = forms.IntegerField(label="Telefono", required=False)
     
     gerente_farm = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
     
@@ -288,29 +393,32 @@ class BusquedaAvanzadaGerenteForm(forms.Form):
         
         super().clean()
         
-        textoBusqueda = self.cleaned_data.get('textoBusqueda')
-        nombre_ger = self.cleaned_data.get('nombre_ger')
-        fecha_inicio_gestion = self.cleaned_data.get('fecha_inicio_gestion')
-        correo = self.cleaned_data.get('correo')
+        first_name = self.cleaned_data.get('first_name')
+        email = self.cleaned_data.get('email')
+        direccion_ger = self.cleaned_data.get('direccion_ger')
+        date_joined = self.cleaned_data.get('date_joined')
+        telefono_ger = self.cleaned_data.get('telefono_ger')
+        salario_ger = self.cleaned_data.get('salario_ger')
         gerente_farm = self.cleaned_data.get('gerente_farm')
         fecha_hoy = date.today()
-        if(textoBusqueda == ""
-           and nombre_ger == ""
-           and fecha_inicio_gestion is None
-           and correo == ""
+        if(first_name == ""
+           and email == ""
+           and direccion_ger == ""
+           and date_joined is None
+           and telefono_ger is None
+           and salario_ger is None
            and gerente_farm is None):
-            self.add_error('textoBusqueda', 'Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('nombre_ger', 'Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('fecha_inicio_gestion', 'Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('correo', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('first_name', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('email', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('direccion_ger', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('date_joined', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('telefono_ger', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('salario_ger', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('gerente_farm', 'Debe introducir al menos un valor en un campo del formulario')
                     
         else:
-            if(textoBusqueda != "" and len(textoBusqueda) < 3):
-                self.add_error('textoBusqueda', 'Debe introducir al menos 3 caracteres')
-                
-            if(fecha_inicio_gestion and fecha_inicio_gestion > fecha_hoy):
-                self.add_error('fecha_inicio_gestion','La busqueda por una fecha mayor a la de hoy no es válida, introduzca una fecha anterior.')
+            if(first_name != "" and len(first_name) < 3):
+                self.add_error('first_name', 'Debe introducir al menos 3 caracteres')
                 
         return self.cleaned_data
     
@@ -322,16 +430,23 @@ class BusquedaAvanzadaGerenteForm(forms.Form):
 
 class EmpleadoModelForm(UserCreationForm):
     
-    email = forms.EmailField(label="Eamil del empleado")
+    email = forms.EmailField(label="Email del empleado")
     
     salario = forms.FloatField(label="Salario", required=True, help_text='Salario del Empleado')
     
-    farm_emp = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=True, label='Farmacia Asignada', widget=forms.Select())
-
+    farm_emp = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label='Farmacia Asignada', widget=forms.Select())
+    
+    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
+    
+    direccion_emp = forms.CharField(label="Direccion", required=True)
+    
+    telefono_emp = forms.IntegerField(label="Telefono", required=True)
+    
     
     class Meta:
         model = Usuario
-        fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'salario','farm_emp')
+        fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'direccion_emp', 'telefono_emp', 'salario','farm_emp')
+
     
     def clean(self):
     
@@ -339,28 +454,45 @@ class EmpleadoModelForm(UserCreationForm):
 
         salario = self.cleaned_data.get('salario')
         farm_emp = self.cleaned_data.get('farm_emp')
+        direccion_emp = self.cleaned_data.get('direccion_emp')
+        telefono_emp = self.cleaned_data.get('telefono_emp')
 
         #Comprobamos que se inserte un salario para el empleado.
         if (salario is None):
             self.add_error('salario','Debe especificar un salario para el empleado.')
+            
+        #Comprobamos que se inserte una dirección
+        if (direccion_emp is None):
+            self.add_error('direccion_emp','Debe indicar una dirección de contacto para el empleado.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        if (str(telefono_emp)[0] not in ('6','7','9') or len(str(telefono_emp)) != 9):
+            self.add_error('telefono_emp','Debe especificar un número español de 9 dígitos.')
         
-        #Comprobamos que se le asigne una farmacia al empleado.    
-        if (farm_emp is None):
-            self.add_error('farm_emp','Debe asignar una farmacia al empleado.')
-
+        #Comprobamos que el numero no exista en otro empleado.
+        empleadoTelefono = Empleado.objects.filter(telefono_emp=telefono_emp).first()    
+        if (not empleadoTelefono is None):
+            self.add_error('telefono_emp','Ya existe un empleado con ese teléfono.')
+            
         return self.cleaned_data
-               
 
+    
 class BusquedaEmpleadoForm(forms.Form):
     textoBusqueda = forms.CharField(required=True)
     
 class BusquedaAvanzadaEmpleadoForm(forms.Form):
     
-    nombre_emp = forms.CharField (required=False, label="Nombre del Empleado")
+    first_name = forms.CharField (required=False, label="Nombre del Empleado")
     
-    cargo = forms.CharField (required=False, label="Cargo del Empleado")
+    email = forms.EmailField(required=False, label="Email del Empleado")
+    
+    date_joined = forms.DateTimeField (required=False, label="Fecha de Registro | dd-mm-yyyy", widget=forms.DateTimeInput())
     
     salario = forms.FloatField(required=False, label="Salario del Empleado")
+    
+    direccion_emp = forms.CharField(label="Direccion", required=False)
+    
+    telefono_emp = forms.IntegerField(label="Telefono", required=False)
     
     farm_emp = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
     
@@ -368,23 +500,32 @@ class BusquedaAvanzadaEmpleadoForm(forms.Form):
         
         super().clean()
         
-        nombre_emp = self.cleaned_data.get('nombre_emp')
-        cargo = self.cleaned_data.get('cargo')
+        first_name = self.cleaned_data.get('first_name')
+        email = self.cleaned_data.get('email')
+        direccion_emp = self.cleaned_data.get('direccion_emp')
+        date_joined = self.cleaned_data.get('date_joined')
+        telefono_emp = self.cleaned_data.get('telefono_emp')
         salario = self.cleaned_data.get('salario')
         farm_emp = self.cleaned_data.get('farm_emp')
-
-        if(nombre_emp == ""
-           and cargo == ""
+        fecha_hoy = date.today()
+        if(first_name == ""
+           and email == ""
+           and direccion_emp == ""
+           and date_joined is None
+           and telefono_emp is None
            and salario is None
            and farm_emp is None):
-            self.add_error('nombre_emp', 'Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('cargo', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('first_name', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('email', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('direccion_emp', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('date_joined', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('telefono_emp', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('salario', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('farm_emp', 'Debe introducir al menos un valor en un campo del formulario')
                     
         else:
-            if(nombre_emp != "" and len(nombre_emp) < 3):
-                self.add_error('nombre_emp', 'Debe introducir al menos 3 caracteres')
+            if(first_name != "" and len(first_name) < 3):
+                self.add_error('first_name', 'Debe introducir al menos 3 caracteres')
                 
         return self.cleaned_data
     
@@ -494,40 +635,32 @@ class BusquedaAvanzadaVotacionForm(forms.Form):
   
     
     
-class ClienteModelForm(ModelForm):
+class ClienteModelForm(UserCreationForm):
+    
+    email = forms.EmailField(label="Email del cliente")
+    
+    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
+    
+    direccion_cli = forms.CharField(label="Direccion", required=True)
+    
+    telefono_cli = forms.IntegerField(label="Telefono", required=True)
+    
+    productos_favoritos = forms.ModelMultipleChoiceField(queryset=Producto.objects.all(), required=False, label="Producto Favorito del Cliente", widget=forms.SelectMultiple())
+
+    votacion_prod = forms.ModelMultipleChoiceField (queryset=Producto.objects.all(), required=False, label="Productos Votados por el Cliente", widget=forms.SelectMultiple())
+ 
+    
     class Meta:
-        model = Cliente
-        fields = ['nombre_cli', 'telefono_cli', 'direccion_cli', 'productos_favoritos']
-        labels = {
-            "nombre_cli": 'Nombre del Cliente', 
-            "telefono_cli": 'Telefono del Cliente',
-            "direccion_cli" : 'Direccion del Cliente',
-            "productos_favoritos" : 'Productos Favoritos del Cliente',
-        }
-        help_texts = {
-            "nombre_cli": '100 caracteres como máximo',
-            "telefono_cli" : 'Número de teléfono del cliente.',
-            "direccion_cli" : 'Introduzca la dirección del cliente.',
-            "productos_favoritos" : 'Indique producto favorito del cliente.',
-        }
-        widgets = {
-            
-        }
-        
-        
+        model = Usuario
+        fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'direccion_cli', 'telefono_cli', 'productos_favoritos','votacion_prod')
+    
+    
     def clean(self):
     
         super().clean()
 
-        nombre_cli = self.cleaned_data.get('nombre_cli')
-        telefono_cli = self.cleaned_data.get('telefono_cli')
         direccion_cli = self.cleaned_data.get('direccion_cli')
-        productos_favoritos = self.cleaned_data.get('productos_favoritos')
-
-        #Comprobamos que no exista un cliente con ese nombre
-        clienteNombre = Cliente.objects.filter(nombre_cli=nombre_cli).first()
-        if(not (clienteNombre is None or (not self.instance is None and clienteNombre.id == self.instance.id))):
-            self.add_error('nombre_cli','Ya existe un cliente con ese nombre.')
+        telefono_cli = self.cleaned_data.get('telefono_cli')
 
         #Comprobamos que se inserte una dirección para el cliente.
         if (direccion_cli is None):
@@ -550,11 +683,15 @@ class BusquedaClienteForm(forms.Form):
     
 class BusquedaAvanzadaClienteForm(forms.Form):
     
-    nombre_cli = forms.CharField (required=False, label="Nombre del Cliente")
+    first_name = forms.CharField (required=False, label="Nombre del Cliente")
     
-    telefono_cli = forms.IntegerField (required=False, label="Teléfono del Cliente")
+    email = forms.EmailField(required=False, label="Email del Cliente")
     
-    direccion_cli = forms.CharField (required=False, label="Direccion del Cliente")
+    date_joined = forms.DateTimeField (required=False, label="Fecha de Registro | dd-mm-yyyy", widget=forms.DateTimeInput())
+    
+    direccion_cli = forms.CharField(label="Direccion", required=False)
+    
+    telefono_cli = forms.IntegerField(label="Telefono", required=False)
     
     productos_favoritos = forms.ModelChoiceField(queryset=Producto.objects.all(), required=False, label="Producto Favorito del Cliente", widget=forms.Select())
     
@@ -564,29 +701,32 @@ class BusquedaAvanzadaClienteForm(forms.Form):
         
         super().clean()
         
-        nombre_cli = self.cleaned_data.get('nombre_cli')
-        telefono_cli = self.cleaned_data.get('telefono_cli')
+        first_name = self.cleaned_data.get('first_name')
+        email = self.cleaned_data.get('email')
         direccion_cli = self.cleaned_data.get('direccion_cli')
+        date_joined = self.cleaned_data.get('date_joined')
+        telefono_cli = self.cleaned_data.get('telefono_cli')
         productos_favoritos = self.cleaned_data.get('productos_favoritos')
         votacion_prod = self.cleaned_data.get('votacion_prod')
 
-        if(nombre_cli == ""
+        if(first_name == ""
+           and email == ""
+           and date_joined is None
            and telefono_cli is None
            and direccion_cli == ""
            and productos_favoritos is None
            and votacion_prod is None):
-            self.add_error('nombre_cli', 'Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('telefono_cli', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('first_name', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('email', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('direccion_cli', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('date_joined', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('telefono_cli', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('productos_favoritos', 'Debe introducir al menos un valor en un campo del formulario')
             self.add_error('votacion_prod', 'Debe introducir al menos un valor en un campo del formulario')
                     
         else:
-            if(nombre_cli != "" and len(nombre_cli) < 3):
-                self.add_error('nombre_cli', 'Debe introducir al menos 3 caracteres')
-                
-            if(direccion_cli != "" and len(direccion_cli) < 10):
-                self.add_error('direccion_cli', 'Debe introducir al menos 10 caracteres')
+            if(first_name != "" and len(first_name) < 3):
+                self.add_error('first_name', 'Debe introducir al menos 3 caracteres')
                 
         return self.cleaned_data
         

@@ -21,6 +21,10 @@ class Usuario(AbstractUser):
     
     rol = models.PositiveSmallIntegerField(choices=ROLES, default=1)
 
+class Administrador(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
+    direccion_admin = models.CharField(max_length=200)
+    telefono_admin = models.IntegerField(null=True, blank=True)
 
 class Farmacia(models.Model):
     nombre_farm = models.CharField(max_length=200)
@@ -29,15 +33,17 @@ class Farmacia(models.Model):
 
 class Gerente(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
-    nombre_ger = models.CharField(max_length=200)
-    correo = models.EmailField(blank=True)
-    fecha_inicio_gestion = models.DateField(null=True, blank=False)
+    direccion_ger = models.CharField(max_length=200)
+    telefono_ger = models.IntegerField(null=True, blank=True)
+    salario_ger = models.FloatField()
     gerente_farm = models.OneToOneField(Farmacia, on_delete=models.CASCADE, null=True)
 
 class Empleado(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
-    salario = models.FloatField(default=1020.40, db_column="salario_empleado")
-    farm_emp = models.ForeignKey(Farmacia, on_delete=models.CASCADE) 
+    direccion_emp = models.CharField(max_length=200)
+    telefono_emp = models.IntegerField(null=True, blank=True)
+    salario = models.FloatField()
+    farm_emp = models.ForeignKey(Farmacia, on_delete=models.CASCADE, null=True, blank=True) 
     
 class Proveedor(models.Model):
     nombre_prov = models.CharField(max_length=200)
@@ -59,9 +65,8 @@ class SuministroProducto(models.Model):
 
 class Cliente(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
-    nombre_cli = models.CharField(max_length=200)
-    telefono_cli = models.IntegerField(null=True, blank=True, )
     direccion_cli = models.CharField(max_length=200, null=True, blank=True)
+    telefono_cli = models.IntegerField(null=True, blank=True, )
     productos_favoritos = models.ManyToManyField(Producto, related_name='productos_favoritos')
     votacion_prod = models.ManyToManyField(Producto, through='Votacion', related_name='votacion_prod')
     

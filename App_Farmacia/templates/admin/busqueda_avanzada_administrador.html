@@ -3,7 +3,7 @@
 {% block contenido %}
 {% load bootstrap5 %}
 
-<form action ="{% url 'cliente_buscar_avanzado' %}" method = "GET">
+<form action ="{% url 'administrador_buscar_avanzado' %}" method = "GET">
     {% csrf_token %}
     <div class="container">
         <div class="mb-4 w-50">
@@ -12,29 +12,19 @@
         <div class="w-50">
             {% bootstrap_field formulario.email %}
         </div>
+        <div class= "w-50">
+            {% bootstrap_field formulario.direccion_admin %}
+        </div>
+
         <div class="d-flex justify-content-between mb-4 ">
-            <div class= "w-50">
-                {% bootstrap_field formulario.direccion_cli %}
+            <div class="w-25">
+            {% bootstrap_field formulario.telefono_admin %}
             </div>
             <div class="w-25">
                 {% bootstrap_field formulario.date_joined %}
             </div>
+            
         </div>
-        <div class="d-flex justify-content-between mb-4 ">
-            <div>
-                {% bootstrap_field formulario.telefono_cli %}
-            </div>
-
-            <div class="w-25 ">
-                {% bootstrap_field formulario.productos_favoritos show_label=True %}
-            </div>
-
-            <div class="w-25 ">
-                {% bootstrap_field formulario.votacion_prod show_label=True %}
-            </div>
-
-        </div>
-
         {% buttons %}
             <button type="submit" class="btn btn-primary">Buscar</button>
         {% endbuttons%}

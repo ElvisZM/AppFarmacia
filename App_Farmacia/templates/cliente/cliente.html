@@ -1,7 +1,10 @@
 <div>
-    <h2>Nombre Cliente: {{ cliente.nombre_cli|truncatewords:1 }}</h2>
-    <h2>Telefono Cliente: {{ cliente.telefono_cli }}</h2>
-    <h2>Direccion Cliente: {{ cliente.direccion_cli|truncatewords:3 }}</h2>
+    <h2>Empleado/a: {{ cliente.usuario.first_name|truncatewords:2 }}</h2>
+    <h2>Email: {{ cliente.usuario.email }}</h2>
+    <h2>Direccion: {{ cliente.direccion_cli }}</h2>
+    <h2>Teléfono: {{ cliente.telefono_cli }}</h2>
+    <h2>Fecha de Alta: {{ cliente.usuario.date_joined }}</h2>
+    <h2>Último Inicio Sesion: {{ cliente.usuario.last_login }}</h2>
     {% for productofav in cliente.productos_favoritos.all %}
         <h2>Producto Favorito: {{ productofav.nombre_prod }}</h2>
     {% endfor %}

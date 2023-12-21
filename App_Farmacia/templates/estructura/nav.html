@@ -37,6 +37,15 @@
                 </li>
                 <li><a href="#">Lista de C.R.U.D.S</a>
                     <ul class="listacruds">
+                        {% if request.user.is_authenticated and perms.App_Farmacia.add_administrador %}
+                        <li><a href="#">Administradores</a>
+                            <ul class="submenulista">
+                                <li><a href="{% url 'administrador_create' %}">Crear Administrador</a></li>
+                                <li><a href="{% url 'administrador_buscar_avanzado' %}">Busq. Avanzada Administrador</a></li>
+                                <li><a href="{% url 'lista_administradores' %}">Ver Administradores</a></li>
+                            </ul>
+                        </li>
+                        {% endif %}
                         {% if request.user.is_authenticated and perms.App_Farmacia.add_gerente %}
                         <li><a href="#">Gerentes</a>
                             <ul class="submenulista">

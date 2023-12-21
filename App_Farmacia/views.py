@@ -69,6 +69,162 @@ def login_menu (request):
     return render(request, 'registration/login_menu.html')
 
 
+
+
+def crear_administrador_modelo(formulario):
+        
+    administrador_creado = False
+    #Comprueba si el formulario es válido
+    if formulario.is_valid():
+        try:
+            #Guarda el producto en la base de datos
+            usuario = Usuario.objects.create(
+                username=formulario.cleaned_data.get('username'),
+                first_name=formulario.cleaned_data.get('first_name'),
+                email=formulario.cleaned_data.get('email'),
+                date_joined=formulario.cleaned_data.get('date_joined'),
+                rol=Usuario.ADMINISTRADOR
+            )
+            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.save()
+            administrador = Administrador.objects.create(
+                usuario= usuario,
+                direccion_admin= formulario.cleaned_data.get("direccion_admin"),
+                telefono_admin= formulario.cleaned_data.get("telefono_admin"),
+            )
+            administrador.save()            
+            administrador_creado = True
+        except:
+            pass
+    return administrador_creado                
+
+@permission_required('App_Farmacia.add_administrador')
+def administrador_create(request):
+    
+    # Si la petición es GET se creará el formulario Vacio
+    # Si la petición es POST se creará el formulario con Datos
+    datosFormulario = None
+    if (request.method == 'POST'):
+        datosFormulario = request.POST
+    
+    formulario = AdministradorModelForm(datosFormulario)
+    if (request.method == 'POST'):
+        gerente_creado = crear_administrador_modelo(formulario)
+        if (gerente_creado):
+            messages.success(request, 'Se ha añadido el administrador '+formulario.cleaned_data.get('first_name')+" correctamente")
+            return redirect("lista_administradores")       
+
+    return render(request, 'admin/create_administrador.html', {'formulario':formulario})
+
+
+
+@permission_required('App_Farmacia.view_administrador')
+def administrador_buscar(request):
+    formulario = BusquedaAdministradorForm(request.GET)
+    
+    if formulario.is_valid():
+        texto = formulario.cleaned_data.get('textoBusqueda')
+        administradores = Administrador.objects.all()
+        administradores = administradores.filter(usuario__first_name__contains=texto).all()
+        return render(request, 'admin/administrador_busqueda.html',{'administradores_mostrar':administradores, 'texto_busqueda':texto})
+    if("HTTP_REFERER" in request.META):
+        return redirect(request.META["HTTP_REFERER"])
+    else:
+        return redirect("index")
+    
+    
+@permission_required('App_Farmacia.view_administrador')
+def administrador_buscar_avanzado(request):
+    
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaAdministradorForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSadministradores = Administrador.objects.all()
+            
+            first_name = formulario.cleaned_data.get('first_name')
+            email = formulario.cleaned_data.get('email')
+            direccion_admin = formulario.cleaned_data.get('direccion_admin')
+            date_joined = formulario.cleaned_data.get('date_joined')
+            telefono_admin = formulario.cleaned_data.get('telefono_admin')
+            
+            if (first_name != ""):
+                QSadministradores = QSadministradores.filter(usuario__first_name__contains=first_name)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+first_name+"\n"
+                
+            if (email != ""):
+                QSadministradores = QSadministradores.filter(usuario__email=email)
+                mensaje_busqueda += "Email que sea igual a "+email+"\n"
+                
+            if (direccion_admin != ""):
+                QSadministradores = QSadministradores.filter(direccion_admin__contains=direccion_admin)
+                mensaje_busqueda += "Direccion o que contenga la palabra "+direccion_admin+"\n"
+            
+            if (not date_joined is None):
+                mensaje_busqueda += f"Fecha de registro que sea igual o mayor a "+str(date_joined)+"\n"
+                QSadministradores = QSadministradores.filter(usuario__date_joined__gte = date_joined)
+            
+            if (not telefono_admin is None):
+                mensaje_busqueda += f"Telefono que sea igual a "+str(telefono_admin)+"\n"
+                QSadministradores = QSadministradores.filter(telefono_admin = telefono_admin)
+            
+            administradores = QSadministradores.all()
+            
+            return render(request, 'admin/administrador_busqueda.html', {'administradores_mostrar':administradores, 'texto_busqueda':mensaje_busqueda})  
+                      
+    else:
+        formulario = BusquedaAvanzadaAdministradorForm(None)
+        
+    return render(request, 'admin/busqueda_avanzada_administrador.html',{'formulario':formulario})    
+    
+    
+@permission_required('App_Farmacia.change_administrador')
+def administrador_editar(request, administrador_id):
+    administrador = Administrador.objects.get(id=administrador_id)
+    
+    datosFormulario = None
+    
+    if (request.method == "POST"):
+        datosFormulario = request.POST
+        
+    formulario = AdministradorModelForm(datosFormulario, instance = administrador)
+    
+    if (request.method == "POST"):
+        
+        if formulario.is_valid():
+            formulario.save()
+            try:
+                formulario.save()
+                messages.success(request, f"Se ha editado el administrador {administrador.usuario.first_name} correctamente")
+                return redirect('lista_administradores')
+            except Exception as error:
+                pass
+    return render(request, 'admin/actualizar_administrador.html', {'formulario': formulario, 'administrador':administrador})    
+    
+       
+@permission_required('App_Farmacia.delete_administrador')
+def administrador_eliminar(request, administrador_id):
+    administrador = Administrador.objects.get(id=administrador_id)
+    try:
+        administrador.delete()
+        messages.success(request, f"Se ha eliminado el administrador {administrador.usuario.first_name} correctamente.")
+    except:
+        pass
+    return redirect('lista_administradores')
+
+
+def administradores_lista(request):
+    
+    administradores = Administrador.objects.select_related('usuario').all()
+
+    return render(request, 'admin/lista_administradores.html', {'administradores':administradores})
+
+
+
+
+
 # PARA FORMULARIOS 
 def crear_producto_modelo(formulario):
         
@@ -322,7 +478,23 @@ def crear_gerente_modelo(formulario):
     if formulario.is_valid():
         try:
             #Guarda el producto en la base de datos
-            formulario.save()
+            usuario = Usuario.objects.create(
+                username=formulario.cleaned_data.get('username'),
+                first_name=formulario.cleaned_data.get('first_name'),
+                email=formulario.cleaned_data.get('email'),
+                date_joined=formulario.cleaned_data.get('date_joined'),
+                rol=Usuario.GERENTE
+            )
+            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.save()
+            gerente = Gerente.objects.create(
+                usuario= usuario,
+                salario_ger= formulario.cleaned_data.get("salario_ger"),
+                gerente_farm= formulario.cleaned_data.get("gerente_farm"),
+                direccion_ger= formulario.cleaned_data.get("direccion_ger"),
+                telefono_ger= formulario.cleaned_data.get("telefono_ger"),
+            )
+            gerente.save()            
             gerente_creado = True
         except:
             pass
@@ -341,7 +513,7 @@ def gerente_create(request):
     if (request.method == 'POST'):
         gerente_creado = crear_gerente_modelo(formulario)
         if (gerente_creado):
-            messages.success(request, 'Se ha añadido el gerente '+formulario.cleaned_data.get('nombre_ger')+" correctamente")
+            messages.success(request, 'Se ha añadido el gerente '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_gerentes")       
 
     return render(request, 'gerente/create_gerente.html', {'formulario':formulario})
@@ -353,7 +525,7 @@ def gerente_buscar(request):
     if formulario.is_valid():
         texto = formulario.cleaned_data.get('textoBusqueda')
         gerentes = Gerente.objects.all()
-        gerentes = gerentes.filter(nombre_ger__contains=texto).all()
+        gerentes = gerentes.filter(usuario__first_name__contains=texto).all()
         return render(request, 'gerente/gerente_busqueda.html',{'gerentes_mostrar':gerentes, 'texto_busqueda':texto})
     if("HTTP_REFERER" in request.META):
         return redirect(request.META["HTTP_REFERER"])
@@ -372,27 +544,37 @@ def gerente_buscar_avanzado(request):
             
             QSgerentes = Gerente.objects.all()
             
-            textoBusqueda = formulario.cleaned_data.get('textoBusqueda')
-            nombre_ger = formulario.cleaned_data.get('nombre_ger')
-            correo = formulario.cleaned_data.get('correo')
-            fecha_inicio_gestion = formulario.cleaned_data.get('fecha_inicio_gestion')
+            first_name = formulario.cleaned_data.get('first_name')
+            email = formulario.cleaned_data.get('email')
+            direccion_ger = formulario.cleaned_data.get('direccion_ger')
+            date_joined = formulario.cleaned_data.get('date_joined')
+            telefono_ger = formulario.cleaned_data.get('telefono_ger')
+            salario_ger = formulario.cleaned_data.get('salario_ger')
             gerente_farm = formulario.cleaned_data.get('gerente_farm')
             
-            if (textoBusqueda != ""):
-                QSgerentes = QSgerentes.filter(nombre_ger__contains=textoBusqueda)
-                mensaje_busqueda += "Nombre o que contenga la palabra "+textoBusqueda+"\n"
+            if (first_name != ""):
+                QSgerentes = QSgerentes.filter(usuario__first_name__contains=first_name)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+first_name+"\n"
                 
-            if (nombre_ger != ""):
-                QSgerentes = QSgerentes.filter(nombre_ger__contains=nombre_ger)
-                mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_ger+"\n"
+            if (email != ""):
+                QSgerentes = QSgerentes.filter(usuario__email=email)
+                mensaje_busqueda += "Email que sea igual a "+email+"\n"
                 
-            if (correo != ""):
-                QSgerentes = QSgerentes.filter(correo__contains=correo)
-                mensaje_busqueda += "Direccion o que contenga la palabra "+correo+"\n"
+            if (direccion_ger != ""):
+                QSgerentes = QSgerentes.filter(direccion_ger__contains=direccion_ger)
+                mensaje_busqueda += "Direccion o que contenga la palabra "+direccion_ger+"\n"
             
-            if (not fecha_inicio_gestion is None):
-                mensaje_busqueda += f"Fecha de inicio de gestion que sea igual o mayor a "+datetime.strftime(fecha_inicio_gestion, '%d-%m-%Y')+"\n"
-                QSgerentes = QSgerentes.filter(fecha_inicio_gestion__gte = fecha_inicio_gestion)
+            if (not date_joined is None):
+                mensaje_busqueda += f"Fecha de registro que sea igual o mayor a "+str(date_joined)+"\n"
+                QSgerentes = QSgerentes.filter(usuario__date_joined__gte = date_joined)
+            
+            if (not telefono_ger is None):
+                mensaje_busqueda += f"Telefono que sea igual a "+str(telefono_ger)+"\n"
+                QSgerentes = QSgerentes.filter(telefono_ger = telefono_ger)
+            
+            if (not salario_ger is None):
+                mensaje_busqueda += f"Salario que sea igual o mayor a "+str(salario_ger)+"\n"
+                QSgerentes = QSgerentes.filter(salario_ger__gte = salario_ger)
                 
             if (not gerente_farm is None):
                 mensaje_busqueda += "Gerente que tenga asignado la farmacia "+gerente_farm.nombre_farm+"\n"
@@ -425,7 +607,7 @@ def gerente_editar(request, gerente_id):
             formulario.save()
             try:
                 formulario.save()
-                messages.success(request, f"Se ha editado el gerente {gerente.nombre_ger} correctamente")
+                messages.success(request, f"Se ha editado el gerente {gerente.usuario.first_name} correctamente")
                 return redirect('lista_gerentes')
             except Exception as error:
                 pass
@@ -438,7 +620,7 @@ def gerente_eliminar(request, gerente_id):
     gerente = Gerente.objects.get(id=gerente_id)
     try:
         gerente.delete()
-        messages.success(request, f"Se ha eliminado el gerente {gerente.nombre_ger} correctamente.")
+        messages.success(request, f"Se ha eliminado el gerente {gerente.usuario.first_name} correctamente.")
     except:
         pass
     return redirect('lista_gerentes')
@@ -453,7 +635,7 @@ def crear_empleado_modelo(formulario):
         try:
             #Guarda el producto en la base de datos
             usuario = Usuario.objects.create(
-                 username=formulario.cleaned_data.get('username'),
+                username=formulario.cleaned_data.get('username'),
                 first_name=formulario.cleaned_data.get('first_name'),
                 email=formulario.cleaned_data.get('email'),
                 date_joined=formulario.cleaned_data.get('date_joined'),
@@ -465,6 +647,8 @@ def crear_empleado_modelo(formulario):
                 usuario= usuario,
                 salario= formulario.cleaned_data.get("salario"),
                 farm_emp= formulario.cleaned_data.get("farm_emp"),
+                direccion_emp= formulario.cleaned_data.get("direccion_emp"),
+                telefono_emp= formulario.cleaned_data.get("telefono_emp"),
             )
             empleado.save() 
             empleado_creado = True
@@ -485,7 +669,7 @@ def empleado_create(request):
     if (request.method == 'POST'):
         empleado_creado = crear_empleado_modelo(formulario)
         if (empleado_creado):
-            messages.success(request, 'Se ha añadido el '+formulario.cleaned_data.get('first_name')+" correctamente")
+            messages.success(request, 'Se ha añadido '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_empleados")       
 
     return render(request, 'empleado/create_empleado.html', {'formulario':formulario})
@@ -497,7 +681,7 @@ def empleado_buscar(request):
     if formulario.is_valid():
         texto = formulario.cleaned_data.get('textoBusqueda')
         empleados = Empleado.objects.all()
-        empleados = empleados.filter(nombre_emp__contains=texto).all()
+        empleados = empleados.filter(usuario__first_name__contains=texto).all()
         return render(request, 'empleado/empleado_busqueda.html',{'empleados_mostrar':empleados, 'texto_busqueda':texto})
     if("HTTP_REFERER" in request.META):
         return redirect(request.META["HTTP_REFERER"])
@@ -516,18 +700,33 @@ def empleado_buscar_avanzado(request):
             
             QSempleados = Empleado.objects.all()
             
-            nombre_emp = formulario.cleaned_data.get('nombre_emp')
-            cargo = formulario.cleaned_data.get('cargo')
+            first_name = formulario.cleaned_data.get('first_name')
+            email = formulario.cleaned_data.get('email')
+            direccion_emp = formulario.cleaned_data.get('direccion_emp')
+            date_joined = formulario.cleaned_data.get('date_joined')
+            telefono_emp = formulario.cleaned_data.get('telefono_emp')
             salario = formulario.cleaned_data.get('salario')
             farm_emp = formulario.cleaned_data.get('farm_emp')
             
-            if (nombre_emp != ""):
-                QSempleados = QSempleados.filter(nombre_emp__contains=nombre_emp)
-                mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_emp+"\n"
+            if (first_name != ""):
+                QSempleados = QSempleados.filter(usuario__first_name__contains=first_name)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+first_name+"\n"
                 
-            if (cargo != ""):
-                QSempleados = QSempleados.filter(cargo__contains=cargo)
-                mensaje_busqueda += "Cargo o que contenga la palabra "+cargo+"\n"
+            if (email != ""):
+                QSempleados = QSempleados.filter(usuario__email=email)
+                mensaje_busqueda += "Email sea igual a "+email+"\n"
+            
+            if (direccion_emp != ""):
+                mensaje_busqueda += f"Direccion o que contenga la palabra "+direccion_emp+"\n"
+                QSempleados = QSempleados.filter(direccion_emp__contains = direccion_emp)
+            
+            if (not date_joined is None):
+                mensaje_busqueda += f"Fecha de registro que sea igual o mayor a "+str(date_joined)+"\n"
+                QSempleados = QSempleados.filter(usuario__date_joined__gte = date_joined)
+            
+            if (not telefono_emp is None):
+                mensaje_busqueda += f"Telefono que sea igual a "+str(telefono_emp)+"\n"
+                QSempleados = QSempleados.filter(telefono_emp = telefono_emp)
             
             if (not salario is None):
                 mensaje_busqueda += f"Salario que sea igual o mayor a "+str(salario)+"\n"
@@ -549,8 +748,7 @@ def empleado_buscar_avanzado(request):
     
 @permission_required('App_Farmacia.change_empleado')
 def empleado_editar(request, empleado_id):
-    empleado = Empleado.objects.get(id=empleado_id)
-    
+    empleado = Empleado.objects.select_related('usuario', 'farm_emp').get(id=empleado_id)
     datosFormulario = None
     
     if (request.method == "POST"):
@@ -561,10 +759,9 @@ def empleado_editar(request, empleado_id):
     if (request.method == "POST"):
         
         if formulario.is_valid():
-            formulario.save()
             try:
                 formulario.save()
-                messages.success(request, f"Se ha editado el empleado {empleado.nombre_emp} correctamente")
+                messages.success(request, f"Se ha editado el empleado {empleado.usuario.first_name} correctamente")
                 return redirect('lista_empleados')
             except Exception as error:
                 pass
@@ -575,7 +772,7 @@ def empleado_eliminar(request, empleado_id):
     empleado = Empleado.objects.get(id=empleado_id)
     try:
         empleado.delete()
-        messages.success(request, f"Se ha eliminado el empleado {empleado.nombre_emp} correctamente.")
+        messages.success(request, f"Se ha eliminado el empleado {empleado.usuario.first_name} correctamente.")
     except:
         pass
     return redirect('lista_empleados')
@@ -665,7 +862,7 @@ def votacion_buscar_avanzado(request):
                 
             if (not voto_cliente is None):
                 QSvotaciones = QSvotaciones.filter(voto_cliente=voto_cliente)
-                mensaje_busqueda += "Que el cliente sea "+voto_cliente.nombre_cli+"\n"
+                mensaje_busqueda += "Que el cliente sea "+voto_cliente.usuario.first_name+"\n"
         
             
             votaciones = QSvotaciones.all()
@@ -721,11 +918,33 @@ def crear_cliente_modelo(formulario):
     #Comprueba si el formulario es válido
     if formulario.is_valid():
         try:
-            #Guarda el producto en la base de datos
-            formulario.save()
+            usuario = Usuario.objects.create(
+                username=formulario.cleaned_data.get('username'),
+                first_name=formulario.cleaned_data.get('first_name'),
+                email=formulario.cleaned_data.get('email'),
+                date_joined=formulario.cleaned_data.get('date_joined'),
+                rol=Usuario.CLIENTE
+            )
+            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.save()
+            cliente = Cliente.objects.create(
+                usuario= usuario,
+                direccion_cli= formulario.cleaned_data.get("direccion_cli"),
+                telefono_cli= formulario.cleaned_data.get("telefono_cli"),
+            )
+            
+            productos_favoritos = formulario.cleaned_data.get("productos_favoritos")
+            if productos_favoritos:
+                cliente.productos_favoritos.set(productos_favoritos)
+
+            votacion_prod = formulario.cleaned_data.get("votacion_prod")
+            if votacion_prod:
+                cliente.votacion_prod.set(votacion_prod)
+                
+            cliente.save()            
             cliente_creado = True
-        except:
-            pass
+        except Exception as e: 
+            print(e)
     return cliente_creado                
 
 @permission_required('App_Farmacia.add_cliente')
@@ -742,7 +961,7 @@ def cliente_create(request):
         cliente_creado = crear_cliente_modelo(formulario)
         
         if (cliente_creado):
-            messages.success(request, 'Se ha añadido el cliente '+formulario.cleaned_data.get('nombre_cli')+" correctamente")
+            messages.success(request, 'Se ha añadido el cliente '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_clientes")       
 
     return render(request, 'cliente/create_cliente.html', {'formulario':formulario})
@@ -754,7 +973,7 @@ def cliente_buscar(request):
     if formulario.is_valid():
         texto = formulario.cleaned_data.get('textoBusqueda')
         clientes = Cliente.objects.all()
-        clientes = clientes.filter(nombre_cli__contains=texto).all()
+        clientes = clientes.filter(usuario__first_name__contains=texto).all()
         return render(request, 'cliente/cliente_busqueda.html',{'clientes_mostrar':clientes, 'texto_busqueda':texto})
     if("HTTP_REFERER" in request.META):
         return redirect(request.META["HTTP_REFERER"])
@@ -773,24 +992,34 @@ def cliente_buscar_avanzado(request):
             
             QSclientes = Cliente.objects.all()
             
-            nombre_cli = formulario.cleaned_data.get('nombre_cli')
-            telefono_cli = formulario.cleaned_data.get('telefono_cli')
+            first_name = formulario.cleaned_data.get('first_name')
+            email = formulario.cleaned_data.get('email')
             direccion_cli = formulario.cleaned_data.get('direccion_cli')
+            date_joined = formulario.cleaned_data.get('date_joined')
+            telefono_cli = formulario.cleaned_data.get('telefono_cli')
             productos_favoritos = formulario.cleaned_data.get('productos_favoritos')
             votacion_prod = formulario.cleaned_data.get('votacion_prod')
                 
-            if (nombre_cli != ""):
-                QSclientes = QSclientes.filter(nombre_cli__contains=nombre_cli)
-                mensaje_busqueda += "Nombre o que contenga la palabra "+nombre_cli+"\n"
+            if (first_name != ""):
+                QSclientes = QSclientes.filter(usuario__first_name__contains=first_name)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+first_name+"\n"
                 
-            if (not telefono_cli is None):
-                QSclientes = QSclientes.filter(telefono_cli=telefono_cli)
-                mensaje_busqueda += "Que el teléfono sea "+telefono_cli+"\n"
-            
+            if (email != ""):
+                QSclientes = QSclientes.filter(usuario__email=email)
+                mensaje_busqueda += "Email que sea igual a "+email+"\n"
+                
             if (direccion_cli != ""):
-                mensaje_busqueda += f"Que la direccion sea o contenga la palabra "+direccion_cli+"\n"
-                QSclientes = QSclientes.filter(direccion_cli__contains = direccion_cli)
-                
+                QSclientes = QSclientes.filter(direccion_cli__contains=direccion_cli)
+                mensaje_busqueda += "Direccion o que contenga la palabra "+direccion_cli+"\n"
+            
+            if (not date_joined is None):
+                mensaje_busqueda += f"Fecha de registro que sea igual o mayor a "+str(date_joined)+"\n"
+                QSclientes = QSclientes.filter(usuario__date_joined__gte = date_joined)
+            
+            if (not telefono_cli is None):
+                mensaje_busqueda += f"Telefono que sea igual a "+str(telefono_cli)+"\n"
+                QSclientes = QSclientes.filter(telefono_cli = telefono_cli)
+            
             if (not productos_favoritos is None):
                 QSclientes = QSclientes.filter(productos_favoritos=productos_favoritos)
                 mensaje_busqueda += "Que el producto favorito sea "+productos_favoritos.nombre_prod+"\n"
@@ -836,7 +1065,7 @@ def cliente_eliminar(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     try:
         cliente.delete()
-        messages.success(request, f"Se ha eliminado el cliente {cliente.nombre_cli} correctamente.")
+        messages.success(request, f"Se ha eliminado el cliente {cliente.usuario.first_name} correctamente.")
     except:
         pass
     return redirect('lista_clientes')

@@ -7,11 +7,11 @@
 {% block cabecera %}
     <div class="d-flex justify-content-evenly">
         <div class ="cabecera">
-            <h1>GERENTES | LISTA </h1>
+            <h1>ADMINISTRADORES | LISTA </h1>
         </div>
         <div>
-            <form action="{% url 'gerente_buscar' %}" class="d-flex" role="search" method="GET">
-                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí su gerente" aria-label="Search">
+            <form action="{% url 'administrador_buscar' %}" class="d-flex" role="search" method="GET">
+                <input name="textoBusqueda" class="form-control w-75 " type="search" placeholder="Busque aquí al administrador" aria-label="Search">
                 <button class="btn btn-light btn-outline-dark ms-2" type="submit">Buscar</button>
             </form>
         </div>
@@ -31,25 +31,27 @@
 
     <div class="descripcion_body">
         <div class="descripcion_body-texto">    
-            {% for gerente in gerentes %}
-                {% include 'gerente/gerente.html' %}
+            {% for administrador in administradores %}
+                {% include 'admin/administrador.html' %}
+                {% if request.user.is_authenticated and perms.App_Farmacia.add_administrador %}
                 <div class="row btn-group">             
                     <div class="mb-2 ">
                         <button type="button" 
                                 class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'gerente_editar' gerente.id %}" ><span class="text-dark">Editar Gerente</span></a>
+                                <a class="text-decoration-none" href="{% url 'administrador_editar' administrador.id %}" ><span class="text-dark">Editar Administrador</span></a>
                         </button>
                     </div>
 
                     <div class="">
-                        <form action = "{% url 'gerente_eliminar' gerente.id %}" method="post">
+                        <form action = "{% url 'administrador_eliminar' administrador.id %}" method="post">
                             {% csrf_token %}
                             <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar Gerente</span>
+                                <span>Eliminar Administrador</span>
                             </button>
                         </form>
                     </div>
                 </div>
+                {% endif %}
                 <br>
                 <br>
                 <br>

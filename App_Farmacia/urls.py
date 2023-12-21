@@ -8,6 +8,20 @@ urlpatterns = [
     
     path('login_menu',views.login_menu, name='login_menu'),
     
+    
+    path('administrador/create',views.administrador_create, name='administrador_create'),
+    
+    path('administrador/buscar/',views.administrador_buscar, name='administrador_buscar'),
+    
+    path('administrador/buscar/avanzado/',views.administrador_buscar_avanzado, name='administrador_buscar_avanzado'),
+    
+    path('administrador/editar/<int:administrador_id>',views.administrador_editar, name='administrador_editar'),
+    
+    path('administrador/eliminar/<int:administrador_id>',views.administrador_eliminar, name='administrador_eliminar'),
+    
+    path('administradores/lista',views.administradores_lista, name='lista_administradores'),
+    
+    
     path('producto/create',views.producto_create,name='producto_create'),
     
     path('producto/buscar/',views.producto_buscar, name='producto_buscar'),

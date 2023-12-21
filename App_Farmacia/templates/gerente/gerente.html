@@ -1,6 +1,10 @@
 <div>
-    <h2>Nombre: {{ gerente.nombre_ger|truncatewords:2 }}</h2>
-    <h2>Correo Electronico: {{ gerente.correo }}</h2>
-    <h2>Fecha Inicio: {{ gerente.fecha_inicio_gestion|date:"m-d-Y" }}</h2>
+    <h2>Gerente: {{ gerente.usuario.first_name|truncatewords:2 }}</h2>
+    <h2>Email: {{ gerente.usuario.email }}</h2>
+    <h2>Direccion: {{ gerente.direccion_ger }}</h2>
+    <h2>Teléfono: {{ gerente.telefono_ger }}</h2>
+    <h2>Fecha de Alta: {{ gerente.usuario.date_joined }}</h2>
+    <h2>Último Inicio Sesion: {{ gerente.usuario.last_login }}</h2>
+    <h2>Salario: {{ gerente.salario_ger }} €</h2>
     <h2>Farmacia: {{ gerente.gerente_farm.nombre_farm|truncatewords:1 }}</h2>
 </div>
