@@ -1054,7 +1054,7 @@ def cliente_editar(request, cliente_id):
             formulario.save()
             try:
                 formulario.save()
-                messages.success(request, f"Se ha editado el cliente {cliente.nombre_cli} correctamente")
+                messages.success(request, f"Se ha editado el cliente {cliente.usuario.first_name} correctamente")
                 return redirect('lista_clientes')
             except Exception as error:
                 pass
@@ -1176,7 +1176,7 @@ def promocion_buscar_avanzado(request):
                 
             if (not cliente_promo is None):
                 QSpromociones = QSpromociones.filter(cliente_promo=cliente_promo)
-                mensaje_busqueda += "Cliente/s que tienen promociones "+cliente_promo.nombre_cli+"\n"
+                mensaje_busqueda += "Cliente/s que tienen promociones "+cliente_promo.usuario.first_name+"\n"
         
             
             promociones = QSpromociones.all()
@@ -1278,7 +1278,7 @@ def farmacia_ordenada_fecha(request):
     return render(request, 'farmacia/farmaciaydatos.html', {'farmacias_fecha':datos})
 
 def gerente_nombre(request, nombre_introducido):
-    gerentes = Gerente.objects.select_related('gerente_farm', 'usuario').filter(nombre_ger__contains=nombre_introducido)
+    gerentes = Gerente.objects.select_related('gerente_farm', 'usuario').filter(usuario__first_name__contains=nombre_introducido)
     return render(request, 'gerente/gerentes_filtrado_nombre.html', {'gerentes':gerentes})
 
 def farmacias_con_gerentes(request):
@@ -1357,7 +1357,7 @@ def clientes_nunca_votaron(request):
 
 def cuentas_bancarias_propietario_nombre(request, nombre_propietario):
     cuentas_bancarias = Pago.objects.select_related("cliente_pago", "subscripcion_pago").filter(
-        Q(banco='CA') | Q(banco='UN'),Q(cliente_pago__nombre_cli__icontains=nombre_propietario)
+        Q(banco='CA') | Q(banco='UN'),Q(cliente_pago__usuario__first_name__icontains=nombre_propietario)
     )
     return render(request, 'cuentas/cuentas_bancarias.html', {'cuentas_bancarias': cuentas_bancarias})
 
