@@ -109,8 +109,8 @@ def administrador_create(request):
     
     formulario = AdministradorModelForm(datosFormulario)
     if (request.method == 'POST'):
-        gerente_creado = crear_administrador_modelo(formulario)
-        if (gerente_creado):
+        administrador_creado = crear_administrador_modelo(formulario)
+        if (administrador_creado):
             messages.success(request, 'Se ha añadido el administrador '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_administradores")       
 
@@ -1228,7 +1228,11 @@ def promocion_eliminar(request, promocion_id):
 
 
 
-
+@permission_required('App_Farmacia.view_cliente')
+def administradores_lista(request):
+    administradores = Administrador.objects.select_related('usuario').all()
+    
+    return render(request, 'admin/lista_administradores.html', {'administradores': administradores})
 
 
 @permission_required('App_Farmacia.view_cliente')
