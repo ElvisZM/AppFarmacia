@@ -30,10 +30,9 @@ class RegistroForm(UserCreationForm):
    
 class AdministradorModelForm(UserCreationForm):
     
-    
     email = forms.EmailField(label="Email del administrador")
     
-    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
+    first_name = forms.CharField(label="Nombre y Apellidos")
     
     direccion_admin = forms.CharField(label="Direccion", required=True)
     
@@ -43,13 +42,13 @@ class AdministradorModelForm(UserCreationForm):
     class Meta:
         model = Usuario
         fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'direccion_admin', 'telefono_admin')
+        
 
     
     def clean(self):
     
         super().clean()
 
-        salario_ger = self.cleaned_data.get('salario_ger')
         direccion_admin = self.cleaned_data.get('direccion_admin')
         telefono_admin = self.cleaned_data.get('telefono_admin')
 

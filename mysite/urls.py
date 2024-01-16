@@ -22,6 +22,7 @@ urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
     path('', include('App_Farmacia.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('api/v1/', include('App_Farmacia.api_urls')),
 
 ]
 
