@@ -7,5 +7,6 @@ from .forms import *
 @api_view(['GET'])
 def producto_list(request):
     productos = Producto.objects.all()
-    serializer = ProductoSerializer(productos, many=True)
-    return Response(serializer.data)
+    #serializer = ProductoSerializer(productos, many=True)
+    serializer_mejorado = ProductoSerializerMejorado(productos, many=True)
+    return Response(serializer_mejorado.data)
