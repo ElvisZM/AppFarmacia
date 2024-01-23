@@ -25,6 +25,6 @@ class ProductoSerializerMejorado(serializers.ModelSerializer):
     prov_sum_prod = ProveedorSerializer(read_only=True, many=True)
     
     class Meta:
-        fields = ('nombre_prod', 'descripcion', 'precio', 'farmacia_prod', 'prov_sum_prod')
+        fields = ('id', 'nombre_prod', 'descripcion', 'precio', 'farmacia_prod', 'prov_sum_prod')
         model = Producto
         

@@ -23,7 +23,7 @@ urlpatterns = [
     path('', include('App_Farmacia.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/v1/', include('App_Farmacia.api_urls')),
-
+    path('oauth2/', include('oauth2_provider.urls',namespace='oauth2_provider')),
 ]
 
 handler400 = 'App_Farmacia.views.mi_error_400'

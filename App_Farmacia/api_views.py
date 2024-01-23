@@ -10,3 +10,9 @@ def producto_list(request):
     #serializer = ProductoSerializer(productos, many=True)
     serializer_mejorado = ProductoSerializerMejorado(productos, many=True)
     return Response(serializer_mejorado.data)
+
+def producto_buscar(request):
+    if (request.user.has_perm('AppFarmacia.view_producto')):
+        formulario = BusquedaProductoForm(request.query_params)
+        if (formulario.is_valid()):
+            texto = formulario.cleaned_data.get('textoBusqueda')
