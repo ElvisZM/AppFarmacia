@@ -3,5 +3,5 @@ from .api_views import *
 
 urlpatterns = [
     path('productos', producto_list),
-    path('productos/busqueda_simple', producto_buscar),
+    path('producto/busqueda_simple', producto_buscar),
 ]
