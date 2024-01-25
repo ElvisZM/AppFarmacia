@@ -220,6 +220,39 @@ class BusquedaAvanzadaProductoForm(forms.Form):
                 
         return self.cleaned_data
     
+class BusquedaAvanzadaProductoFormAPI(forms.Form):
+    
+    nombre_prod = forms.CharField (required=False, label="Nombre del Producto")
+    
+    descripcion = forms.CharField (required=False)
+    
+    precio = forms.DecimalField(required=False)
+    
+    def clean(self):
+        
+        super().clean()
+        
+        nombre_prod = self.cleaned_data.get('nombre_prod')
+        descripcion = self.cleaned_data.get('descripcion')
+        precio = self.cleaned_data.get('precio')
+        
+        if(nombre_prod == ""
+           and descripcion == ""
+           and precio is None):
+            self.add_error('nombre_prod', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('descripcion', 'Debe introducir al menos un valor en un campo del formulario')
+            self.add_error('precio', 'Debe introducir al menos un valor en un campo del formulario')
+                    
+        else:
+            if(nombre_prod != "" and len(nombre_prod) < 3):
+                self.add_error('nombre_prod', 'Debe introducir al menos 3 caracteres')
+                
+            if(descripcion != "" and len(descripcion) < 10):
+                self.add_error('nombre_prod', 'Debe introducir al menos 10 caracteres')
+                
+        return self.cleaned_data    
+    
+    
     
 class FarmaciaModelForm(ModelForm):
     class Meta:
