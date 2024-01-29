@@ -7,20 +7,15 @@
     {% csrf_token %}
     <div class="container">
         <div class="mb-4">
-            {% bootstrap_field formulario.nombre_ger show_label=True %}
-                {% spaceless %}
-                {% if formulario.is_bound %}
-                    {{ formulario.nombre_ger.value }}
-                {% endif %}
-                {% endspaceless %}
+            {{ formulario.usuario.first_name }}
         </div>
 
         <div class="mb-4">
-            {% bootstrap_field formulario.correo show_label=True %}
+            {{ formulario.usuario.email }}
         </div>
             
         <div class="mb-4">
-            {% bootstrap_field formulario.fecha_inicio_gestion show_label=True %}
+            {{ formulario.usuario.date_joined }}
         </div>
         
         <div class="mb-4">

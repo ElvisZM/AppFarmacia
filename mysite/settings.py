@@ -151,12 +151,14 @@ INTERNAL_IPS = ['127.0.0.1']
 
 OAUTH2_PROVIDER = {
     'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Acceso a los grupos'},
-    'ACCESS_TOKEN_EXPIRE_SECONDS': 36000000
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 360000000
 }
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        #'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
     ),
 
     'DEFAULT_PERMISSION_CLASSES': (

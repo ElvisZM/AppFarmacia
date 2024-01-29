@@ -15,6 +15,9 @@ class RegistroForm(UserCreationForm):
                 (Usuario.EMPLEADO, 'Empleado'),
                 (Usuario.GERENTE, 'Gerente'),
     )
+    domicilio = forms.CharField(max_length=255, label="Domicilio")
+    telefono = forms.CharField(max_length=15, label="Teléfono")
+    
     rol = forms.ChoiceField(choices=roles, label="Tipo de Usuario")
     class Meta:
         model = Usuario
@@ -382,10 +385,10 @@ class GerenteModelForm(UserCreationForm):
             
         #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
         if (str(telefono_ger)[0] not in ('6','7','9') or len(str(telefono_ger)) != 9):
-            self.add_error('telefono_emp','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_ger','Debe especificar un número español de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro gerente.
-        gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).first()    
+        gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=self.instance.id).first()    
         if (not gerenteTelefono is None):
             self.add_error('telefono_ger','Ya existe un gerente con ese teléfono.')
             
@@ -395,7 +398,7 @@ class GerenteModelForm(UserCreationForm):
             self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
             
         #Comprobamos que la farmacia no tenga ya a un gerente que la gestione
-        farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).first()
+        farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).exclude(id=self.instance.id).first()
         if (farmaciaGestionada):
             self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
 
@@ -507,6 +510,59 @@ class EmpleadoModelForm(UserCreationForm):
             self.add_error('telefono_emp','Ya existe un empleado con ese teléfono.')
             
         return self.cleaned_data
+    
+class EmpleadoEditarModelForm(forms.ModelForm):
+    
+    email = forms.EmailField(label="Email del empleado", required=True)
+    
+    salario = forms.FloatField(label="Salario", required=True, help_text='Salario del Empleado')
+    
+    farm_emp = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=True, label='Farmacia Asignada', widget=forms.Select())
+    
+    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
+    
+    direccion_emp = forms.CharField(label="Direccion", required=True)
+    
+    telefono_emp = forms.IntegerField(label="Telefono", required=True)
+    
+    date_joined = forms.DateTimeField(label="Fecha Registro", required=True)
+      
+    class Meta:
+        model = Usuario
+        fields = ('first_name','email', 'direccion_emp', 'telefono_emp', 'salario','farm_emp', 'date_joined')
+
+    
+    def clean(self):
+    
+        super().clean()
+
+        salario = self.cleaned_data.get('salario')
+        farm_emp = self.cleaned_data.get('farm_emp')
+        direccion_emp = self.cleaned_data.get('direccion_emp')
+        telefono_emp = self.cleaned_data.get('telefono_emp')
+
+        #Comprobamos que se inserte un salario para el empleado.
+        if (salario is None):
+            self.add_error('salario','Debe especificar un salario para el empleado.')
+            
+        #Comprobamos que se inserte una dirección
+        if (direccion_emp is None):
+            self.add_error('direccion_emp','Debe indicar una dirección de contacto para el empleado.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        if (str(telefono_emp)[0] not in ('6','7','9') or len(str(telefono_emp)) != 9):
+            self.add_error('telefono_emp','Debe especificar un número español de 9 dígitos.')
+        
+        #Comprobamos que el numero no exista en otro empleado.
+        empleadoTelefono = Empleado.objects.filter(telefono_emp=telefono_emp).exclude(id=self.instance.id).first()    
+        if (not empleadoTelefono is None):
+            self.add_error('telefono_emp','Ya existe un empleado con ese teléfono.')
+            
+        if (farm_emp is None):
+            self.add_error('farm_emp','Debe especificar a que farmacia pertenece el empleado.')    
+            
+        return self.cleaned_data
+
 
     
 class BusquedaEmpleadoForm(forms.Form):

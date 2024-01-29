@@ -20,14 +20,21 @@
         <div class="mt-5 mb-4">
             <h1>Crea tu cuenta en P.Sur Pharmacy</h1>
         </div>
-        <div class="mb-4">
-            {% bootstrap_field formulario.username %}
+        <div class="d-flex mb-4 justify-content-between">
+            <div class="w-50">
+                {% bootstrap_field formulario.first_name show_label=True%}
+            </div>
+            <div class="w-25">
+                {% bootstrap_field formulario.email %}
+            </div>
         </div>
-        <div class="mb-4">
-            {% bootstrap_field formulario.first_name show_label=True%}
-        </div>
-        <div class="mb-4">
-            {% bootstrap_field formulario.email %}
+        <div class="d-flex mb-4 justify-content-between">
+            <div class="w-50">
+                {% bootstrap_field formulario.username %}
+            </div>
+            <div class="w-25">
+                {% bootstrap_field formulario.telefono show_label=True%}
+            </div>
         </div>
         <div class="d-flex mb-4 justify-content-between">
             <div class="w-50">
@@ -37,10 +44,14 @@
                 {% bootstrap_field formulario.password2 %}
             </div>
         </div>
-        <div class=" w-25">
-            {% bootstrap_field formulario.rol %}
+        <div class="d-flex mb-4 justify-content-between">
+            <div class="w-50">
+                {% bootstrap_field formulario.domicilio show_label=True%}
+            </div>
+            <div class=" w-25">
+                {% bootstrap_field formulario.rol %}
+            </div>
         </div>
-        
         {% buttons %}
             <div class="d-flex justify-content-center">
                 <button class="botonformulario" type="submit">Enviar</button>

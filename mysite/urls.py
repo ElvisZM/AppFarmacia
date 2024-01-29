@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include 
 from App_Farmacia import views
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,6 +26,10 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/v1/', include('App_Farmacia.api_urls')),
     path('oauth2/', include('oauth2_provider.urls',namespace='oauth2_provider')),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    
 ]
 
 handler400 = 'App_Farmacia.views.mi_error_400'

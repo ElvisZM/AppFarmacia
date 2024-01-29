@@ -1,7 +1,9 @@
 from .models import *
 from .serializers import *
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
 
@@ -10,7 +12,12 @@ from .forms import *
 @api_view(['GET'])
 def producto_list(request):
     productos = Producto.objects.all()
-    #serializer = ProductoSerializer(productos, many=True)
+    serializer = ProductoSerializer(productos, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def producto_list_mejorado(request):
+    productos = Producto.objects.all()
     serializer_mejorado = ProductoSerializerMejorado(productos, many=True)
     return Response(serializer_mejorado.data)
 
@@ -29,7 +36,7 @@ def producto_buscar(request):
     else:
         return Response({"Sin permisos"}, status=status.HTTP_400_BAD_REQUEST)    
 
-@api_view()    
+@api_view(['GET'])    
 def producto_busqueda_avanzada(request):
     if (len(request.query_params) > 0):
         formulario = BusquedaAvanzadaProductoFormAPI(request.query_params)
@@ -62,3 +69,22 @@ def producto_busqueda_avanzada(request):
             return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET'])
+def empleado_list(request):
+    empleados = Empleado.objects.all()
+    serializer = EmpleadoSerializer(empleados, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def empleado_list_mejorado(request):
+    empleados = Empleado.objects.all()
+    serializer_mejorado = EmpleadoSerializerMejorado(empleados, many=True)
+    return Response(serializer_mejorado.data)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def votacion_list_mejorado(request):
+    votaciones = Votacion.objects.all()
+    serializer_mejorado = VotacionSerializerMejorado(votaciones, many=True)
+    return Response(serializer_mejorado.data)

@@ -85,7 +85,7 @@ def crear_administrador_modelo(formulario):
                 date_joined=formulario.cleaned_data.get('date_joined'),
                 rol=Usuario.ADMINISTRADOR
             )
-            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.set_password(formulario.cleaned_data.get("password1"))
             usuario.save()
             administrador = Administrador.objects.create(
                 usuario= usuario,
@@ -485,7 +485,7 @@ def crear_gerente_modelo(formulario):
                 date_joined=formulario.cleaned_data.get('date_joined'),
                 rol=Usuario.GERENTE
             )
-            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.set_password(formulario.cleaned_data.get("password1"))
             usuario.save()
             gerente = Gerente.objects.create(
                 usuario= usuario,
@@ -633,6 +633,14 @@ def crear_empleado_modelo(formulario):
     #Comprueba si el formulario es válido
     if formulario.is_valid():
         try:
+            username = formulario.cleaned_data.get('username')
+            password = formulario.cleaned_data.get("password")
+            password1 = formulario.cleaned_data.get("password1")
+
+            # Imprimir información relevante
+            print("Username:", username)
+            print("Password antes de encriptar:", password)
+            print("Password antes de encriptar:", password1)
             #Guarda el producto en la base de datos
             usuario = Usuario.objects.create(
                 username=formulario.cleaned_data.get('username'),
@@ -641,8 +649,10 @@ def crear_empleado_modelo(formulario):
                 date_joined=formulario.cleaned_data.get('date_joined'),
                 rol=Usuario.EMPLEADO
             )
-            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.set_password(formulario.cleaned_data.get("password1"))
             usuario.save()
+            print("Password después de encriptar:", usuario.password)
+
             empleado = Empleado.objects.create(
                 usuario= usuario,
                 salario= formulario.cleaned_data.get("salario"),
@@ -754,7 +764,7 @@ def empleado_editar(request, empleado_id):
     if (request.method == "POST"):
         datosFormulario = request.POST
         
-    formulario = EmpleadoModelForm(datosFormulario, instance = empleado)
+    formulario = EmpleadoEditarModelForm(datosFormulario, instance = empleado)
     
     if (request.method == "POST"):
         
@@ -925,7 +935,7 @@ def crear_cliente_modelo(formulario):
                 date_joined=formulario.cleaned_data.get('date_joined'),
                 rol=Usuario.CLIENTE
             )
-            usuario.set_password(formulario.cleaned_data.get("password"))
+            usuario.set_password(formulario.cleaned_data.get("password1"))
             usuario.save()
             cliente = Cliente.objects.create(
                 usuario= usuario,
