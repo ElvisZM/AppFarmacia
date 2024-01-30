@@ -83,7 +83,7 @@ def empleado_list_mejorado(request):
     return Response(serializer_mejorado.data)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+#@permission_classes([IsAuthenticated])
 def votacion_list_mejorado(request):
     votaciones = Votacion.objects.all()
     serializer_mejorado = VotacionSerializerMejorado(votaciones, many=True)

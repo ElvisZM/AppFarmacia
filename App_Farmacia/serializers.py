@@ -2,6 +2,11 @@ from rest_framework import serializers
 from .models import *
 
 class UsuarioSerializer(serializers.ModelSerializer):
+    
+    date_joined = serializers.DateTimeField(format=('%d-%m-%Y'))
+    
+    last_login = serializers.DateTimeField(format=('%d-%m-%Y'))
+    
     class Meta:
         model = Usuario
         fields = '__all__'
@@ -47,7 +52,7 @@ class EmpleadoSerializerMejorado(serializers.ModelSerializer):
     farm_emp = FarmaciaSerializer()
     usuario = UsuarioSerializer()
     
-    #Para formatear fechas de AbstractUser
+    #Para formatear fechas si estan heredadas de AbstractUser, se realizan en el campo Usuario
     
     class Meta:
         model = Empleado

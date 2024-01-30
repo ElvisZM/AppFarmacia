@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
     'rest_framework',
     'oauth2_provider',
+    'rest_framework_simplejwt',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -156,8 +157,8 @@ OAUTH2_PROVIDER = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        #'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        #'rest_framework_simplejwt.authentication.JWTAuthentication',
 
     ),
 
