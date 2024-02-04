@@ -88,3 +88,31 @@ def votacion_list_mejorado(request):
     votaciones = Votacion.objects.all()
     serializer_mejorado = VotacionSerializerMejorado(votaciones, many=True)
     return Response(serializer_mejorado.data)
+
+@api_view(['GET'])
+def farmacia_list(request):
+    farmacias = Farmacia.objects.all()
+    serializer = FarmaciaSerializer(farmacias, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def proveedor_list(request):
+    proveedores = Proveedor.objects.all()
+    serializer = ProveedorSerializer(proveedores, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def producto_create(request):
+    serializers = ProductoSerializerCreate(data=request.data)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Producto CREADO")
+        except Exception as error:
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_RESQUEST)
+    
+    
+    
+    
