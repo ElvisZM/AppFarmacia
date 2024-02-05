@@ -2,29 +2,43 @@
 
 {% block cabecera %}
     <div class="cabecera">
-        <h1>MI PROYECTO - INICIO</h1>
+        <h1>MI PROYECTO API - INICIO</h1>
     </div>
 {% endblock %}
 
 {% block contenido %}
-    <div class="descripcion_body">
-        <div class="descripcion_body-texto">
-            <h2>Listado de enlaces</h2>
-            <ul>
-                <li><a href="{% url 'farmacias_ordenadas_fecha' %}">1 -- Farmacias ordenadas por fecha de creacion </a></li>
-                <li><a href="{% url 'gerentes_nombre' 'low' %}"> 2 -- Gerentes filtrados por nombre "low" </a></li>
-                <li><a href="{% url 'farmacias_con_gerentes' %}"> 3 -- Farmacias con sus gerentes </a></li>
-                <li><a href="{% url 'productos_con_proveedores' %}"> 4 -- Productos con sus proveedores {# ##¿¿NO FUNCIONA CORRECTAMENTE O COINCIDENCIA NO HAY DATOS EN DB?? PREGUNTAR EN CLASE## #} </a></li>
-                <li><a href="{% url 'empleados_compras' %}"> 5 -- Empleados y sus compras </a></li>
-                <li><a href="{% url 'detalle_compra' 5 %}"> 6 -- Detalle de Compra '5' </a></li>
-                <li><a href="{% url 'clientes_productosfavoritos' %}"> 7 -- Clientes y sus Productos favoritos </a></li>
-                <li><a href="{% url 'empleados_salariosuperior' 3000 %}"> 8 -- Empleados con salario superior a 3000€ </a></li>
-                <li><a href="{% url 'productos_disponibles_farmacia_especifica' 1 %}"> 9 -- Productos disponible en farmacia '1' </a></li>
-                <li><a href="{% url 'compras_entre_fechas' '2010-01-01' '2020-12-31' %}"> 10 -- Compras realizadas entre fechas (2010 - 2020) </a></li>
-                <li><a href="{% url 'ultimo_voto_producto_concreto' 15 %}"> EXAMEN -- ULTIMO VOTO A PRODUCTO CONCRETO </a></li>
-                <li><a href="{% url 'productos_con_puntuacion_3_cliente_concreto' 2 %}"> EXAMEN -- MODELOS PRINCIPALES CON VOTOS IGUAL A 3 CLIENTE CONCRETO</a></li>
-                <li><a href="{% url 'clientes_nunca_votaron' %}"> EXAMEN -- CLIENTES NUNCA VOTARON </a></li>
-            </ul>
+<div class="descripcion_body">
+    <div class="descripcion_body-texto">
+        <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="https://i.pinimg.com/originals/d0/01/f3/d001f368b71cee5b82dc777ace58a311.jpg" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="https://1.bp.blogspot.com/-D1Fqp2A17Mk/UIpc_tlENNI/AAAAAAAAAb4/JMJPZ9OrjbU/s1600/Farmacia.jpg" class="d-block w-100" alt="...">
+              </div>
+              <div class="carousel-item">
+                <img src="https://cdn.arageek.com/magazine/2021/08/Pharmacy-specialties.jpg" class="d-block w-100" alt="...">
+              </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
         </div>
+  
     </div>
+</div>
+
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 {% endblock %}

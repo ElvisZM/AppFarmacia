@@ -111,7 +111,7 @@ def producto_create(request):
         except Exception as error:
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_RESQUEST)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
     
