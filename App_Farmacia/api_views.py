@@ -114,7 +114,9 @@ def proveedor_list(request):
 
 @api_view(['POST'])
 def producto_create(request):
-    serializers = ProductoSerializerCreate(data=request.data)
+    data = request.data
+    data["prov_sum_prod"] = dict(request.data["prov_sum_prod"])
+    serializers = ProductoSerializerCreate(data=data)
     if serializers.is_valid():
         try:
             serializers.save()

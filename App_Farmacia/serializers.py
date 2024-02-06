@@ -91,8 +91,20 @@ class VotacionSerializerMejorado(serializers.ModelSerializer):
         fields = '__all__'
     
     
+class SuministroProductoSerializer(serializers.ModelSerializer):
+    
+    #Para relaciones ManyToOne u OneToOne
+    producto = ProductoSerializerMejorado()
+    proveedor = ProveedorSerializer()
+    
+    class Meta:
+        model = SuministroProducto
+        fields = '__all__'
+    
+    
 class ProductoSerializerCreate(serializers.ModelSerializer):
     
+    prov_sum_prod = SuministroProductoSerializer(many=True)
     class Meta:
         model = Producto
         fields = ['nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
@@ -116,9 +128,8 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             raise serializers.ValidationError('El precio introducido no es válido')
         return precio
     
-    def validate_prov_sum_prod(self, prov_sum_prod):
-        if len(prov_sum_prod) < 1:
+    def validate_prov_sum_prod(self,prov_sum_prod):
+        print("entra aki")
+        if len(prov_sum_prod) < 2:
             raise serializers.ValidationError('Debe seleccionar al menos un proveedor')
         return prov_sum_prod
-    
-            
