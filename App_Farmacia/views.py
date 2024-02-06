@@ -34,14 +34,25 @@ def registrar_usuario(request):
             user = formulario.save()
             rol = int(formulario.cleaned_data.get('rol'))
             if (rol == Usuario.CLIENTE):
-                cliente = Cliente.objects.create(usuario = user)
+                cliente = Cliente.objects.create(usuario = user,
+                                                direccion_cli=formulario.cleaned_data.get('domicilio'),
+                                                telefono_cli=formulario.cleaned_data.get('telefono'))
                 cliente.save()
             if (rol == Usuario.EMPLEADO):
-                empleado = Empleado.objects.create(usuario = user)
+                empleado = Empleado.objects.create(usuario = user, 
+                                                direccion_emp=formulario.cleaned_data.get('domicilio'),
+                                                telefono_emp=formulario.cleaned_data.get('telefono'))
                 empleado.save()
             if (rol == Usuario.GERENTE):
-                gerente = Gerente.objects.create(usuario = user)
+                gerente = Gerente.objects.create(usuario = user,
+                                                direccion_ger=formulario.cleaned_data.get('domicilio'),
+                                                telefono_ger=formulario.cleaned_data.get('telefono'))
                 gerente.save()
+            if (rol == Usuario.ADMINISTRADOR):
+                administrador = Administrador.objects.create(usuario = user, 
+                                                direccion_admin=formulario.cleaned_data.get('domicilio'),
+                                                telefono_admin=formulario.cleaned_data.get('telefono'))
+                administrador.save()
                 
             login(request, user)
             return redirect('index')
@@ -852,15 +863,15 @@ def votacion_buscar_avanzado(request):
             
             if (not puntuacion is None):
                 QSvotaciones = QSvotaciones.filter(puntuacion=puntuacion)
-                mensaje_busqueda += "Puntuacion sea o que contenga la palabra "+puntuacion+"\n"
+                mensaje_busqueda += "Puntuacion sea "+str(puntuacion)+"\n"
                 
             if(not fechaDesde is None):
                 mensaje_busqueda +=" La fecha sea mayor a "+date.strftime(fechaDesde,'%d-%m-%Y')+"\n"
-                QSpromociones = QSpromociones.filter(fecha_fin_promo__gte=fechaDesde)
+                QSvotaciones = QSvotaciones.filter(fecha_votacion__gte=fechaDesde)
             
             if(not fechaHasta is None):
                 mensaje_busqueda +=" La fecha sea menor a "+date.strftime(fechaHasta,'%d-%m-%Y')+"\n"
-                QSpromociones = QSpromociones.filter(fecha_fin_promo__lte=fechaHasta)
+                QSvotaciones = QSvotaciones.filter(fecha_votacion__lte=fechaHasta)
             
             if (comenta_votacion != ""):
                 QSvotaciones = QSvotaciones.filter(comenta_votacion__contains=comenta_votacion)

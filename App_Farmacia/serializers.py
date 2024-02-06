@@ -122,6 +122,3 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
         return prov_sum_prod
     
             
-            
-    
-    

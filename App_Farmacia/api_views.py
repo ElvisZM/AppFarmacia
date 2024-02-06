@@ -38,9 +38,10 @@ def producto_buscar(request):
 
 @api_view(['GET'])    
 def producto_busqueda_avanzada(request):
-    if (len(request.query_params) > 0):
-        formulario = BusquedaAvanzadaProductoFormAPI(request.query_params)
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaProductoForm(request.GET)
         if formulario.is_valid():
+            
             mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
             
             QSproductos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod')
@@ -48,7 +49,9 @@ def producto_busqueda_avanzada(request):
             nombre_prod = formulario.cleaned_data.get('nombre_prod')
             descripcion = formulario.cleaned_data.get('descripcion')
             precio = formulario.cleaned_data.get('precio')
-            
+            farmacia_prod = formulario.cleaned_data.get('farmacia_prod')
+            prov_sum_prod = formulario.cleaned_data.get('prov_sum_prod')
+                            
             if (nombre_prod != ""):
                 QSproductos = QSproductos.filter(Q(nombre_prod__contains=nombre_prod) | Q(descripcion__contains=nombre_prod))
                 mensaje_busqueda += "Nombre o descripcion que contenga la palabra "+nombre_prod+"\n"
@@ -61,6 +64,14 @@ def producto_busqueda_avanzada(request):
                 QSproductos = QSproductos.filter(precio__gte= precio)
                 mensaje_busqueda += f"Precio que sea igual o mayor a {precio}\n"
             
+            if (not farmacia_prod is None):
+                QSproductos = QSproductos.filter(farmacia_prod=farmacia_prod)
+                mensaje_busqueda += "Que la farmacia a la que pertence sea "+farmacia_prod.nombre_farm+"\n"
+                
+            if (not prov_sum_prod is None):
+                QSproductos = QSproductos.filter(prov_sum_prod=prov_sum_prod)
+                mensaje_busqueda += "Que el proveedor sea "+prov_sum_prod.nombre_prov+"\n"
+        
             productos = QSproductos.all()
             
             serializer = ProductoSerializerMejorado(productos, many=True)
@@ -114,5 +125,119 @@ def producto_create(request):
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
+
+@api_view(['GET'])    
+def empleado_busqueda_avanzada(request):
+    if (len(request.query_params) > 0):
+        formulario = BusquedaAvanzadaEmpleadoForm(request.query_params)
+        if formulario.is_valid():
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSempleados = Empleado.objects.all()
+            
+            first_name = formulario.cleaned_data.get('first_name')
+            email = formulario.cleaned_data.get('email')
+            direccion_emp = formulario.cleaned_data.get('direccion_emp')
+            date_joined = formulario.cleaned_data.get('date_joined')
+            telefono_emp = formulario.cleaned_data.get('telefono_emp')
+            salario = formulario.cleaned_data.get('salario')
+            farm_emp = formulario.cleaned_data.get('farm_emp')
+            
+            if (first_name != ""):
+                QSempleados = QSempleados.filter(usuario__first_name__contains=first_name)
+                mensaje_busqueda += "Nombre o que contenga la palabra "+first_name+"\n"
+                
+            if (email != ""):
+                QSempleados = QSempleados.filter(usuario__email=email)
+                mensaje_busqueda += "Email sea igual a "+email+"\n"
+            
+            if (direccion_emp != ""):
+                mensaje_busqueda += f"Direccion o que contenga la palabra "+direccion_emp+"\n"
+                QSempleados = QSempleados.filter(direccion_emp__contains = direccion_emp)
+            
+            if (not date_joined is None):
+                mensaje_busqueda += f"Fecha de registro que sea igual o mayor a "+str(date_joined)+"\n"
+                QSempleados = QSempleados.filter(usuario__date_joined__gte = date_joined)
+            
+            if (not telefono_emp is None):
+                mensaje_busqueda += f"Telefono que sea igual a "+str(telefono_emp)+"\n"
+                QSempleados = QSempleados.filter(telefono_emp = telefono_emp)
+            
+            if (not salario is None):
+                mensaje_busqueda += f"Salario que sea igual o mayor a "+str(salario)+"\n"
+                QSempleados = QSempleados.filter(salario__gte = salario)
+                
+            if (not farm_emp is None):
+                QSempleados = QSempleados.filter(farm_emp=farm_emp)
+                mensaje_busqueda += "Que este asignado/a a la Farmacia "+farm_emp.nombre_farm+"\n"
+            
+            empleados = QSempleados.all()
+            
+            serializer = EmpleadoSerializerMejorado(empleados, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+@api_view(['GET']) 
+def clientes_list(request):
+    clientes = Cliente.objects.all()
+    serializer = ClienteSerializerMejorado(clientes, many=True)
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])    
+def votacion_busqueda_avanzada(request):
+    if (len(request.GET) > 0):
+        formulario = BusquedaAvanzadaVotacionForm(request.GET)
+        if formulario.is_valid():
+            
+            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
+            
+            QSvotaciones = Votacion.objects.all()
+            
+            puntuacion = formulario.cleaned_data.get('puntuacion')
+            fechaDesde = formulario.cleaned_data.get('fecha_desde')
+            fechaHasta = formulario.cleaned_data.get('fecha_hasta')
+            comenta_votacion = formulario.cleaned_data.get('comenta_votacion')
+            voto_producto = formulario.cleaned_data.get('voto_producto')
+            voto_cliente = formulario.cleaned_data.get('voto_cliente')
+            
+            if (not puntuacion is None):
+                QSvotaciones = QSvotaciones.filter(puntuacion=puntuacion)
+                mensaje_busqueda += "Puntuacion sea "+str(puntuacion)+"\n"
+                
+            if(not fechaDesde is None):
+                mensaje_busqueda +=" La fecha sea mayor a "+date.strftime(fechaDesde,'%d-%m-%Y')+"\n"
+                QSvotaciones = QSvotaciones.filter(fecha_votacion__gte=fechaDesde)
+            
+            if(not fechaHasta is None):
+                mensaje_busqueda +=" La fecha sea menor a "+date.strftime(fechaHasta,'%d-%m-%Y')+"\n"
+                QSvotaciones = QSvotaciones.filter(fecha_votacion__lte=fechaHasta)
+            
+            if (comenta_votacion != ""):
+                QSvotaciones = QSvotaciones.filter(comenta_votacion__contains=comenta_votacion)
+                mensaje_busqueda += "Comentario o que contenga la palabra "+comenta_votacion+"\n"
+            
+            if (not voto_producto is None):
+                QSvotaciones = QSvotaciones.filter(voto_producto=voto_producto)
+                mensaje_busqueda += "Que el producto sea "+voto_producto.nombre_prod+"\n"
+                
+            if (not voto_cliente is None):
+                QSvotaciones = QSvotaciones.filter(voto_cliente=voto_cliente)
+                mensaje_busqueda += "Que el cliente sea "+voto_cliente.usuario.first_name+"\n"
+        
+            
+            votaciones = QSvotaciones.all()
+            
+            serializer = VotacionSerializerMejorado(votaciones, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)
     
     

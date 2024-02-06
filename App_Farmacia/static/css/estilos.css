@@ -161,7 +161,7 @@
 .submenulogin {
     display: inline-block;
     position: absolute;
-    z-index: 999;
+    z-index: 1;
     top:100%;
     right:0%;
     width: 220%;
@@ -180,7 +180,7 @@
     margin: auto;
     text-align: left;
     background-color: white;
-    z-index:;
+    z-index:1;
 }
 
 .submenulogin > li > i{
@@ -243,6 +243,10 @@
     margin-top: 3%;
     padding-left: 3%;
     margin-bottom: 5%;
+}
+
+#carouselExampleFade {
+    z-index: 0;
 }
 
 #ó {

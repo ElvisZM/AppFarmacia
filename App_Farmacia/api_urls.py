@@ -10,9 +10,14 @@ urlpatterns = [
     
     path('empleados', empleado_list),
     path('empleados/mejorado', empleado_list_mejorado),
+    path('empleado/busqueda_avanzada', empleado_busqueda_avanzada),
+    
     path('votaciones/mejorado', votacion_list_mejorado),
+    path('votacion/busqueda_avanzada', votacion_busqueda_avanzada),
     
     path('farmacias', farmacia_list),
     
     path('proveedores', proveedor_list),
+    
+    path('clientes', clientes_list),
 ]

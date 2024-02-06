@@ -14,6 +14,7 @@ class RegistroForm(UserCreationForm):
                 (Usuario.CLIENTE, 'Cliente'),
                 (Usuario.EMPLEADO, 'Empleado'),
                 (Usuario.GERENTE, 'Gerente'),
+                (Usuario.ADMINISTRADOR, 'Administrador'),
     )
     domicilio = forms.CharField(max_length=255, label="Domicilio")
     telefono = forms.CharField(max_length=15, label="Teléfono")
@@ -223,39 +224,8 @@ class BusquedaAvanzadaProductoForm(forms.Form):
                 
         return self.cleaned_data
     
-class BusquedaAvanzadaProductoFormAPI(forms.Form):
-    
-    nombre_prod = forms.CharField (required=False, label="Nombre del Producto")
-    
-    descripcion = forms.CharField (required=False)
-    
-    precio = forms.DecimalField(required=False)
-    
-    def clean(self):
-        
-        super().clean()
-        
-        nombre_prod = self.cleaned_data.get('nombre_prod')
-        descripcion = self.cleaned_data.get('descripcion')
-        precio = self.cleaned_data.get('precio')
-        
-        if(nombre_prod == ""
-           and descripcion == ""
-           and precio is None):
-            self.add_error('nombre_prod', 'Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('descripcion', 'Debe introducir al menos un valor en un campo del formulario')
-            self.add_error('precio', 'Debe introducir al menos un valor en un campo del formulario')
-                    
-        else:
-            if(nombre_prod != "" and len(nombre_prod) < 3):
-                self.add_error('nombre_prod', 'Debe introducir al menos 3 caracteres')
-                
-            if(descripcion != "" and len(descripcion) < 10):
-                self.add_error('nombre_prod', 'Debe introducir al menos 10 caracteres')
-                
-        return self.cleaned_data    
-    
-    
+
+
     
 class FarmaciaModelForm(ModelForm):
     class Meta:
@@ -694,7 +664,7 @@ class BusquedaAvanzadaVotacionForm(forms.Form):
         
         super().clean()
         
-        puntuacion = self.cleaned_data.get('puntuaciom')
+        puntuacion = self.cleaned_data.get('puntuacion')
         fecha_desde = self.cleaned_data.get('fecha_desde')
         fecha_hasta = self.cleaned_data.get('fecha_hasta')
         comenta_votacion = self.cleaned_data.get('comenta_votacion')
