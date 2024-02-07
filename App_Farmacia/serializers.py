@@ -104,13 +104,12 @@ class SuministroProductoSerializer(serializers.ModelSerializer):
     
 class ProductoSerializerCreate(serializers.ModelSerializer):
     
-    prov_sum_prod = SuministroProductoSerializer(many=True)
     class Meta:
         model = Producto
         fields = ['nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
         
     def validate_nombre_prod(self,nombre):
-        productoNombre = Producto.objects.filter(nombre_prod=nombre).first()
+        productoNombre = Producto.objects.filter(nombre_prod=nombre, farmacia_prod=self.initial_data['farmacia_prod']).first()
         if(not productoNombre is None):
             if(not self.instance is None and productoNombre.id == self.instance.id):
                 pass
@@ -128,8 +127,22 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             raise serializers.ValidationError('El precio introducido no es válido')
         return precio
     
-    def validate_prov_sum_prod(self,prov_sum_prod):
-        print("entra aki")
-        if len(prov_sum_prod) < 2:
-            raise serializers.ValidationError('Debe seleccionar al menos un proveedor')
-        return prov_sum_prod
+    def create(self, validated_data):
+        proveedores = self.initial_data['prov_sum_prod']
+        if len(proveedores) < 1:
+            raise serializers.ValidationError(
+                {'prov_sum_prod':
+                ['Debe seleccionar al menos un proveedor']
+                })
+        
+        producto = Producto.objects.create(
+            nombre_prod = validated_data['nombre_prod'],
+            descripcion = validated_data['descripcion'],
+            precio = validated_data['precio'],
+            
+            )
+        for proveedor in proveedores:
+            modeloProveedor = Proveedor.objects.get(id=proveedor)
+            SuministroProducto.objects.create(proveedor=modeloProveedor, producto=producto)
+        
+        return producto

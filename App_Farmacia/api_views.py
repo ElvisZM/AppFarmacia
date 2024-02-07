@@ -116,15 +116,17 @@ def proveedor_list(request):
 def producto_create(request):
     data = request.data
     data["prov_sum_prod"] = dict(request.data["prov_sum_prod"])
-    serializers = ProductoSerializerCreate(data=data)
-    if serializers.is_valid():
+    producto_serializers = ProductoSerializerCreate(data=data)
+    if producto_serializers.is_valid():
         try:
-            serializers.save()
+            producto_serializers.save()
             return Response("Producto CREADO")
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error:
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
 
