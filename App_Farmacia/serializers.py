@@ -139,10 +139,31 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             nombre_prod = validated_data['nombre_prod'],
             descripcion = validated_data['descripcion'],
             precio = validated_data['precio'],
-            
+            farmacia_prod = validated_data['farmacia_prod'],
             )
         for proveedor in proveedores:
             modeloProveedor = Proveedor.objects.get(id=proveedor)
             SuministroProducto.objects.create(proveedor=modeloProveedor, producto=producto)
         
         return producto
+    
+    
+    def update(self, instance, validated_data):
+        proveedores = self.initial_data['prov_sum_prod']
+        if len(proveedores) < 1:
+            raise serializers.ValidationError(
+                {'prov_sum_prod':
+                ['Debe seleccionar al menos un proveedor']
+                })
+        
+        instance.nombre_prod = validated_data["nombre_prod"]
+        instance.descripcion = validated_data["descripcion"]
+        instance.precio = validated_data["precio"]
+        instance.farmacia_prod = validated_data["farmacia_prod"]
+        instance.save()
+        
+        instance.proveedores.clear()
+        for proveedor in proveedores:
+            modeloProveedor = Proveedor.objects.get(id=proveedor)
+            SuministroProducto.objects.create(proveedor=modeloProveedor, producto=instance)
+        return instance

@@ -114,9 +114,7 @@ def proveedor_list(request):
 
 @api_view(['POST'])
 def producto_create(request):
-    data = request.data
-    data["prov_sum_prod"] = dict(request.data["prov_sum_prod"])
-    producto_serializers = ProductoSerializerCreate(data=data)
+    producto_serializers = ProductoSerializerCreate(data=request.data)
     if producto_serializers.is_valid():
         try:
             producto_serializers.save()
@@ -124,10 +122,30 @@ def producto_create(request):
         except serializers.ValidationError as error:
             return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
         except Exception as error:
+            print(error)
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
+@api_view(['PUT'])
+def producto_editar(request, producto_id):
+    producto = Producto.objects.get(id=producto_id)
+    productoCreateSerializer = ProductoSerializerCreate(data=request.data, instance=producto)
+    if productoCreateSerializer.is_valid():
+        try:
+            productoCreateSerializer.save()
+            return Response("Producto EDITADO")
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    else:
+        return Response(productoCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+ 
+ 
+ 
+ 
+ 
     
 
 @api_view(['GET'])    
