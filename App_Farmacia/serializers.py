@@ -161,7 +161,7 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
         instance.farmacia_prod = validated_data["farmacia_prod"]
         instance.save()
         
-        instance.proveedores.clear()
+        instance.prov_sum_prod.clear()
         for proveedor in proveedores:
             modeloProveedor = Proveedor.objects.get(id=proveedor)
             SuministroProducto.objects.create(proveedor=modeloProveedor, producto=instance)
