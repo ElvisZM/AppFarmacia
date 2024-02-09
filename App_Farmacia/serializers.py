@@ -114,7 +114,7 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             if(not self.instance is None and productoNombre.id == self.instance.id):
                 pass
             else:
-                raise serializers.ValidationError('Ya existe un producto con ese nombre.')        
+                raise serializers.ValidationError('Ya existe un producto con ese nombre en esta farmacia.')        
         return nombre
     
     def validate_descripcion(self,descripcion):
@@ -147,7 +147,6 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
         
         return producto
     
-    
     def update(self, instance, validated_data):
         proveedores = self.initial_data['prov_sum_prod']
         if len(proveedores) < 1:
@@ -167,3 +166,30 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             modeloProveedor = Proveedor.objects.get(id=proveedor)
             SuministroProducto.objects.create(proveedor=modeloProveedor, producto=instance)
         return instance
+ 
+   
+class ProductoSerializerActualizarNombre(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ['nombre_prod']
+        
+    def validate_nombre_prod(self, nombre_prod):
+        productoNombre = Producto.objects.filter(nombre_prod=nombre_prod).first()
+        if(not productoNombre is None and productoNombre.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe un producto con ese nombre')
+        return nombre_prod
+    
+class UsuarioSerializerRegistro(serializers.Serializer):
+    
+    username = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+    email = serializers.EmailField()
+    rol = serializers.IntegerField()
+    
+    def validate_username(self, username):
+        usuario = Usuario.objects.filter(username=username).first()
+        if(not usuario is None):
+            raise serializers.ValidationError('Ya existe un usuario con ese nombre.')
+        return username
+    

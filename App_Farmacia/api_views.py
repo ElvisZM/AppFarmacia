@@ -126,11 +126,19 @@ def producto_create(request):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+  
+@api_view(['GET'])  
+def producto_obtener(request, producto_id):
+    producto = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod")
+    producto = producto.get(id=producto_id)
+    serializer = ProductoSerializerMejorado(producto)
+    return Response(serializer.data)  
+  
     
 @api_view(['PUT'])
 def producto_editar(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
-    productoCreateSerializer = ProductoSerializerCreate(data=request.data, instance=producto)
+    productoCreateSerializer = ProductoSerializerCreate(instance=producto, data=request.data)
     if productoCreateSerializer.is_valid():
         try:
             productoCreateSerializer.save()
@@ -141,8 +149,34 @@ def producto_editar(request, producto_id):
             return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
     else:
         return Response(productoCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+def producto_actualizar_nombre(request, producto_id):
+    serializers = ProductoSerializerCreate(data=request.data)
+    producto = Producto.objects.get(id=producto_id)
+    serializers = ProductoSerializerActualizarNombre(data=request.data, instance=producto)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Producto EDITADO")
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+@api_view(['DELETE'])
+def producto_eliminar(request, producto_id):
+    producto = Producto.objects.get(id=producto_id)
+    try:
+        producto.delete()
+        return Response("Producto DELETEADO")
+    except Exception as error:
+        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
  
  
+
  
  
  
