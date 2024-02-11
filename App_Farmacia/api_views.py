@@ -6,8 +6,55 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from django.db.models import Q
-
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.views import APIView
 from .forms import *
+
+class FileUploadAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = FileUploadSerializer
+    
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            # you can access the file like this from serializer
+            # uploaded_file = serializer.validated_data["file"]
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    def put(self, request, pk, *args, **kwargs):
+        instance = self.get_object(pk)
+        serializer = self.serializer_class(instance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request, pk, *args, **kwargs):
+        instance = self.get_object(pk)
+        serializer = self.serializer_class(instance, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, *args, **kwargs):
+        instance = self.get_object(pk)
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def get_object(self, pk):
+        try:
+            return UploadedFile.objects.get(pk=pk)
+        except UploadedFile.DoesNotExist:
+            raise Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def producto_list(request):
@@ -126,7 +173,8 @@ def producto_create(request):
             return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     else:
         return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-  
+
+
 @api_view(['GET'])  
 def producto_obtener(request, producto_id):
     producto = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod")
@@ -175,6 +223,95 @@ def producto_eliminar(request, producto_id):
     except Exception as error:
         return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
  
+ 
+
+
+
+
+@api_view(['GET'])
+def farmacia_buscar(request):
+    if (request.user.has_perm('AppFarmacia.view_producto')):
+        formulario = BusquedaFarmaciaForm(request.query_params)
+        if (formulario.is_valid()):
+            texto = formulario.data.get('textoBusqueda')
+            farmacias = Farmacia.objects.all()
+            farmacias = farmacias.filter(Q(nombre_farm__contains=texto) | Q(direccion_farm__contains=texto)).all()
+            serializer = FarmaciaSerializer(farmacias, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"Sin permisos"}, status=status.HTTP_400_BAD_REQUEST)    
+
+
+
+
+@api_view(['POST'])
+def farmacia_create(request):
+    farmacia_serializers = FarmaciaSerializerCreate(data=request.data)
+    if farmacia_serializers.is_valid():
+        try:
+            farmacia_serializers.save()
+            return Response("Farmacia CREADA")
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print(error)
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(farmacia_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])  
+def farmacia_obtener(request, farmacia_id):
+    farmacia = Farmacia.objects.all()
+    farmacia = farmacia.get(id=farmacia_id)
+    serializer = FarmaciaSerializer(farmacia)
+    return Response(serializer.data)  
+  
+    
+@api_view(['PUT'])
+def farmacia_editar(request, farmacia_id):
+    farmacia = Farmacia.objects.get(id=farmacia_id)
+    farmaciaCreateSerializer = FarmaciaSerializerCreate(instance=farmacia, data=request.data)
+    if farmaciaCreateSerializer.is_valid():
+        try:
+            farmaciaCreateSerializer.save()
+            return Response("Farmacia EDITADA")
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    else:
+        return Response(farmaciaCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+def farmacia_actualizar_nombre(request, farmacia_id):
+    serializers = FarmaciaSerializerCreate(data=request.data)
+    farmacia = Farmacia.objects.get(id=farmacia_id)
+    serializers = FarmaciaSerializerActualizarNombre(data=request.data, instance=farmacia)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Farmacia EDITADA")
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+@api_view(['DELETE'])
+def farmacia_eliminar(request, farmacia_id):
+    farmacia = Farmacia.objects.get(id=farmacia_id)
+    try:
+        farmacia.delete()
+        return Response("Farmacia DELETEADA")
+    except Exception as error:
+        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+ 
+ 
+
  
 
  
@@ -236,12 +373,84 @@ def empleado_busqueda_avanzada(request):
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
     
+ 
+ 
+ 
+ 
+ 
     
 @api_view(['GET']) 
 def clientes_list(request):
     clientes = Cliente.objects.all()
     serializer = ClienteSerializerMejorado(clientes, many=True)
     return Response(serializer.data)
+
+
+
+
+
+
+
+
+
+
+@api_view(['POST'])
+def votacion_create(request):
+    votacion_serializers = VotacionSerializerCreate(data=request.data)
+    if votacion_serializers.is_valid():
+        try:
+            votacion_serializers.save()
+            return Response("Votacion CREADA")
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            print(error)
+            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(votacion_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])  
+def votacion_obtener(request, votacion_id):
+    votacion = Votacion.objects.select_related("voto_producto", "voto_cliente")
+    votacion = votacion.get(id=votacion_id)
+    serializer = VotacionSerializerMejorado(votacion)
+    return Response(serializer.data)  
+  
+    
+@api_view(['PUT'])
+def votacion_editar(request, votacion_id):
+    votacion = Votacion.objects.get(id=votacion_id)
+    votacionCreateSerializer = VotacionSerializerCreate(instance=votacion, data=request.data)
+    if votacionCreateSerializer.is_valid():
+        try:
+            votacionCreateSerializer.save()
+            return Response("Votacion EDITADA")
+        except serializers.ValidationError as error:
+            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    else:
+        return Response(votacionCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['GET'])
+def votacion_buscar(request):
+    if (request.user.has_perm('AppFarmacia.view_votacion')):
+        formulario = BusquedaVotacionForm(request.query_params)
+        if (formulario.is_valid()):
+            texto = formulario.data.get('textoBusqueda')
+            votaciones = Votacion.objects.all()
+            votaciones = votaciones.filter(Q(puntuacion__contains=texto) | Q(comenta_votacion__contains=texto)).all()
+            serializer = VotacionSerializerMejorado(votaciones, many=True)
+            return Response(serializer.data)
+        else:
+            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response({"Sin permisos"}, status=status.HTTP_400_BAD_REQUEST)    
+
 
 
 
@@ -295,5 +504,29 @@ def votacion_busqueda_avanzada(request):
             return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PATCH'])
+def votacion_actualizar_puntuacion(request, votacion_id):
+    serializers = VotacionSerializerCreate(data=request.data)
+    votacion = Votacion.objects.get(id=votacion_id)
+    serializers = VotacionSerializerActualizarPuntuacion(data=request.data, instance=votacion)
+    if serializers.is_valid():
+        try:
+            serializers.save()
+            return Response("Votacion EDITADO")
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    else:
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
+@api_view(['DELETE'])
+def votacion_eliminar(request, votacion_id):
+    votacion = Votacion.objects.get(id=votacion_id)
+    try:
+        votacion.delete()
+        return Response("Votacion DELETEADA")
+    except Exception as error:
+        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+ 

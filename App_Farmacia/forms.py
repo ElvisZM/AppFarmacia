@@ -220,7 +220,7 @@ class BusquedaAvanzadaProductoForm(forms.Form):
                 self.add_error('nombre_prod', 'Debe introducir al menos 3 caracteres')
                 
             if(descripcion != "" and len(descripcion) < 10):
-                self.add_error('nombre_prod', 'Debe introducir al menos 10 caracteres')
+                self.add_error('descripcion', 'Debe introducir al menos 10 caracteres')
                 
         return self.cleaned_data
     

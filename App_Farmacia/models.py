@@ -118,11 +118,6 @@ class DetalleCompra(models.Model):
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE)
     producto_detalle = models.ForeignKey(Producto, on_delete=models.CASCADE)
 
-class CuentaEmpleado(models.Model):
-    empleado = models.OneToOneField(Empleado, on_delete=models.CASCADE) 
-    nombre_usuario = models.CharField(max_length=50)
-    contraseña = models.CharField(max_length=50)
-
 class HistorialCliente(models.Model):
     cliente = models.OneToOneField(Cliente, on_delete=models.CASCADE)
     total_compras = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -144,3 +139,10 @@ class Promocion(models.Model):
     valor_promo = models.IntegerField(default=0)
     fecha_fin_promo = models.DateField()
     cliente_promo = models.OneToOneField(Cliente, on_delete=models.CASCADE)
+    
+class UploadedFile(models.Model):
+    file = models.FileField()
+    uploaded_on = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.uploaded_on.date()

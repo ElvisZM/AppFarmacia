@@ -12,6 +12,11 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = '__all__'
 
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedFile
+        fields = ('file', 'uploaded_on',)
+
 class FarmaciaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Farmacia
@@ -178,6 +183,104 @@ class ProductoSerializerActualizarNombre(serializers.ModelSerializer):
         if(not productoNombre is None and productoNombre.id != self.instance.id):
             raise serializers.ValidationError('Ya existe un producto con ese nombre')
         return nombre_prod
+    
+    
+    
+
+    
+    
+class FarmaciaSerializerCreate(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Farmacia
+        fields = ['nombre_farm','direccion_farm','telefono_farm']
+        
+    def validate_nombre_farm(self,nombre):
+        farmaciaNombre = Farmacia.objects.filter(nombre_farm=nombre).first()
+        if(not (farmaciaNombre is None or (not self.instance is None and farmaciaNombre.id == self.instance.id))):
+            raise serializers.ValidationError('Ya existe una farmacia con ese nombre.')        
+        return nombre
+    
+    def validate_direccion_farm(self,direccion):
+        if len(direccion) < 10:
+            raise serializers.ValidationError('Al menos debes indicar 10 caracteres')
+        return direccion
+    
+    def validate_telefono_farm(self,telefono):
+        if (str(telefono)[0] not in ('6','7','9') or len(str(telefono)) != 9):
+            raise serializers.ValidationError('Debe especificar un número español de 9 dígitos.')
+        return telefono
+    
+    def update(self, instance, validated_data):
+        
+        instance.nombre_farm = validated_data["nombre_farm"]
+        instance.direccion_farm = validated_data["direccion_farm"]
+        instance.telefono_farm = validated_data["telefono_farm"]
+        instance.save()
+        
+        return instance
+   
+class FarmaciaSerializerActualizarNombre(serializers.ModelSerializer):
+    class Meta:
+        model = Farmacia
+        fields = ['nombre_farm']
+        
+    def validate_nombre_farm(self, nombre):
+        farmaciaNombre = Farmacia.objects.filter(nombre_farm=nombre).first()
+        if(not farmaciaNombre is None and farmaciaNombre.id != self.instance.id):
+            raise serializers.ValidationError('Ya existe una farmacia con ese nombre')
+        return nombre
+        
+    
+    
+
+
+
+   
+class VotacionSerializerCreate(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Votacion
+        fields = ['numeros','puntuacion','fecha_votacion','comenta_votacion','voto_producto','voto_cliente']
+        
+    def validate_comenta_votacion(self,comentario):
+        if len(comentario) < 10:
+            raise serializers.ValidationError('Al menos debes indicar 10 caracteres')
+        return comentario
+    
+    def validate_voto_producto(self,productoSeleccionado):
+        if (productoSeleccionado is None):
+            raise serializers.ValidationError('Debe seleccionar un producto a votar.')
+        return productoSeleccionado
+    
+    def validate_voto_cliente(self,clienteVota):
+        if (clienteVota is None):
+            raise serializers.ValidationError('Debe seleccionar quien realizo la votación.')
+        return clienteVota
+    
+    
+    def update(self, instance, validated_data):
+        
+        instance.puntuacion = validated_data["puntuacion"]
+        instance.comenta_votacion = validated_data["comenta_votacion"]
+        instance.voto_producto = validated_data["voto_producto"]
+        instance.voto_cliente = validated_data["voto_cliente"]
+        instance.save()
+        
+        return instance
+   
+class VotacionSerializerActualizarPuntuacion(serializers.ModelSerializer):
+    class Meta:
+        model = Votacion
+        fields = ['puntuacion']
+    
+
+
+
+
+
+
+    
     
 class UsuarioSerializerRegistro(serializers.Serializer):
     
