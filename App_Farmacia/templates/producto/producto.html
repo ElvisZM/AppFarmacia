@@ -5,7 +5,7 @@
             <p class="card-text">Precio: {{ producto.precio }}€</p>
             <p class="card-text">Farmacia: {{ producto.farmacia_prod.nombre_farm}}</p>
             {% for proveedor in producto.prov_sum_prod.all %}
-            <p class="card-text">Proveedor del Producto: {{ proveedor.nombre_prov }}</p>
+            <p class="card-text">Proveedor: {{ proveedor.nombre_prov }}</p>
             {% endfor %}
         </div>
         {% if request.user.is_authenticated and perms.App_Farmacia.add_producto %}

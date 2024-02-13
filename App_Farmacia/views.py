@@ -36,21 +36,29 @@ def registrar_usuario(request):
             user = formulario.save()
             rol = int(formulario.cleaned_data.get('rol'))
             if (rol == Usuario.CLIENTE):
+                grupo = Group.objects.get(name="Cliente")
+                grupo.user_set.add(user)
                 cliente = Cliente.objects.create(usuario = user,
                                                 direccion_cli=formulario.cleaned_data.get('domicilio'),
                                                 telefono_cli=formulario.cleaned_data.get('telefono'))
                 cliente.save()
             if (rol == Usuario.EMPLEADO):
+                grupo = Group.objects.get(name="Empleado")
+                grupo.user_set.add(user)
                 empleado = Empleado.objects.create(usuario = user, 
                                                 direccion_emp=formulario.cleaned_data.get('domicilio'),
                                                 telefono_emp=formulario.cleaned_data.get('telefono'))
                 empleado.save()
             if (rol == Usuario.GERENTE):
+                grupo = Group.objects.get(name="Gerente")
+                grupo.user_set.add(user)
                 gerente = Gerente.objects.create(usuario = user,
                                                 direccion_ger=formulario.cleaned_data.get('domicilio'),
                                                 telefono_ger=formulario.cleaned_data.get('telefono'))
                 gerente.save()
             if (rol == Usuario.ADMINISTRADOR):
+                grupo = Group.objects.get(name="Administrador")
+                grupo.user_set.add(user)
                 administrador = Administrador.objects.create(usuario = user, 
                                                 direccion_admin=formulario.cleaned_data.get('domicilio'),
                                                 telefono_admin=formulario.cleaned_data.get('telefono'))

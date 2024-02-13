@@ -432,7 +432,7 @@ class GerenteEdicionForm(forms.Form):
     
     telefono_ger = forms.IntegerField(label="Telefono", required=True)
     
-    gerente_farm = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
+    gerente_farm = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=True, label="Farmacia Asignada", widget=forms.Select())
 
 
     def clean(self):
@@ -452,25 +452,37 @@ class GerenteEdicionForm(forms.Form):
         if (direccion_ger is None):
             self.add_error('direccion_ger','Debe indicar una dirección de contacto para el gerente.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español.
-        if (str(telefono_ger)[0] not in ('6','7','9') or len(str(telefono_ger)) != 9):
-            self.add_error('telefono_ger','Debe especificar un número español de 9 dígitos.')
-        
-        #Comprobamos que el numero no exista en otro gerente.
-        #gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=self.instance.id).first() 
-        #if (not gerenteTelefono is None):
-        #    self.add_error('telefono_ger','Ya existe un gerente con ese teléfono.')
-           
         #Comprobamos que inserte una farmacia a gestionar    
         if (gerente_farm is None):
             self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
-            
-        #Comprobamos que la farmacia no tenga ya a un gerente que la gestione
-        #farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).exclude(id=self.instance.id).first()
-        #if (farmaciaGestionada):
-        #    self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
 
         return self.cleaned_data
+    
+    def clean_telefono_ger(self):
+        telefono_ger = self.cleaned_data.get('telefono_ger')
+
+        #Comprobamos que el numero tenga 9 digitos, sea español.
+        if not str(telefono_ger).startswith(('6', '7', '9')) or len(str(telefono_ger)) != 9:
+            raise forms.ValidationError('Debe especificar un número español de 9 dígitos.')
+
+        #Obtenemos la ID del gerente actual
+        gerente_id = self.data.get('gerente_id')
+
+        #Comprobamos que el numero no exista en otro gerente.
+        if gerente_id and Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=gerente_id).exists():
+            raise forms.ValidationError('Ya existe un gerente con ese teléfono.')
+
+        return telefono_ger
+    
+    
+    def clean_gerente_farm(self):
+        gerente_farm = self.cleaned_data.get('gerente_farm')
+
+        #Comprobamos que la farmacia no tenga ya a un gerente que la gestione
+        if Gerente.objects.filter(gerente_farm=gerente_farm).exclude(gerente_farm=gerente_farm).exists():
+            raise forms.ValidationError('La farmacia ya tiene un gerente asignado.')
+        
+        return gerente_farm
                
                
 

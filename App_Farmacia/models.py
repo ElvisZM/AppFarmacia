@@ -13,13 +13,13 @@ class Usuario(AbstractUser):
     EMPLEADO = 3
     GERENTE = 4
     ROLES = (
-        (ADMINISTRADOR, 'administrador'),
-        (CLIENTE, 'cliente'),
-        (EMPLEADO, 'empleado'),
-        (GERENTE, 'gerente'),
+        (ADMINISTRADOR, 'Administrador'),
+        (CLIENTE, 'Cliente'),
+        (EMPLEADO, 'Empleado'),
+        (GERENTE, 'Gerente'),
     )
     
-    rol = models.PositiveSmallIntegerField(choices=ROLES, default=1)
+    rol = models.PositiveSmallIntegerField(choices=ROLES)
 
 class Administrador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
@@ -30,6 +30,9 @@ class Farmacia(models.Model):
     nombre_farm = models.CharField(max_length=200)
     direccion_farm = models.CharField(max_length=200)
     telefono_farm = models.IntegerField(null=True, blank=True)
+    
+    def __str__(self):
+        return self.nombre_farm
 
 class Gerente(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
@@ -47,7 +50,10 @@ class Empleado(models.Model):
     
 class Proveedor(models.Model):
     nombre_prov = models.CharField(max_length=200)
-    direccion_prov = models.CharField(max_length=200)    
+    direccion_prov = models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.nombre_prov
 
 class Producto(models.Model):
     nombre_prod = models.CharField(max_length=200)
@@ -55,6 +61,9 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=5, decimal_places=2)
     farmacia_prod = models.ForeignKey(Farmacia, on_delete=models.CASCADE)
     prov_sum_prod = models.ManyToManyField(Proveedor, through='SuministroProducto')
+    
+    def __str__(self):
+        return self.nombre_prod
 
 class SuministroProducto(models.Model):
     fecha_sum = models.DateField(null=True, blank=True)
@@ -139,6 +148,9 @@ class Promocion(models.Model):
     valor_promo = models.IntegerField(default=0)
     fecha_fin_promo = models.DateField()
     cliente_promo = models.OneToOneField(Cliente, on_delete=models.CASCADE)
+        
+    def __str__(self):
+        return self.nombre_promo
     
 class UploadedFile(models.Model):
     file = models.FileField()
