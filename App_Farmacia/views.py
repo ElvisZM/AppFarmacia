@@ -18,8 +18,10 @@ from django.contrib.auth.decorators import permission_required
 def index(request):
     if(not "fecha_inicio" in request.session):
         request.session["fecha_inicio"] = dt.now().strftime("%d/%m/%Y %H:%M")
+        
+    productos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod').all()[:6]
     
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'productos': productos})
 
 def borrar_sesion(request):
     del request.session["fecha_inicio"]
@@ -200,7 +202,7 @@ def administrador_editar(request, administrador_id):
     if (request.method == "POST"):
         datosFormulario = request.POST
         
-    formulario = AdministradorModelForm(datosFormulario, instance = administrador)
+    formulario = AdministradorEditarModelForm(datosFormulario, instance = administrador)
     
     if (request.method == "POST"):
         
@@ -600,29 +602,22 @@ def gerente_buscar_avanzado(request):
         
     return render(request, 'gerente/busqueda_avanzada_gerente.html',{'formulario':formulario})    
     
-    
 @permission_required('App_Farmacia.change_gerente')
 def gerente_editar(request, gerente_id):
     gerente = Gerente.objects.get(id=gerente_id)
-    
-    datosFormulario = None
-    
-    if (request.method == "POST"):
-        datosFormulario = request.POST
-        
-    formulario = GerenteModelForm(datosFormulario, instance = gerente)
-    
-    if (request.method == "POST"):
-        
+    formulario = GerenteEdicionModelForm(instance=gerente)
+
+    if request.method == "POST":
+        formulario = GerenteEdicionModelForm(request.POST, instance=gerente)
         if formulario.is_valid():
             formulario.save()
-            try:
-                formulario.save()
-                messages.success(request, f"Se ha editado el gerente {gerente.usuario.first_name} correctamente")
-                return redirect('lista_gerentes')
-            except Exception as error:
-                pass
-    return render(request, 'gerente/actualizar_gerente.html', {'formulario': formulario, 'gerente':gerente})    
+            messages.success(request, f"Se ha editado el gerente {gerente.usuario.first_name} correctamente")
+            return redirect('lista_gerentes')
+        else:
+            print("Formulario inválido:", formulario.errors)
+
+    return render(request, 'gerente/actualizar_gerente.html', {'formulario': formulario, 'gerente': gerente})
+
     
     
     
@@ -1067,7 +1062,7 @@ def cliente_editar(request, cliente_id):
     if (request.method == "POST"):
         datosFormulario = request.POST
         
-    formulario = ClienteModelForm(datosFormulario, instance = cliente)
+    formulario = ClienteEditarModelForm(datosFormulario, instance = cliente)
     
     if (request.method == "POST"):
         
@@ -1295,6 +1290,7 @@ def productos_lista(request):
     productos = Producto.objects.select_related('farmacia_prod').prefetch_related('prov_sum_prod').all()
 
     return render(request, 'producto/lista_productos.html', {'productos':productos})
+
 
 
 

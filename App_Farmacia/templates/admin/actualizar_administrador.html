@@ -7,11 +7,15 @@
     {% csrf_token %}
     <div class="container">
         <div class="mb-4">
-            {{ formulario.instance.usuario.first_name }}
+            <p>Nombre y apellidos <h4>{{ formulario.instance.usuario.first_name }}</h4></p>
         </div>
 
         <div class="mb-4">
-            {{ formulario.instance.usuario.email }}
+            <p>Email <h4>{{ formulario.instance.usuario.email }}</h4></p>
+        </div>
+
+        <div class="mb-4">
+            <p>Fecha de Registro <h4>{{ formulario.instance.usuario.date_joined }}</h4></p>
         </div>
             
         <div class="mb-4">

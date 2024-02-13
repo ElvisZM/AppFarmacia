@@ -187,6 +187,8 @@ def producto_obtener(request, producto_id):
 def producto_editar(request, producto_id):
     producto = Producto.objects.get(id=producto_id)
     productoCreateSerializer = ProductoSerializerCreate(instance=producto, data=request.data)
+    print("MI SERIALIZER")
+    print(productoCreateSerializer)
     if productoCreateSerializer.is_valid():
         try:
             productoCreateSerializer.save()

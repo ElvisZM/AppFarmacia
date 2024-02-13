@@ -2,11 +2,10 @@
 {% load bootstrap5 %}
 {% block contenido %}
 <div class="container-menu">
-    <div class="text-center">
+    <div class="text-end">
         <h6>Fecha Inicio: {{ request.session.fecha_inicio}}</h5>
-        {% if request.user.is_authenticated %}
-        <h5>¡Hola, {{ request.user.username }}!</h5>
-        {% endif %}
+            {% if request.user.is_authenticated %}
+            {% endif %}
     </div>
     <div class="header">
         <div class="logo">
@@ -17,7 +16,6 @@
         </div>
         <div class="menu-expansible">
             <ul>
-                <!-- Elemento del menú "Categorías" con un submenu-->
                 <li><a href="#"> Ejercicios <i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="submenu">
                         <li><a href="{% url 'farmacias_ordenadas_fecha' %}">1 -- Farmacias ordenadas por fecha de creacion </a></li>
@@ -35,7 +33,7 @@
                         <li><a href="{% url 'clientes_nunca_votaron' %}"> EXAMEN -- CLIENTES NUNCA VOTARON </a></li>
                     </ul>
                 </li>
-                <li><a href="#">Lista de C.R.U.D.S</a>
+                <li><a href="#">Lista de C.R.U.D.S <i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="listacruds">
                         {% if request.user.is_authenticated and perms.App_Farmacia.add_administrador %}
                         <li><a href="#">Administradores</a>
@@ -102,7 +100,7 @@
                         </li>
                     </ul>
                 </li>
-                <li><a href="#">Productos</a>
+                <li><a href="#">Productos <i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="submenucrud">
                         {% if request.user.is_authenticated and perms.App_Farmacia.add_producto %}
                         <li><a href="{% url 'producto_create' %}">Crear Producto</a></li>
@@ -111,7 +109,6 @@
                         <li><a href="{% url 'lista_productos' %}">Ver Productos</a></li>
                     </ul>
                 </li>
-                <!-- Elemento del menú "Busqueda" -->
                 
                 <li>            
                     <form action="{% url 'producto_buscar' %}" class="d-flex mt-2" role="search" method="GET">

@@ -31,34 +31,12 @@
 
     <div class="descripcion_body">
         <div class="descripcion_body-texto">    
-            {% for gerente in gerentes %}
+            <div class="grid-container">   
+                {% for gerente in gerentes %}
                 {% include 'gerente/gerente.html' %}
-                <div class="row btn-group">             
-                    <div class="mb-2 ">
-                        <button type="button" 
-                                class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'gerente_editar' gerente.id %}" ><span class="text-dark">Editar Gerente</span></a>
-                        </button>
-                    </div>
-
-                    <div class="">
-                        <form action = "{% url 'gerente_eliminar' gerente.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar Gerente</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <br>
-                <hr>
             {% empty %}
             <h2> No se encontraron datos. </h2>
             {% endfor %}
         </div>
-    {% block busqueda %}
-    {% endblock %}
     </div>
 {% endblock %}

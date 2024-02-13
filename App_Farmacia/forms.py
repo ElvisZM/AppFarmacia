@@ -73,6 +73,46 @@ class AdministradorModelForm(UserCreationForm):
         return self.cleaned_data
                
 
+  
+class AdministradorEditarModelForm(forms.ModelForm):
+    
+    direccion_admin = forms.CharField(label="Direccion", required=True)
+    
+    telefono_admin = forms.IntegerField(label="Telefono", required=True)
+    
+    
+    class Meta:
+        model = Administrador
+        fields = '__all__'
+        exclude = ('usuario',)
+        
+
+    
+    def clean(self):
+    
+        super().clean()
+
+        direccion_admin = self.cleaned_data.get('direccion_admin')
+        telefono_admin = self.cleaned_data.get('telefono_admin')
+
+        #Comprobamos que se inserte una dirección
+        if (direccion_admin is None):
+            self.add_error('direccion_admin','Debe indicar una dirección de contacto para el administrador.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        if (str(telefono_admin)[0] not in ('6','7','9') or len(str(telefono_admin)) != 9):
+            self.add_error('telefono_admin','Debe especificar un número español de 9 dígitos.')
+        
+        #Comprobamos que el numero no exista en otro administrador.
+        administradorTelefono = Administrador.objects.filter(telefono_admin=telefono_admin).exclude(id=self.instance.id).first()    
+        if (not administradorTelefono is None):
+            self.add_error('telefono_admin','Ya existe un administrador con ese teléfono.')
+           
+        return self.cleaned_data
+               
+
+
+
 class BusquedaAdministradorForm(forms.Form):
     textoBusqueda = forms.CharField(required=True)
     
@@ -353,7 +393,7 @@ class GerenteModelForm(UserCreationForm):
         if (direccion_ger is None):
             self.add_error('direccion_ger','Debe indicar una dirección de contacto para el gerente.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea español.
         if (str(telefono_ger)[0] not in ('6','7','9') or len(str(telefono_ger)) != 9):
             self.add_error('telefono_ger','Debe especificar un número español de 9 dígitos.')
         
@@ -361,7 +401,6 @@ class GerenteModelForm(UserCreationForm):
         gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=self.instance.id).first()    
         if (not gerenteTelefono is None):
             self.add_error('telefono_ger','Ya existe un gerente con ese teléfono.')
-            
            
         #Comprobamos que inserte una farmacia a gestionar    
         if (gerente_farm is None):
@@ -373,6 +412,68 @@ class GerenteModelForm(UserCreationForm):
             self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
 
         return self.cleaned_data
+               
+               
+                
+    
+class GerenteEdicionModelForm(forms.ModelForm):
+    
+    
+    email = forms.EmailField(label="Email del gerente")
+    
+    salario_ger = forms.FloatField(label="Salario", required=True, help_text='Salario del Gerente')
+    
+    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
+    
+    direccion_ger = forms.CharField(label="Direccion", required=True)
+    
+    telefono_ger = forms.IntegerField(label="Telefono", required=True)
+    
+    gerente_farm = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
+
+    
+    class Meta:
+        model = Gerente
+        fields = '__all__'
+        exclude = ('usuario',)
+    
+    def clean(self):
+    
+        super().clean()
+
+        salario_ger = self.cleaned_data.get('salario_ger')
+        gerente_farm = self.cleaned_data.get('gerente_farm')
+        direccion_ger = self.cleaned_data.get('direccion_ger')
+        telefono_ger = self.cleaned_data.get('telefono_ger')
+
+        #Comprobamos que se inserte un salario para el gerente.
+        if (salario_ger is None):
+            self.add_error('salario_ger','Debe especificar un salario para el gerente.')
+            
+        #Comprobamos que se inserte una dirección
+        if (direccion_ger is None):
+            self.add_error('direccion_ger','Debe indicar una dirección de contacto para el gerente.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español.
+        if (str(telefono_ger)[0] not in ('6','7','9') or len(str(telefono_ger)) != 9):
+            self.add_error('telefono_ger','Debe especificar un número español de 9 dígitos.')
+        
+        #Comprobamos que el numero no exista en otro gerente.
+        gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=self.instance.id).first()    
+        if (not gerenteTelefono is None):
+            self.add_error('telefono_ger','Ya existe un gerente con ese teléfono.')
+           
+        #Comprobamos que inserte una farmacia a gestionar    
+        if (gerente_farm is None):
+            self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
+            
+        #Comprobamos que la farmacia no tenga ya a un gerente que la gestione
+        farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).exclude(id=self.instance.id).first()
+        if (farmaciaGestionada):
+            self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
+
+        return self.cleaned_data
+               
                
 
 class BusquedaGerenteForm(forms.Form):
@@ -483,23 +584,18 @@ class EmpleadoModelForm(UserCreationForm):
     
 class EmpleadoEditarModelForm(forms.ModelForm):
     
-    email = forms.EmailField(label="Email del empleado", required=True)
-    
     salario = forms.FloatField(label="Salario", required=True, help_text='Salario del Empleado')
     
     farm_emp = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=True, label='Farmacia Asignada', widget=forms.Select())
-    
-    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
     
     direccion_emp = forms.CharField(label="Direccion", required=True)
     
     telefono_emp = forms.IntegerField(label="Telefono", required=True)
     
-    date_joined = forms.DateTimeField(label="Fecha Registro", required=True)
-      
     class Meta:
-        model = Usuario
-        fields = ('first_name','email', 'direccion_emp', 'telefono_emp', 'salario','farm_emp', 'date_joined')
+        model = Empleado
+        fields = '__all__'
+        exclude = ('usuario',)
 
     
     def clean(self):
@@ -734,7 +830,47 @@ class ClienteModelForm(UserCreationForm):
             self.add_error('telefono_cli','Ya existe un cliente con ese teléfono.')
                 
         return self.cleaned_data
-               
+
+  
+class ClienteEditarModelForm(forms.ModelForm):
+    
+    direccion_cli = forms.CharField(label="Direccion", required=True)
+    
+    telefono_cli = forms.IntegerField(label="Telefono", required=True)
+    
+    productos_favoritos = forms.ModelMultipleChoiceField(queryset=Producto.objects.all(), required=False, label="Producto Favorito del Cliente", widget=forms.SelectMultiple())
+
+    votacion_prod = forms.ModelMultipleChoiceField (queryset=Producto.objects.all(), required=False, label="Productos Votados por el Cliente", widget=forms.SelectMultiple())
+ 
+    
+    class Meta:
+        model = Cliente
+        fields = '__all__'
+        exclude = ('usuario',)
+    
+    
+    def clean(self):
+    
+        super().clean()
+
+        direccion_cli = self.cleaned_data.get('direccion_cli')
+        telefono_cli = self.cleaned_data.get('telefono_cli')
+
+        #Comprobamos que se inserte una dirección para el cliente.
+        if (direccion_cli is None):
+            self.add_error('direccion_cli', 'Debe especificar una direccioón para el cliente.')
+            
+        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        if (str(telefono_cli)[0] not in ('6','7','9') or len(str(telefono_cli)) != 9):
+            self.add_error('telefono_cli','Debe especificar un número español de 9 dígitos.')
+        
+        #Comprobamos que el numero no exista en otro cliente.
+        clienteTelefono = Cliente.objects.filter(telefono_cli=telefono_cli).first()    
+        if (not clienteTelefono is None):
+            self.add_error('telefono_cli','Ya existe un cliente con ese teléfono.')
+                
+        return self.cleaned_data
+                              
 
 class BusquedaClienteForm(forms.Form):
     textoBusqueda = forms.CharField(required=True)

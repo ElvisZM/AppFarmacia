@@ -6,7 +6,7 @@
 
 {% block cabecera %}
     <div class="d-flex justify-content-evenly">
-        <div class ="cabecera">
+        <div class ="cabecera w-50">
             <h1>PRODUCTOS | LISTA </h1>
         </div>
         <div>
@@ -30,41 +30,14 @@
     {% endif %}
 
     <div class="descripcion_body">
-        <div class="descripcion_body-texto">    
+        <div class="descripcion_body-texto"> 
+            <div class="grid-container">   
+   
             {% for producto in productos %}
                 {% include 'producto/producto.html' %}
-                {% for proveedor in producto.prov_sum_prod.all %}
-                    <h2>Proveedor: {{ proveedor.nombre_prov|truncatewords:1 }}</h2>
-                    <h2>Dirección: {{ proveedor.direccion_prov|truncatewords:3}}</h2>
-                {% endfor %}
-                {% if request.user.is_authenticated and perms.App_Farmacia.add_producto %}
-                <div class="row btn-group">             
-                    <div class="mb-2 ">
-                        <button type="button" 
-                                class="btn btn-outline-primary"> 
-                                <a class="text-decoration-none" href="{% url 'producto_editar' producto.id %}" ><span class="text-dark">Editar Producto</span></a>
-                        </button>
-                    </div>
-
-                    <div class="">
-                        <form action = "{% url 'producto_eliminar' producto.id %}" method="post">
-                            {% csrf_token %}
-                            <button class="btn btn-danger" onclick="return eliminar();" type="submit">
-                                <span>Eliminar Producto</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                {% endif %}
-                <br>
-                <br>
-                <br>
-                <hr>
             {% empty %}
             <h2> No se encontraron datos. </h2>
             {% endfor %}
         </div>
-    {% block busqueda %}
-    {% endblock %}
     </div>
 {% endblock %}
