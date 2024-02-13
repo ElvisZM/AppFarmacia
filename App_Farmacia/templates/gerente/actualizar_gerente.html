@@ -6,16 +6,23 @@
 <form action="{% url 'gerente_editar' gerente.id %}" method="post">
     {% csrf_token %}
     <div class="container">
+
+
         <div class="mb-4">
-            <p>Nombre y apellidos <h4>{{ formulario.instance.usuario.first_name }}</h4></p>
+            {% bootstrap_field formulario.username show_label=True %}
         </div>
 
         <div class="mb-4">
-            <p>Email <h4>{{ formulario.instance.usuario.email }}</h4></p>
+            {% bootstrap_field formulario.first_name show_label=True %}
+        </div>
+
+
+        <div class="mb-4">
+            {% bootstrap_field formulario.email show_label=True %}
         </div>
 
         <div class="mb-4">
-            <p>Fecha de Registro <h4>{{ formulario.instance.usuario.date_joined }}</h4></p>
+            {% bootstrap_field formulario.date_joined show_label=True %}
         </div>
 
         <div class="mb-4">

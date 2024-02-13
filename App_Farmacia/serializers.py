@@ -133,11 +133,16 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
         return precio
     
     def create(self, validated_data):
-        proveedores = self.initial_data['prov_sum_prod']
-        if len(proveedores) < 1:
+        if('prov_sum_prod' not  in self.initial_data):
             raise serializers.ValidationError(
                 {'prov_sum_prod':
-                ['Debe seleccionar al menos un proveedor']
+                ['No ha enviado proveedores']
+                })
+        proveedores = self.initial_data['prov_sum_prod']
+        if len(proveedores) < 2:
+            raise serializers.ValidationError(
+                {'prov_sum_prod':
+                ['Debe seleccionar al menos dos proveedores.']
                 })
         
         producto = Producto.objects.create(

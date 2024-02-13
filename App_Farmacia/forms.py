@@ -416,14 +416,17 @@ class GerenteModelForm(UserCreationForm):
                
                 
     
-class GerenteEdicionModelForm(forms.ModelForm):
+class GerenteEdicionForm(forms.Form):
     
+    username = forms.CharField(label='Usuario' ,max_length=150)
     
-    email = forms.EmailField(label="Email del gerente")
+    first_name = forms.CharField(label='Nombre y Apellidos', max_length=150)
+    
+    email = forms.EmailField(label='Email')
+    
+    date_joined = forms.DateField(label='Fecha de Registro')
     
     salario_ger = forms.FloatField(label="Salario", required=True, help_text='Salario del Gerente')
-    
-    first_name = forms.CharField(label="Nombre y Apellidos", required=True)
     
     direccion_ger = forms.CharField(label="Direccion", required=True)
     
@@ -431,12 +434,7 @@ class GerenteEdicionModelForm(forms.ModelForm):
     
     gerente_farm = forms.ModelChoiceField (queryset=Farmacia.objects.all(), required=False, label="Farmacia Asignada", widget=forms.Select())
 
-    
-    class Meta:
-        model = Gerente
-        fields = '__all__'
-        exclude = ('usuario',)
-    
+
     def clean(self):
     
         super().clean()
@@ -459,18 +457,18 @@ class GerenteEdicionModelForm(forms.ModelForm):
             self.add_error('telefono_ger','Debe especificar un número español de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro gerente.
-        gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=self.instance.id).first()    
-        if (not gerenteTelefono is None):
-            self.add_error('telefono_ger','Ya existe un gerente con ese teléfono.')
+        #gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=self.instance.id).first() 
+        #if (not gerenteTelefono is None):
+        #    self.add_error('telefono_ger','Ya existe un gerente con ese teléfono.')
            
         #Comprobamos que inserte una farmacia a gestionar    
         if (gerente_farm is None):
             self.add_error('gerente_farm','Debe introducir una farmacia a gestionar.')
             
         #Comprobamos que la farmacia no tenga ya a un gerente que la gestione
-        farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).exclude(id=self.instance.id).first()
-        if (farmaciaGestionada):
-            self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
+        #farmaciaGestionada = Gerente.objects.filter(gerente_farm=gerente_farm).exclude(id=self.instance.id).first()
+        #if (farmaciaGestionada):
+        #    self.add_error('gerente_farm','La farmacia ya tiene a un gerente asignado.')
 
         return self.cleaned_data
                

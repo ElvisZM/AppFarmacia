@@ -605,12 +605,31 @@ def gerente_buscar_avanzado(request):
 @permission_required('App_Farmacia.change_gerente')
 def gerente_editar(request, gerente_id):
     gerente = Gerente.objects.get(id=gerente_id)
-    formulario = GerenteEdicionModelForm(instance=gerente)
+    formulario = GerenteEdicionForm( initial={
+                        "username":gerente.usuario.username,
+                        "first_name":gerente.usuario.first_name,
+                        "email":gerente.usuario.email,
+                        "date_joined":gerente.usuario.date_joined,
+                        "direccion_ger":gerente.direccion_ger,
+                        "telefono_ger":gerente.telefono_ger,
+                        "salario_ger":gerente.salario_ger,
+                        "gerente_farm":gerente.gerente_farm
+                        
+                        })
 
-    if request.method == "POST":
-        formulario = GerenteEdicionModelForm(request.POST, instance=gerente)
+    if request.method == "POST":    
+        formulario = GerenteEdicionForm(request.POST)
         if formulario.is_valid():
-            formulario.save()
+            gerente.usuario.username = formulario.cleaned_data['username']
+            gerente.usuario.first_name = formulario.cleaned_data['first_name']
+            gerente.usuario.email = formulario.cleaned_data['email']
+            gerente.usuario.date_joined = formulario.cleaned_data['date_joined']
+            gerente.direccion_ger = formulario.cleaned_data['direccion_ger']
+            gerente.telefono_ger = formulario.cleaned_data['telefono_ger']
+            gerente.salario_ger = formulario.cleaned_data['salario_ger']
+            gerente.gerente_farm = formulario.cleaned_data['gerente_farm']
+            gerente.usuario.save()
+            gerente.save()
             messages.success(request, f"Se ha editado el gerente {gerente.usuario.first_name} correctamente")
             return redirect('lista_gerentes')
         else:
