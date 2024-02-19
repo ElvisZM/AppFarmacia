@@ -1,3 +1,5 @@
+{% load socialaccount %}
+{% providers_media_js %}
 {% load static %}
 {% load bootstrap5 %}
 {% block contenido %}
@@ -126,7 +128,7 @@
                         <li><p id="ó"><b> O usar </b></p></li>
                         <li><p id="parrafo-google-apple">
                                 <div class="google-apple">
-                                    <button><i class="fa-brands fa-google fa-2xl"></i></button>
+                                    <button><a href="{% provider_login_url 'google' %}"><i class="fa-brands fa-google fa-2xl"></i></a></button>
                                     <button><i class="fa-brands fa-apple fa-2xl"></i></button>
                                 </div>
                             </p>

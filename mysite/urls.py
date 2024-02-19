@@ -26,15 +26,13 @@ urlpatterns = [
     path('__debug__/', include('debug_toolbar.urls')),
     path('', include('App_Farmacia.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('allauth.urls')),
     path('api/v1/', include('App_Farmacia.api_urls')),
     path('oauth2/', include('oauth2_provider.urls',namespace='oauth2_provider')),
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
-    
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),    
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 
 handler400 = 'App_Farmacia.views.mi_error_400'
 handler403 = 'App_Farmacia.views.mi_error_403'

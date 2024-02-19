@@ -19,7 +19,7 @@ class Usuario(AbstractUser):
         (GERENTE, 'Gerente'),
     )
     
-    rol = models.PositiveSmallIntegerField(choices=ROLES)
+    rol = models.PositiveSmallIntegerField(choices=ROLES, default=CLIENTE)
 
 class Administrador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
