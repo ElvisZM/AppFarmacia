@@ -29,7 +29,8 @@ class registrar_usuario(generics.CreateAPIView):
             try:
                 rol = request.data.get('rol')
                 user = Usuario.objects.create_user(
-                        username = serializers.data.get("username"), 
+                        username = serializers.data.get("username"),
+                        first_name = serializers.data.get("first_name"),
                         email = serializers.data.get("email"), 
                         password = serializers.data.get("password1"),
                         rol = rol,
@@ -69,8 +70,9 @@ class registrar_usuario(generics.CreateAPIView):
 
 @api_view(['GET'])
 def obtener_usuario_token(request,token):
+    
     ModeloToken = AccessToken.objects.get(token=token)
-    usuario = Usuario.objects.get(id=ModeloToken.id)
+    usuario = Usuario.objects.get(id=ModeloToken.user_id)
     serializer = UsuarioSerializer(usuario)
     return Response(serializer.data)
     
