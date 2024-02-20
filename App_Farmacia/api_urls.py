@@ -3,6 +3,9 @@ from .api_views import *
 
 
 urlpatterns = [
+    path('registrar/usuario',registrar_usuario.as_view()),
+    
+    
     path('upload-file/', FileUploadAPIView.as_view()),
     path('upload-file/<int:pk>/', FileUploadAPIView.as_view(), name='file-detail'),
 

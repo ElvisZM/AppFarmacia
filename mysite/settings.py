@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
+    'corsheaders',
 ]
 
 SITE_ID = 1
@@ -197,3 +198,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8001",
+]

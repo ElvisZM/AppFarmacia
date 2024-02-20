@@ -2,6 +2,24 @@ from rest_framework import serializers
 from .models import *
 from .forms import *
 
+
+class UsuarioSerializerRegistro(serializers.Serializer):
+    
+    username = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+    email = serializers.EmailField()
+    rol = serializers.IntegerField()
+    
+    def validate_username(self, username):
+        usuario = Usuario.objects.filter(username=username).first()
+        
+        if(not usuario is None):
+            raise serializers.ValidationError('Ya existe un usuario con ese nombre.')
+        return username
+
+
+
 class UsuarioSerializer(serializers.ModelSerializer):
     
     date_joined = serializers.DateTimeField(format=('%d-%m-%Y'))
