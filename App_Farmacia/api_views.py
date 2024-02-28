@@ -27,7 +27,7 @@ class registrar_usuario(generics.CreateAPIView):
         serializers = UsuarioSerializerRegistro(data=request.data)
         if serializers.is_valid():
             try:
-                rol = request.data.get('rol')
+                rol = int(request.data.get('rol'))
                 user = Usuario.objects.create_user(
                         username = serializers.data.get("username"),
                         first_name = serializers.data.get("first_name"),
@@ -41,19 +41,19 @@ class registrar_usuario(generics.CreateAPIView):
                     cliente = Cliente.objects.create( usuario = user)
                     cliente.save()
                     
-                if(rol == Usuario.EMPLEADO):
+                elif(rol == Usuario.EMPLEADO):
                     grupo = Group.objects.get(name='Empleado') 
                     grupo.user_set.add(user)
                     empleado = Cliente.objects.create( usuario = user)
                     empleado.save()
                 
-                if(rol == Usuario.GERENTE):
+                elif(rol == Usuario.GERENTE):
                     grupo = Group.objects.get(name='Gerente') 
                     grupo.user_set.add(user)
                     gerente = Cliente.objects.create( usuario = user)
                     gerente.save()
                     
-                if(rol == Usuario.ADMINISTRADOR):
+                elif(rol == Usuario.ADMINISTRADOR):
                     grupo = Group.objects.get(name='Clientes') 
                     grupo.user_set.add(user)
                     cliente = Cliente.objects.create( usuario = user)
@@ -197,15 +197,24 @@ def producto_busqueda_avanzada(request):
     
 @api_view(['GET'])
 def empleado_list(request):
-    empleados = Empleado.objects.all()
-    serializer = EmpleadoSerializer(empleados, many=True)
-    return Response(serializer.data)
+    if(request.user.has_perm("App_Farmacia.add_empleado")):
+        empleados = Empleado.objects.all()
+        serializer = EmpleadoSerializer(empleados, many=True)
+        return Response(serializer.data)
+    else:
+       return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['GET'])
 def empleado_list_mejorado(request):
-    empleados = Empleado.objects.all()
-    serializer_mejorado = EmpleadoSerializerMejorado(empleados, many=True)
-    return Response(serializer_mejorado.data)
+    if(request.user.has_perm("App_Farmacia.view_empleado")):
+        empleados = Empleado.objects.all()
+        serializer_mejorado = EmpleadoSerializerMejorado(empleados, many=True)
+        return Response(serializer_mejorado.data)
+    else:
+       return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 @api_view(['GET'])
 #@permission_classes([IsAuthenticated])
@@ -222,24 +231,31 @@ def farmacia_list(request):
 
 @api_view(['GET'])
 def proveedor_list(request):
-    proveedores = Proveedor.objects.all()
-    serializer = ProveedorSerializer(proveedores, many=True)
-    return Response(serializer.data)
+    if(request.user.has_perm("App_Farmacia.view_proveedor")):
+        proveedores = Proveedor.objects.all()
+        serializer = ProveedorSerializer(proveedores, many=True)
+        return Response(serializer.data)
+    else:
+       return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
 
 @api_view(['POST'])
 def producto_create(request):
-    producto_serializers = ProductoSerializerCreate(data=request.data)
-    if producto_serializers.is_valid():
-        try:
-            producto_serializers.save()
-            return Response("Producto CREADO")
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            print(error)
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.add_producto")):
+        producto_serializers = ProductoSerializerCreate(data=request.data)
+        if producto_serializers.is_valid():
+            try:
+                producto_serializers.save()
+                return Response("Producto CREADO")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                print(error)
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])  
@@ -252,43 +268,58 @@ def producto_obtener(request, producto_id):
     
 @api_view(['PUT'])
 def producto_editar(request, producto_id):
-    producto = Producto.objects.get(id=producto_id)
-    productoCreateSerializer = ProductoSerializerCreate(instance=producto, data=request.data)
-    if productoCreateSerializer.is_valid():
-        try:
-            productoCreateSerializer.save()
-            return Response("Producto EDITADO")
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    if(request.user.has_perm("App_Farmacia.change_producto")):
+        producto = Producto.objects.get(id=producto_id)
+        productoCreateSerializer = ProductoSerializerCreate(instance=producto, data=request.data)
+        if productoCreateSerializer.is_valid():
+            try:
+                productoCreateSerializer.save()
+                return Response("Producto EDITADO")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+        else:
+            return Response(productoCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(productoCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 @api_view(['PATCH'])
 def producto_actualizar_nombre(request, producto_id):
-    serializers = ProductoSerializerCreate(data=request.data)
-    producto = Producto.objects.get(id=producto_id)
-    serializers = ProductoSerializerActualizarNombre(data=request.data, instance=producto)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Producto EDITADO")
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.change_producto")):
+
+        serializers = ProductoSerializerCreate(data=request.data)
+        producto = Producto.objects.get(id=producto_id)
+        serializers = ProductoSerializerActualizarNombre(data=request.data, instance=producto)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Producto EDITADO")
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+        
     
 @api_view(['DELETE'])
 def producto_eliminar(request, producto_id):
-    producto = Producto.objects.get(id=producto_id)
-    try:
-        producto.delete()
-        return Response("Producto DELETEADO")
-    except Exception as error:
-        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.delete_producto")):
+
+        producto = Producto.objects.get(id=producto_id)
+        try:
+            producto.delete()
+            return Response("Producto DELETEADO")
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
  
  
 
@@ -297,36 +328,37 @@ def producto_eliminar(request, producto_id):
 
 @api_view(['GET'])
 def farmacia_buscar(request):
-    if (request.user.has_perm('AppFarmacia.view_producto')):
-        formulario = BusquedaFarmaciaForm(request.query_params)
-        if (formulario.is_valid()):
-            texto = formulario.data.get('textoBusqueda')
-            farmacias = Farmacia.objects.all()
-            farmacias = farmacias.filter(Q(nombre_farm__contains=texto) | Q(direccion_farm__contains=texto)).all()
-            serializer = FarmaciaSerializer(farmacias, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    formulario = BusquedaFarmaciaForm(request.query_params)
+    if (formulario.is_valid()):
+        texto = formulario.data.get('textoBusqueda')
+        farmacias = Farmacia.objects.all()
+        farmacias = farmacias.filter(Q(nombre_farm__contains=texto) | Q(direccion_farm__contains=texto)).all()
+        serializer = FarmaciaSerializer(farmacias, many=True)
+        return Response(serializer.data)
     else:
-        return Response({"Sin permisos"}, status=status.HTTP_400_BAD_REQUEST)    
+        return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 
 @api_view(['POST'])
 def farmacia_create(request):
-    farmacia_serializers = FarmaciaSerializerCreate(data=request.data)
-    if farmacia_serializers.is_valid():
-        try:
-            farmacia_serializers.save()
-            return Response("Farmacia CREADA")
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            print(error)
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.add_farmacia")):
+
+        farmacia_serializers = FarmaciaSerializerCreate(data=request.data)
+        if farmacia_serializers.is_valid():
+            try:
+                farmacia_serializers.save()
+                return Response("Farmacia CREADA")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                print(error)
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(farmacia_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(farmacia_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
 
 @api_view(['GET'])  
@@ -339,43 +371,62 @@ def farmacia_obtener(request, farmacia_id):
     
 @api_view(['PUT'])
 def farmacia_editar(request, farmacia_id):
-    farmacia = Farmacia.objects.get(id=farmacia_id)
-    farmaciaCreateSerializer = FarmaciaSerializerCreate(instance=farmacia, data=request.data)
-    if farmaciaCreateSerializer.is_valid():
-        try:
-            farmaciaCreateSerializer.save()
-            return Response("Farmacia EDITADA")
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    if(request.user.has_perm("App_Farmacia.change_farmacia")):
+
+        farmacia = Farmacia.objects.get(id=farmacia_id)
+        farmaciaCreateSerializer = FarmaciaSerializerCreate(instance=farmacia, data=request.data)
+        if farmaciaCreateSerializer.is_valid():
+            try:
+                farmaciaCreateSerializer.save()
+                return Response("Farmacia EDITADA")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+        else:
+            return Response(farmaciaCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(farmaciaCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
 
 
 @api_view(['PATCH'])
 def farmacia_actualizar_nombre(request, farmacia_id):
-    serializers = FarmaciaSerializerCreate(data=request.data)
-    farmacia = Farmacia.objects.get(id=farmacia_id)
-    serializers = FarmaciaSerializerActualizarNombre(data=request.data, instance=farmacia)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Farmacia EDITADA")
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.change_farmacia")):
+
+        serializers = FarmaciaSerializerCreate(data=request.data)
+        farmacia = Farmacia.objects.get(id=farmacia_id)
+        serializers = FarmaciaSerializerActualizarNombre(data=request.data, instance=farmacia)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Farmacia EDITADA")
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
     
     
 @api_view(['DELETE'])
 def farmacia_eliminar(request, farmacia_id):
-    farmacia = Farmacia.objects.get(id=farmacia_id)
-    try:
-        farmacia.delete()
-        return Response("Farmacia DELETEADA")
-    except Exception as error:
-        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.change_farmacia")):
+
+        farmacia = Farmacia.objects.get(id=farmacia_id)
+        try:
+            farmacia.delete()
+            return Response("Farmacia DELETEADA")
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
  
  
 
@@ -388,58 +439,62 @@ def farmacia_eliminar(request, farmacia_id):
 
 @api_view(['GET'])    
 def empleado_busqueda_avanzada(request):
-    if (len(request.query_params) > 0):
-        formulario = BusquedaAvanzadaEmpleadoForm(request.query_params)
-        if formulario.is_valid():
-            mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
-            
-            QSempleados = Empleado.objects.all()
-            
-            first_name = formulario.cleaned_data.get('first_name')
-            email = formulario.cleaned_data.get('email')
-            direccion_emp = formulario.cleaned_data.get('direccion_emp')
-            date_joined = formulario.cleaned_data.get('date_joined')
-            telefono_emp = formulario.cleaned_data.get('telefono_emp')
-            salario = formulario.cleaned_data.get('salario')
-            farm_emp = formulario.cleaned_data.get('farm_emp')
-            
-            if (first_name != ""):
-                QSempleados = QSempleados.filter(usuario__first_name__contains=first_name)
-                mensaje_busqueda += "Nombre o que contenga la palabra "+first_name+"\n"
+    if(request.user.has_perm("App_Farmacia.view_empleado")):
+
+        if (len(request.query_params) > 0):
+            formulario = BusquedaAvanzadaEmpleadoForm(request.query_params)
+            if formulario.is_valid():
+                mensaje_busqueda = "\nSe ha buscado por los siguientes valores:\n"
                 
-            if (email != ""):
-                QSempleados = QSempleados.filter(usuario__email=email)
-                mensaje_busqueda += "Email sea igual a "+email+"\n"
-            
-            if (direccion_emp != ""):
-                mensaje_busqueda += f"Direccion o que contenga la palabra "+direccion_emp+"\n"
-                QSempleados = QSempleados.filter(direccion_emp__contains = direccion_emp)
-            
-            if (not date_joined is None):
-                mensaje_busqueda += f"Fecha de registro que sea igual o mayor a "+str(date_joined)+"\n"
-                QSempleados = QSempleados.filter(usuario__date_joined__gte = date_joined)
-            
-            if (not telefono_emp is None):
-                mensaje_busqueda += f"Telefono que sea igual a "+str(telefono_emp)+"\n"
-                QSempleados = QSempleados.filter(telefono_emp = telefono_emp)
-            
-            if (not salario is None):
-                mensaje_busqueda += f"Salario que sea igual o mayor a "+str(salario)+"\n"
-                QSempleados = QSempleados.filter(salario__gte = salario)
+                QSempleados = Empleado.objects.all()
                 
-            if (not farm_emp is None):
-                QSempleados = QSempleados.filter(farm_emp=farm_emp)
-                mensaje_busqueda += "Que este asignado/a a la Farmacia "+farm_emp.nombre_farm+"\n"
-            
-            empleados = QSempleados.all()
-            
-            serializer = EmpleadoSerializerMejorado(empleados, many=True)
-            return Response(serializer.data)
+                first_name = formulario.cleaned_data.get('first_name')
+                email = formulario.cleaned_data.get('email')
+                direccion_emp = formulario.cleaned_data.get('direccion_emp')
+                date_joined = formulario.cleaned_data.get('date_joined')
+                telefono_emp = formulario.cleaned_data.get('telefono_emp')
+                salario = formulario.cleaned_data.get('salario')
+                farm_emp = formulario.cleaned_data.get('farm_emp')
+                
+                if (first_name != ""):
+                    QSempleados = QSempleados.filter(usuario__first_name__contains=first_name)
+                    mensaje_busqueda += "Nombre o que contenga la palabra "+first_name+"\n"
+                    
+                if (email != ""):
+                    QSempleados = QSempleados.filter(usuario__email=email)
+                    mensaje_busqueda += "Email sea igual a "+email+"\n"
+                
+                if (direccion_emp != ""):
+                    mensaje_busqueda += f"Direccion o que contenga la palabra "+direccion_emp+"\n"
+                    QSempleados = QSempleados.filter(direccion_emp__contains = direccion_emp)
+                
+                if (not date_joined is None):
+                    mensaje_busqueda += f"Fecha de registro que sea igual o mayor a "+str(date_joined)+"\n"
+                    QSempleados = QSempleados.filter(usuario__date_joined__gte = date_joined)
+                
+                if (not telefono_emp is None):
+                    mensaje_busqueda += f"Telefono que sea igual a "+str(telefono_emp)+"\n"
+                    QSempleados = QSempleados.filter(telefono_emp = telefono_emp)
+                
+                if (not salario is None):
+                    mensaje_busqueda += f"Salario que sea igual o mayor a "+str(salario)+"\n"
+                    QSempleados = QSempleados.filter(salario__gte = salario)
+                    
+                if (not farm_emp is None):
+                    QSempleados = QSempleados.filter(farm_emp=farm_emp)
+                    mensaje_busqueda += "Que este asignado/a a la Farmacia "+farm_emp.nombre_farm+"\n"
+                
+                empleados = QSempleados.all()
+                
+                serializer = EmpleadoSerializerMejorado(empleados, many=True)
+                return Response(serializer.data)
+            else:
+                return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({}, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
  
  
  
@@ -448,10 +503,14 @@ def empleado_busqueda_avanzada(request):
     
 @api_view(['GET']) 
 def clientes_list(request):
-    clientes = Cliente.objects.all()
-    serializer = ClienteSerializerMejorado(clientes, many=True)
-    return Response(serializer.data)
+    if(request.user.has_perm("App_Farmacia.view_cliente")):
 
+        clientes = Cliente.objects.all()
+        serializer = ClienteSerializerMejorado(clientes, many=True)
+        return Response(serializer.data)
+
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
 
 
@@ -463,18 +522,22 @@ def clientes_list(request):
 
 @api_view(['POST'])
 def votacion_create(request):
-    votacion_serializers = VotacionSerializerCreate(data=request.data)
-    if votacion_serializers.is_valid():
-        try:
-            votacion_serializers.save()
-            return Response("Votacion CREADA")
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            print(error)
-            return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.add_votacion")):
+
+        votacion_serializers = VotacionSerializerCreate(data=request.data)
+        if votacion_serializers.is_valid():
+            try:
+                votacion_serializers.save()
+                return Response("Votacion CREADA")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                print(error)
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(votacion_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(votacion_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
 
 
@@ -488,35 +551,35 @@ def votacion_obtener(request, votacion_id):
     
 @api_view(['PUT'])
 def votacion_editar(request, votacion_id):
-    votacion = Votacion.objects.get(id=votacion_id)
-    votacionCreateSerializer = VotacionSerializerCreate(instance=votacion, data=request.data)
-    if votacionCreateSerializer.is_valid():
-        try:
-            votacionCreateSerializer.save()
-            return Response("Votacion EDITADA")
-        except serializers.ValidationError as error:
-            return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+    if(request.user.has_perm("App_Farmacia.change_votacion")):
+        votacion = Votacion.objects.get(id=votacion_id)
+        votacionCreateSerializer = VotacionSerializerCreate(instance=votacion, data=request.data)
+        if votacionCreateSerializer.is_valid():
+            try:
+                votacionCreateSerializer.save()
+                return Response("Votacion EDITADA")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+        else:
+            return Response(votacionCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response(votacionCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
 
 
 @api_view(['GET'])
 def votacion_buscar(request):
-    if (request.user.has_perm('AppFarmacia.view_votacion')):
-        formulario = BusquedaVotacionForm(request.query_params)
-        if (formulario.is_valid()):
-            texto = formulario.data.get('textoBusqueda')
-            votaciones = Votacion.objects.all()
-            votaciones = votaciones.filter(Q(puntuacion__contains=texto) | Q(comenta_votacion__contains=texto)).all()
-            serializer = VotacionSerializerMejorado(votaciones, many=True)
-            return Response(serializer.data)
-        else:
-            return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
+    formulario = BusquedaVotacionForm(request.query_params)
+    if (formulario.is_valid()):
+        texto = formulario.data.get('textoBusqueda')
+        votaciones = Votacion.objects.all()
+        votaciones = votaciones.filter(Q(puntuacion__contains=texto) | Q(comenta_votacion__contains=texto)).all()
+        serializer = VotacionSerializerMejorado(votaciones, many=True)
+        return Response(serializer.data)
     else:
-        return Response({"Sin permisos"}, status=status.HTTP_400_BAD_REQUEST)    
+        return Response(formulario.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -575,25 +638,34 @@ def votacion_busqueda_avanzada(request):
 
 @api_view(['PATCH'])
 def votacion_actualizar_puntuacion(request, votacion_id):
-    serializers = VotacionSerializerCreate(data=request.data)
-    votacion = Votacion.objects.get(id=votacion_id)
-    serializers = VotacionSerializerActualizarPuntuacion(data=request.data, instance=votacion)
-    if serializers.is_valid():
-        try:
-            serializers.save()
-            return Response("Votacion EDITADO")
-        except Exception as error:
-            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    if(request.user.has_perm("App_Farmacia.change_votacion")):
+
+        serializers = VotacionSerializerCreate(data=request.data)
+        votacion = Votacion.objects.get(id=votacion_id)
+        serializers = VotacionSerializerActualizarPuntuacion(data=request.data, instance=votacion)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Votacion EDITADO")
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     else:
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
     
     
 @api_view(['DELETE'])
 def votacion_eliminar(request, votacion_id):
-    votacion = Votacion.objects.get(id=votacion_id)
-    try:
-        votacion.delete()
-        return Response("Votacion DELETEADA")
-    except Exception as error:
-        return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
- 
+    if(request.user.has_perm("App_Farmacia.delete_votacion")):
+        votacion = Votacion.objects.get(id=votacion_id)
+        try:
+            votacion.delete()
+            return Response("Votacion DELETEADA")
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)

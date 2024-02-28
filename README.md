@@ -1,6 +1,38 @@
 # APLICACION WEB FARMACIA | PROYECTO DE FIN DE GRADO
 
 
+
+
+## PERMISOS API
+
+### Administrador:
+
+    * Permisos para todas las funciones de la aplicación al completo.
+
+### Gerente:
+
+    * Todos los permisos para "Empleados", "Farmacias", "Productos" y "Votaciones"
+
+### Empleado:
+
+    * Permisos para todas las funciones con "Clientes" excepto Eliminar.
+
+    * Permisos para Ver los "Productos" y "Farmacias".
+
+    * Todos los permisos para "Votaciones".
+
+### Cliente:
+
+    * Todos los permisos para "Votaciones".
+
+    * Permisos para Ver los "Productos" y "Farmacias".
+
+
+
+
+
+
+
 ## CRUD | "PRODUCTOS"
 
 
@@ -592,6 +624,11 @@ VALIDACIONES:
     * Comprobamos que el valor del descuento sea un entero entre 0 y 100
 
     * Comprobamos la fecha de expiración no sea inferior a la actual.
+
+
+
+
+
 
 
 
