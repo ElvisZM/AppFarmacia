@@ -15,3 +15,5 @@ djangorestframework-simplejwt
 django-allauth
 django-recaptcha
 django-cors-headers~=4.3.1
+Pillow
+drf-extra-fields

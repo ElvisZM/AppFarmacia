@@ -253,7 +253,7 @@ def producto_create(request):
                 print(error)
                 return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
-            return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(producto_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 

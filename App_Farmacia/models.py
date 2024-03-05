@@ -56,6 +56,7 @@ class Proveedor(models.Model):
         return self.nombre_prov
 
 class Producto(models.Model):
+    imagen_prod = models.ImageField(upload_to='productos/')
     nombre_prod = models.CharField(max_length=200)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)

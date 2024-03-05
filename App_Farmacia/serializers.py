@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import *
 from .forms import *
+from drf_extra_fields.fields import Base64ImageField
+
 
 
 class UsuarioSerializerRegistro(serializers.Serializer):
@@ -60,7 +62,7 @@ class ProductoSerializerMejorado(serializers.ModelSerializer):
     prov_sum_prod = ProveedorSerializer(read_only=True, many=True)
     
     class Meta:
-        fields = ('id', 'nombre_prod', 'descripcion', 'precio', 'farmacia_prod', 'prov_sum_prod')
+        fields = ('id', 'imagen_prod', 'nombre_prod', 'descripcion', 'precio', 'farmacia_prod', 'prov_sum_prod')
         model = Producto
         
         
@@ -128,9 +130,12 @@ class SuministroProductoSerializer(serializers.ModelSerializer):
     
 class ProductoSerializerCreate(serializers.ModelSerializer):
     
+    imagen_prod = Base64ImageField()
+    
     class Meta:
         model = Producto
-        fields = ['nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
+        fields = ['imagen_prod', 'nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
+        
         
     def validate_nombre_prod(self,nombre):
         productoNombre = Producto.objects.filter(nombre_prod=nombre, farmacia_prod=self.initial_data['farmacia_prod']).first()
@@ -140,6 +145,11 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             else:
                 raise serializers.ValidationError('Ya existe un producto con ese nombre en esta farmacia.')        
         return nombre
+    
+    def validate_imagen_prod(self, imagen):
+        if (imagen is None):
+            raise serializers.ValidationError('Necesita insertar una imagen del producto.')
+        return imagen
     
     def validate_descripcion(self,descripcion):
         if len(descripcion) < 10:
@@ -165,6 +175,7 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
                 })
         
         producto = Producto.objects.create(
+            imagen_prod = validated_data['imagen_prod'],
             nombre_prod = validated_data['nombre_prod'],
             descripcion = validated_data['descripcion'],
             precio = validated_data['precio'],
