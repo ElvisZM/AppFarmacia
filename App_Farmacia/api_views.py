@@ -238,6 +238,7 @@ def proveedor_list(request):
     else:
        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
+from django.core.files.base import ContentFile
 
 @api_view(['POST'])
 def producto_create(request):

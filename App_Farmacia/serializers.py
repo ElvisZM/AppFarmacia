@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import *
 from .forms import *
-from drf_extra_fields.fields import Base64ImageField
 
 
 
@@ -130,13 +129,10 @@ class SuministroProductoSerializer(serializers.ModelSerializer):
     
 class ProductoSerializerCreate(serializers.ModelSerializer):
     
-    imagen_prod = Base64ImageField()
-    
     class Meta:
         model = Producto
         fields = ['imagen_prod', 'nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
-        
-        
+            
     def validate_nombre_prod(self,nombre):
         productoNombre = Producto.objects.filter(nombre_prod=nombre, farmacia_prod=self.initial_data['farmacia_prod']).first()
         if(not productoNombre is None):
