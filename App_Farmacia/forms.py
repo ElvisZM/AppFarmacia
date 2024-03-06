@@ -18,6 +18,7 @@ class RegistroForm(UserCreationForm):
     )
     domicilio = forms.CharField(max_length=255, label="Domicilio")
     telefono = forms.CharField(max_length=15, label="Teléfono")
+    birthday_date = forms.DateField()
     
     rol = forms.ChoiceField(choices=roles, label="Tipo de Usuario")
     class Meta:
@@ -47,7 +48,6 @@ class AdministradorModelForm(UserCreationForm):
         model = Usuario
         fields = ('username', 'first_name','email', 'password1', 'password2', 'date_joined', 'direccion_admin', 'telefono_admin')
         
-
     
     def clean(self):
     
@@ -69,7 +69,6 @@ class AdministradorModelForm(UserCreationForm):
         if (not administradorTelefono is None):
             self.add_error('telefono_admin','Ya existe un administrador con ese teléfono.')
             
-           
         return self.cleaned_data
                
 

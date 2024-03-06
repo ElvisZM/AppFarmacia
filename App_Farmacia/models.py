@@ -41,6 +41,7 @@ class Gerente(models.Model):
     salario_ger = models.FloatField(default=2100.0)
     gerente_farm = models.OneToOneField(Farmacia, on_delete=models.CASCADE, null=True)
 
+
 class Empleado(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     direccion_emp = models.CharField(max_length=200)
@@ -76,7 +77,8 @@ class SuministroProducto(models.Model):
 class Cliente(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     direccion_cli = models.CharField(max_length=200, null=True, blank=True)
-    telefono_cli = models.IntegerField(null=True, blank=True, )
+    telefono_cli = models.IntegerField(null=True, blank=True)
+    birthday_date = models.DateField(null=True, blank=True)
     productos_favoritos = models.ManyToManyField(Producto, related_name='productos_favoritos')
     votacion_prod = models.ManyToManyField(Producto, through='Votacion', related_name='votacion_prod')
     
@@ -159,3 +161,7 @@ class UploadedFile(models.Model):
     
     def __str__(self):
         return self.uploaded_on.date()
+    
+class CarritoCompra(models.Model):
+    producto_carrito = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad_producto = models.IntegerField(default=1)

@@ -38,25 +38,25 @@ class registrar_usuario(generics.CreateAPIView):
                 if(rol == Usuario.CLIENTE):
                     grupo = Group.objects.get(name='Cliente') 
                     grupo.user_set.add(user)
-                    cliente = Cliente.objects.create( usuario = user)
+                    cliente = Cliente.objects.create( usuario = user, direccion_cli = serializers.data.get("domicilio"), telefono_cli = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
                     cliente.save()
                     
                 elif(rol == Usuario.EMPLEADO):
                     grupo = Group.objects.get(name='Empleado') 
                     grupo.user_set.add(user)
-                    empleado = Cliente.objects.create( usuario = user)
+                    empleado = Cliente.objects.create( usuario = user, direccion_emp = serializers.data.get("domicilio"), telefono_emp = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
                     empleado.save()
                 
                 elif(rol == Usuario.GERENTE):
                     grupo = Group.objects.get(name='Gerente') 
                     grupo.user_set.add(user)
-                    gerente = Cliente.objects.create( usuario = user)
+                    gerente = Cliente.objects.create( usuario = user, direccion_ger = serializers.data.get("domicilio"), telefono_ger = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
                     gerente.save()
                     
                 elif(rol == Usuario.ADMINISTRADOR):
                     grupo = Group.objects.get(name='Clientes') 
                     grupo.user_set.add(user)
-                    cliente = Cliente.objects.create( usuario = user)
+                    cliente = Cliente.objects.create( usuario = user, direccion_admin = serializers.data.get("domicilio"), telefono_admin = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
                     cliente.save()
                     
                 usuarioSerializado = UsuarioSerializer(user)
@@ -239,10 +239,16 @@ def proveedor_list(request):
        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
 from django.core.files.base import ContentFile
+import base64
 
 @api_view(['POST'])
 def producto_create(request):
     if(request.user.has_perm("App_Farmacia.add_producto")):
+        imagen_base64 = request.data["imagen_prod"]
+        format , imagen_base64 = imagen_base64.split(';base64,')
+        ext = format.split('/')[-1]
+        imagen_archivo = ContentFile(base64.b64decode(imagen_base64), name="myphoto."+ext)
+        request.data["imagen_prod"] = imagen_archivo
         producto_serializers = ProductoSerializerCreate(data=request.data)
         if producto_serializers.is_valid():
             try:

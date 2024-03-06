@@ -12,6 +12,9 @@ class UsuarioSerializerRegistro(serializers.Serializer):
     password2 = serializers.CharField()
     email = serializers.EmailField()
     rol = serializers.IntegerField()
+    domicilio = serializers.CharField()
+    telefono = serializers.CharField()
+    birthday_date = serializers.DateField()
     
     def validate_username(self, username):
         usuario = Usuario.objects.filter(username=username).first()
