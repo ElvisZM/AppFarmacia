@@ -193,15 +193,6 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             imagen_prod = archivo,
             )
 
-        cadena_formato = self.initial_data["formato_imagen"]
-        lista_cadena_spliteada = cadena_formato.split("/")
-        formato = lista_cadena_spliteada[1]
-
-        producto.imagen_prod.save(
-            f"{validated_data['nombre_prod']}.{formato}",
-            archivo
-        )
-
         for proveedor in proveedores:
             modeloProveedor = Proveedor.objects.get(id=proveedor)
             SuministroProducto.objects.create(proveedor=modeloProveedor, producto=producto)
