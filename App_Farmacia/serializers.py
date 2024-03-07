@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from .models import *
 from .forms import *
+import base64
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+
 
 
 
@@ -134,7 +139,7 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
     
     class Meta:
         model = Producto
-        fields = ['imagen_prod', 'nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
+        fields = ['nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
             
     def validate_nombre_prod(self,nombre):
         productoNombre = Producto.objects.filter(nombre_prod=nombre, farmacia_prod=self.initial_data['farmacia_prod']).first()
@@ -144,11 +149,6 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             else:
                 raise serializers.ValidationError('Ya existe un producto con ese nombre en esta farmacia.')        
         return nombre
-    
-    def validate_imagen_prod(self, imagen):
-        if (imagen is None):
-            raise serializers.ValidationError('Necesita insertar una imagen del producto.')
-        return imagen
     
     def validate_descripcion(self,descripcion):
         if len(descripcion) < 10:
@@ -173,13 +173,35 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
                 ['Debe seleccionar al menos dos proveedores.']
                 })
         
+        imagen_prod = base64.b64decode(self.initial_data["imagen_prod"])
+        contenido_archivo = ContentFile(imagen_prod)
+        
+        archivo = InMemoryUploadedFile(
+            contenido_archivo,
+            None,
+            validated_data["nombre_prod"],
+            self.initial_data["formato_imagen"],
+            contenido_archivo.size,
+            None
+        )
+        
         producto = Producto.objects.create(
-            imagen_prod = validated_data['imagen_prod'],
             nombre_prod = validated_data['nombre_prod'],
             descripcion = validated_data['descripcion'],
             precio = validated_data['precio'],
             farmacia_prod = validated_data['farmacia_prod'],
+            imagen_prod = archivo,
             )
+
+        cadena_formato = self.initial_data["formato_imagen"]
+        lista_cadena_spliteada = cadena_formato.split("/")
+        formato = lista_cadena_spliteada[1]
+
+        producto.imagen_prod.save(
+            f"{validated_data['nombre_prod']}.{formato}",
+            archivo
+        )
+
         for proveedor in proveedores:
             modeloProveedor = Proveedor.objects.get(id=proveedor)
             SuministroProducto.objects.create(proveedor=modeloProveedor, producto=producto)

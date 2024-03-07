@@ -238,17 +238,10 @@ def proveedor_list(request):
     else:
        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
 
-from django.core.files.base import ContentFile
-import base64
 
 @api_view(['POST'])
 def producto_create(request):
     if(request.user.has_perm("App_Farmacia.add_producto")):
-        imagen_base64 = request.data["imagen_prod"]
-        format , imagen_base64 = imagen_base64.split(';base64,')
-        ext = format.split('/')[-1]
-        imagen_archivo = ContentFile(base64.b64decode(imagen_base64), name="myphoto."+ext)
-        request.data["imagen_prod"] = imagen_archivo
         producto_serializers = ProductoSerializerCreate(data=request.data)
         if producto_serializers.is_valid():
             try:

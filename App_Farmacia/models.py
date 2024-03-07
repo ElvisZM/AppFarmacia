@@ -25,6 +25,7 @@ class Administrador(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     direccion_admin = models.CharField(max_length=200)
     telefono_admin = models.IntegerField(null=True, blank=True)
+    birthday_date = models.DateField(null=True, blank=True)
 
 class Farmacia(models.Model):
     nombre_farm = models.CharField(max_length=200)
@@ -39,6 +40,7 @@ class Gerente(models.Model):
     direccion_ger = models.CharField(max_length=200)
     telefono_ger = models.IntegerField(null=True, blank=True)
     salario_ger = models.FloatField(default=2100.0)
+    birthday_date = models.DateField(null=True, blank=True)
     gerente_farm = models.OneToOneField(Farmacia, on_delete=models.CASCADE, null=True)
 
 
@@ -46,8 +48,10 @@ class Empleado(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete = models.CASCADE)
     direccion_emp = models.CharField(max_length=200)
     telefono_emp = models.IntegerField(null=True, blank=True)
+    birthday_date = models.DateField(null=True, blank=True)
     salario = models.FloatField(default=1024.0)
     farm_emp = models.ForeignKey(Farmacia, on_delete=models.CASCADE, null=True, blank=True) 
+
     
 class Proveedor(models.Model):
     nombre_prov = models.CharField(max_length=200)
