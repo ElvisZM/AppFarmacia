@@ -286,6 +286,370 @@
     }
 },
 {
+    "model": "admin.logentry",
+    "pk": 23,
+    "fields": {
+        "action_time": "2024-03-07T21:55:25.949Z",
+        "user": 1,
+        "content_type": 16,
+        "object_id": "1",
+        "object_repr": "Feliz Cumpleaños",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 24,
+    "fields": {
+        "action_time": "2024-03-07T21:59:40.198Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "10",
+        "object_repr": "Crema de hidrocortisona 1%",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 25,
+    "fields": {
+        "action_time": "2024-03-07T22:01:32.082Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "9",
+        "object_repr": "Multivitamínico Centrum",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 26,
+    "fields": {
+        "action_time": "2024-03-07T22:02:50.867Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "8",
+        "object_repr": "Ranitidina 150mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 27,
+    "fields": {
+        "action_time": "2024-03-07T22:04:56.900Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "7",
+        "object_repr": "Salbutamol (Ventolin) inhalador",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 28,
+    "fields": {
+        "action_time": "2024-03-07T22:05:44.137Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "6",
+        "object_repr": "Simvastatina 20mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 29,
+    "fields": {
+        "action_time": "2024-03-07T22:06:51.186Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "5",
+        "object_repr": "Clorhexidina en enjuague bucal",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 30,
+    "fields": {
+        "action_time": "2024-03-07T22:07:18.247Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "4",
+        "object_repr": "Loratadina 10mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 31,
+    "fields": {
+        "action_time": "2024-03-07T22:07:57.067Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "3",
+        "object_repr": "Paracetamol 500mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 32,
+    "fields": {
+        "action_time": "2024-03-07T22:08:29.618Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "2",
+        "object_repr": "Omeprazol 20mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 33,
+    "fields": {
+        "action_time": "2024-03-07T22:09:18.296Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "1",
+        "object_repr": "Ibuprofeno 400mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Imagen prod\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 34,
+    "fields": {
+        "action_time": "2024-03-07T22:28:23.579Z",
+        "user": 1,
+        "content_type": 16,
+        "object_id": "1",
+        "object_repr": "Feliz Cumpleaños",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Cliente promo\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 35,
+    "fields": {
+        "action_time": "2024-03-07T23:36:00.195Z",
+        "user": 1,
+        "content_type": 6,
+        "object_id": "1",
+        "object_repr": "Cliente object (1)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Birthday date\", \"Productos favoritos\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 36,
+    "fields": {
+        "action_time": "2024-03-08T00:18:15.129Z",
+        "user": 1,
+        "content_type": 6,
+        "object_id": "1",
+        "object_repr": "Cliente object (1)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Birthday date\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 37,
+    "fields": {
+        "action_time": "2024-03-08T00:35:29.796Z",
+        "user": 1,
+        "content_type": 16,
+        "object_id": "2",
+        "object_repr": "Feliz Cumpleaños",
+        "action_flag": 1,
+        "change_message": "[{\"added\": {}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 38,
+    "fields": {
+        "action_time": "2024-03-08T00:35:36.152Z",
+        "user": 1,
+        "content_type": 16,
+        "object_id": "1",
+        "object_repr": "Feliz Cumpleaños",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 39,
+    "fields": {
+        "action_time": "2024-03-08T00:36:14.907Z",
+        "user": 1,
+        "content_type": 6,
+        "object_id": "1",
+        "object_repr": "Cliente object (1)",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Birthday date\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 40,
+    "fields": {
+        "action_time": "2024-03-08T01:17:14.021Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "10",
+        "object_repr": "Crema de hidrocortisona 1%",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 41,
+    "fields": {
+        "action_time": "2024-03-08T01:17:18.952Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "9",
+        "object_repr": "Multivitamínico Centrum",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 42,
+    "fields": {
+        "action_time": "2024-03-08T01:17:22.465Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "9",
+        "object_repr": "Multivitamínico Centrum",
+        "action_flag": 2,
+        "change_message": "[]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 43,
+    "fields": {
+        "action_time": "2024-03-08T01:17:28.863Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "8",
+        "object_repr": "Ranitidina 150mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 44,
+    "fields": {
+        "action_time": "2024-03-08T01:17:34.721Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "7",
+        "object_repr": "Salbutamol (Ventolin) inhalador",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 45,
+    "fields": {
+        "action_time": "2024-03-08T01:17:39.201Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "6",
+        "object_repr": "Simvastatina 20mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 46,
+    "fields": {
+        "action_time": "2024-03-08T01:17:44.693Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "5",
+        "object_repr": "Clorhexidina en enjuague bucal",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 47,
+    "fields": {
+        "action_time": "2024-03-08T01:17:49.579Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "4",
+        "object_repr": "Loratadina 10mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 48,
+    "fields": {
+        "action_time": "2024-03-08T01:17:54.732Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "3",
+        "object_repr": "Paracetamol 500mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 49,
+    "fields": {
+        "action_time": "2024-03-08T01:17:59.942Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "2",
+        "object_repr": "Omeprazol 20mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 50,
+    "fields": {
+        "action_time": "2024-03-08T01:18:04.113Z",
+        "user": 1,
+        "content_type": 9,
+        "object_id": "1",
+        "object_repr": "Ibuprofeno 400mg",
+        "action_flag": 2,
+        "change_message": "[{\"changed\": {\"fields\": [\"Stock\"]}}]"
+    }
+},
+{
     "model": "auth.permission",
     "pk": 1,
     "fields": {
@@ -1546,11 +1910,483 @@
     }
 },
 {
+    "model": "auth.permission",
+    "pk": 141,
+    "fields": {
+        "name": "Can add social application token",
+        "content_type": 36,
+        "codename": "add_socialtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 142,
+    "fields": {
+        "name": "Can change social application token",
+        "content_type": 36,
+        "codename": "change_socialtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 143,
+    "fields": {
+        "name": "Can delete social application token",
+        "content_type": 36,
+        "codename": "delete_socialtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 144,
+    "fields": {
+        "name": "Can view social application token",
+        "content_type": 36,
+        "codename": "view_socialtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 145,
+    "fields": {
+        "name": "Can add carrito compra",
+        "content_type": 24,
+        "codename": "add_carritocompra"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 146,
+    "fields": {
+        "name": "Can change carrito compra",
+        "content_type": 24,
+        "codename": "change_carritocompra"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 147,
+    "fields": {
+        "name": "Can delete carrito compra",
+        "content_type": 24,
+        "codename": "delete_carritocompra"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 148,
+    "fields": {
+        "name": "Can view carrito compra",
+        "content_type": 24,
+        "codename": "view_carritocompra"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 149,
+    "fields": {
+        "name": "Can add administrador",
+        "content_type": 25,
+        "codename": "add_administrador"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 150,
+    "fields": {
+        "name": "Can change administrador",
+        "content_type": 25,
+        "codename": "change_administrador"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 151,
+    "fields": {
+        "name": "Can delete administrador",
+        "content_type": 25,
+        "codename": "delete_administrador"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 152,
+    "fields": {
+        "name": "Can view administrador",
+        "content_type": 25,
+        "codename": "view_administrador"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 153,
+    "fields": {
+        "name": "Can add application",
+        "content_type": 26,
+        "codename": "add_application"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 154,
+    "fields": {
+        "name": "Can change application",
+        "content_type": 26,
+        "codename": "change_application"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 155,
+    "fields": {
+        "name": "Can delete application",
+        "content_type": 26,
+        "codename": "delete_application"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 156,
+    "fields": {
+        "name": "Can view application",
+        "content_type": 26,
+        "codename": "view_application"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 157,
+    "fields": {
+        "name": "Can add access token",
+        "content_type": 27,
+        "codename": "add_accesstoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 158,
+    "fields": {
+        "name": "Can change access token",
+        "content_type": 27,
+        "codename": "change_accesstoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 159,
+    "fields": {
+        "name": "Can delete access token",
+        "content_type": 27,
+        "codename": "delete_accesstoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 160,
+    "fields": {
+        "name": "Can view access token",
+        "content_type": 27,
+        "codename": "view_accesstoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 161,
+    "fields": {
+        "name": "Can add grant",
+        "content_type": 28,
+        "codename": "add_grant"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 162,
+    "fields": {
+        "name": "Can change grant",
+        "content_type": 28,
+        "codename": "change_grant"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 163,
+    "fields": {
+        "name": "Can delete grant",
+        "content_type": 28,
+        "codename": "delete_grant"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 164,
+    "fields": {
+        "name": "Can view grant",
+        "content_type": 28,
+        "codename": "view_grant"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 165,
+    "fields": {
+        "name": "Can add refresh token",
+        "content_type": 29,
+        "codename": "add_refreshtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 166,
+    "fields": {
+        "name": "Can change refresh token",
+        "content_type": 29,
+        "codename": "change_refreshtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 167,
+    "fields": {
+        "name": "Can delete refresh token",
+        "content_type": 29,
+        "codename": "delete_refreshtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 168,
+    "fields": {
+        "name": "Can view refresh token",
+        "content_type": 29,
+        "codename": "view_refreshtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 169,
+    "fields": {
+        "name": "Can add id token",
+        "content_type": 30,
+        "codename": "add_idtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 170,
+    "fields": {
+        "name": "Can change id token",
+        "content_type": 30,
+        "codename": "change_idtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 171,
+    "fields": {
+        "name": "Can delete id token",
+        "content_type": 30,
+        "codename": "delete_idtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 172,
+    "fields": {
+        "name": "Can view id token",
+        "content_type": 30,
+        "codename": "view_idtoken"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 173,
+    "fields": {
+        "name": "Can add site",
+        "content_type": 31,
+        "codename": "add_site"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 174,
+    "fields": {
+        "name": "Can change site",
+        "content_type": 31,
+        "codename": "change_site"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 175,
+    "fields": {
+        "name": "Can delete site",
+        "content_type": 31,
+        "codename": "delete_site"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 176,
+    "fields": {
+        "name": "Can view site",
+        "content_type": 31,
+        "codename": "view_site"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 177,
+    "fields": {
+        "name": "Can add email address",
+        "content_type": 32,
+        "codename": "add_emailaddress"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 178,
+    "fields": {
+        "name": "Can change email address",
+        "content_type": 32,
+        "codename": "change_emailaddress"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 179,
+    "fields": {
+        "name": "Can delete email address",
+        "content_type": 32,
+        "codename": "delete_emailaddress"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 180,
+    "fields": {
+        "name": "Can view email address",
+        "content_type": 32,
+        "codename": "view_emailaddress"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 181,
+    "fields": {
+        "name": "Can add email confirmation",
+        "content_type": 33,
+        "codename": "add_emailconfirmation"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 182,
+    "fields": {
+        "name": "Can change email confirmation",
+        "content_type": 33,
+        "codename": "change_emailconfirmation"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 183,
+    "fields": {
+        "name": "Can delete email confirmation",
+        "content_type": 33,
+        "codename": "delete_emailconfirmation"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 184,
+    "fields": {
+        "name": "Can view email confirmation",
+        "content_type": 33,
+        "codename": "view_emailconfirmation"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 185,
+    "fields": {
+        "name": "Can add social account",
+        "content_type": 34,
+        "codename": "add_socialaccount"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 186,
+    "fields": {
+        "name": "Can change social account",
+        "content_type": 34,
+        "codename": "change_socialaccount"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 187,
+    "fields": {
+        "name": "Can delete social account",
+        "content_type": 34,
+        "codename": "delete_socialaccount"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 188,
+    "fields": {
+        "name": "Can view social account",
+        "content_type": 34,
+        "codename": "view_socialaccount"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 189,
+    "fields": {
+        "name": "Can add social application",
+        "content_type": 35,
+        "codename": "add_socialapp"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 190,
+    "fields": {
+        "name": "Can change social application",
+        "content_type": 35,
+        "codename": "change_socialapp"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 191,
+    "fields": {
+        "name": "Can delete social application",
+        "content_type": 35,
+        "codename": "delete_socialapp"
+    }
+},
+{
+    "model": "auth.permission",
+    "pk": 192,
+    "fields": {
+        "name": "Can view social application",
+        "content_type": 35,
+        "codename": "view_socialapp"
+    }
+},
+{
     "model": "auth.group",
     "pk": 1,
     "fields": {
         "name": "Gerente",
         "permissions": [
+            97,
+            98,
+            99,
+            100,
             93,
             94,
             95,
@@ -1643,26 +2479,22 @@
             14,
             15,
             16,
-            101,
-            102,
-            103,
-            104,
-            97,
-            98,
-            99,
-            100,
             105,
             106,
             107,
             108,
-            113,
-            114,
-            115,
-            116,
+            101,
+            102,
+            103,
+            104,
             109,
             110,
             111,
             112,
+            113,
+            114,
+            115,
+            116,
             17,
             18,
             19,
@@ -1676,6 +2508,10 @@
     "fields": {
         "name": "Administrador",
         "permissions": [
+            97,
+            98,
+            99,
+            100,
             93,
             94,
             95,
@@ -1752,14 +2588,14 @@
             50,
             51,
             52,
-            121,
-            122,
-            123,
-            124,
             125,
             126,
             127,
             128,
+            129,
+            130,
+            131,
+            132,
             1,
             2,
             3,
@@ -1776,38 +2612,34 @@
             14,
             15,
             16,
-            101,
-            102,
-            103,
-            104,
-            97,
-            98,
-            99,
-            100,
             105,
             106,
             107,
             108,
-            113,
-            114,
-            115,
-            116,
+            101,
+            102,
+            103,
+            104,
             109,
             110,
             111,
             112,
-            17,
-            18,
-            19,
-            20,
             117,
             118,
             119,
             120,
-            129,
-            130,
-            131,
-            132,
+            113,
+            114,
+            115,
+            116,
+            17,
+            18,
+            19,
+            20,
+            121,
+            122,
+            123,
+            124,
             133,
             134,
             135,
@@ -2049,6 +2881,110 @@
     }
 },
 {
+    "model": "contenttypes.contenttype",
+    "pk": 24,
+    "fields": {
+        "app_label": "App_Farmacia",
+        "model": "carritocompra"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 25,
+    "fields": {
+        "app_label": "App_Farmacia",
+        "model": "administrador"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 26,
+    "fields": {
+        "app_label": "oauth2_provider",
+        "model": "application"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 27,
+    "fields": {
+        "app_label": "oauth2_provider",
+        "model": "accesstoken"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 28,
+    "fields": {
+        "app_label": "oauth2_provider",
+        "model": "grant"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 29,
+    "fields": {
+        "app_label": "oauth2_provider",
+        "model": "refreshtoken"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 30,
+    "fields": {
+        "app_label": "oauth2_provider",
+        "model": "idtoken"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 31,
+    "fields": {
+        "app_label": "sites",
+        "model": "site"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 32,
+    "fields": {
+        "app_label": "account",
+        "model": "emailaddress"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 33,
+    "fields": {
+        "app_label": "account",
+        "model": "emailconfirmation"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 34,
+    "fields": {
+        "app_label": "socialaccount",
+        "model": "socialaccount"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 35,
+    "fields": {
+        "app_label": "socialaccount",
+        "model": "socialapp"
+    }
+},
+{
+    "model": "contenttypes.contenttype",
+    "pk": 36,
+    "fields": {
+        "app_label": "socialaccount",
+        "model": "socialtoken"
+    }
+},
+{
     "model": "sessions.session",
     "pk": "1kp68l6sf677bbkh57obpcv14ftbo4hh",
     "fields": {
@@ -2062,6 +2998,14 @@
     "fields": {
         "session_data": ".eJxtkM1uxCAMhF-l4hxl-UliyLH3PkFVITCQ0KZQJaSX1b57STeXrXqzPPON7LmS4HE2OqaIMZORcHqh_MIp754oG2lPGmIQ856KNnuZfSoRTYk56U9f5uw2Mr5eyX2u-JYxmuUkDraQkQGVQkLf87aOwCU05GvN39H5tSJTztPiq3ePRwJjFEAp4JxLqeTAlWKM3N4a8nuA3je_6rtTkIelNfjh06G4d5Om3GJOZY22PSztqW7tS3Z-eT69DwGz2eZKB5CAYBVCkEE5dBaC80ZaHIBy7IQYqh4sZWCcqL9aPyjme0GNgy7I_yvzTv8tQ3ZSwe0Hyvl6VQ:1rcDdw:j4AJmj4TJI1dhr9GfTV5h_uRegxtG-Tn8aM9Bi8GsIM",
         "expire_date": "2024-03-05T00:05:52.218Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "4by9yltnvl37kcnnfz0t9rl6eebztdms",
+    "fields": {
+        "session_data": ".eJxVjEEOgjAQRe_StWlmmI4Ul-45QzPttIIaSCisjHdXEha6_e-9_zJBtnUIW81LGNVcDJrT7xYlPfK0A73LdJttmqd1GaPdFXvQavtZ8_N6uH8Hg9ThWxdiJGkwIrbsMhNBdKUR6HLnCxcPSVGxgQ40ARU5kzry0TnmFhjM-wPBgDbD:1riLhl:hXU9nNrtLL5sCyd8_-OVeg3wOsDKMgeHi4acIpdu6B8",
+        "expire_date": "2024-03-21T21:55:09.333Z"
     }
 },
 {
@@ -2186,6 +3130,14 @@
 },
 {
     "model": "sessions.session",
+    "pk": "vpmonmbus0k3f6i6y1cwumt86q5ptqaw",
+    "fields": {
+        "session_data": "eyJmZWNoYV9pbmljaW8iOiIwOC8wMy8yMDI0IDAzOjMzIn0:1riQ3R:QkSu2HH32aiYC1OTBnfjYg7FI4i1FXjd_U0VhFITCrk",
+        "expire_date": "2024-03-22T02:33:49.255Z"
+    }
+},
+{
+    "model": "sessions.session",
     "pk": "zqcq7lc8uu73zjxu68bd0263ouzrj1v5",
     "fields": {
         "session_data": "eyJmZWNoYV9pbmljaW8iOiIyNy8wMi8yMDI0IDAwOjMyIn0:1rekS1:hjXtC_Xj0Ojblg2VI6QtqzALH4oRsajeWA9oSeCdosg",
@@ -2197,7 +3149,7 @@
     "pk": 1,
     "fields": {
         "password": "pbkdf2_sha256$600000$yY8cmvjEnbjUllC8YcStCo$haXVaZNzuE1DCKNMP9bbYWwLOE7vfp1X1mjr88pbsSg=",
-        "last_login": "2024-02-28T20:45:11.261Z",
+        "last_login": "2024-03-07T21:55:09.310Z",
         "is_superuser": true,
         "username": "admin",
         "first_name": "",
@@ -2693,6 +3645,7 @@
         "direccion_ger": "Calle San Martín, 123",
         "telefono_ger": 679123456,
         "salario_ger": 3000.0,
+        "birthday_date": null,
         "gerente_farm": 1
     }
 },
@@ -2704,6 +3657,7 @@
         "direccion_ger": "Avenida Santa Clara, 456",
         "telefono_ger": 679987654,
         "salario_ger": 3200.0,
+        "birthday_date": null,
         "gerente_farm": 2
     }
 },
@@ -2715,6 +3669,7 @@
         "direccion_ger": "Plaza del Sol, 789",
         "telefono_ger": 697123456,
         "salario_ger": 3100.0,
+        "birthday_date": null,
         "gerente_farm": 3
     }
 },
@@ -2726,6 +3681,7 @@
         "direccion_ger": "Calle Esperanza, 234",
         "telefono_ger": 679345678,
         "salario_ger": 3300.0,
+        "birthday_date": null,
         "gerente_farm": 4
     }
 },
@@ -2737,6 +3693,7 @@
         "direccion_ger": "Avenida San José, 567",
         "telefono_ger": 676890123,
         "salario_ger": 3100.0,
+        "birthday_date": null,
         "gerente_farm": 5
     }
 },
@@ -2748,6 +3705,7 @@
         "direccion_ger": "Calle de la Salud, 890",
         "telefono_ger": 697234567,
         "salario_ger": 3200.0,
+        "birthday_date": null,
         "gerente_farm": 6
     }
 },
@@ -2759,6 +3717,7 @@
         "direccion_ger": "Plaza del Bienestar, 123",
         "telefono_ger": 679456789,
         "salario_ger": 3100.0,
+        "birthday_date": null,
         "gerente_farm": 7
     }
 },
@@ -2770,6 +3729,7 @@
         "direccion_ger": "Avenida de la Paz, 456",
         "telefono_ger": 679567890,
         "salario_ger": 3200.0,
+        "birthday_date": null,
         "gerente_farm": 8
     }
 },
@@ -2781,6 +3741,7 @@
         "direccion_ger": "Calle Nuestra Señora de Guadalupe, 789",
         "telefono_ger": 697678901,
         "salario_ger": 3300.0,
+        "birthday_date": null,
         "gerente_farm": 9
     }
 },
@@ -2792,6 +3753,7 @@
         "direccion_ger": "Plaza de la Amistad, 234",
         "telefono_ger": 679789012,
         "salario_ger": 3100.0,
+        "birthday_date": null,
         "gerente_farm": 10
     }
 },
@@ -2803,6 +3765,7 @@
         "direccion_ger": "Calle Romeo y Julieta, 5",
         "telefono_ger": 666333000,
         "salario_ger": 2100.0,
+        "birthday_date": null,
         "gerente_farm": null
     }
 },
@@ -2813,6 +3776,7 @@
         "usuario": 21,
         "direccion_emp": "calle emp",
         "telefono_emp": 699888777,
+        "birthday_date": null,
         "salario": 1024.0,
         "farm_emp": 2
     }
@@ -2901,9 +3865,11 @@
     "model": "App_Farmacia.producto",
     "pk": 1,
     "fields": {
+        "imagen_prod": "productos/ibuprofeno.jpg",
         "nombre_prod": "Ibuprofeno 400mg",
         "descripcion": "Analgésico y antiinflamatorio no esteroideo (AINE) utilizado para aliviar el dolor y reducir la inflamación.",
         "precio": "5.99",
+        "stock": 1,
         "farmacia_prod": 1
     }
 },
@@ -2911,9 +3877,11 @@
     "model": "App_Farmacia.producto",
     "pk": 2,
     "fields": {
+        "imagen_prod": "productos/omeprazol.jpeg",
         "nombre_prod": "Omeprazol 20mg",
         "descripcion": "Inhibidor de la bomba de protones (IBP) utilizado para tratar la acidez estomacal, la indigestión y el reflujo ácido.",
         "precio": "8.49",
+        "stock": 13,
         "farmacia_prod": 2
     }
 },
@@ -2921,9 +3889,11 @@
     "model": "App_Farmacia.producto",
     "pk": 3,
     "fields": {
+        "imagen_prod": "productos/Paracetamol.jpg",
         "nombre_prod": "Paracetamol 500mg",
         "descripcion": "Analgésico y antipirético utilizado para aliviar el dolor y reducir la fiebre.",
         "precio": "3.25",
+        "stock": 2,
         "farmacia_prod": 3
     }
 },
@@ -2931,9 +3901,11 @@
     "model": "App_Farmacia.producto",
     "pk": 4,
     "fields": {
+        "imagen_prod": "productos/Loratadina.png",
         "nombre_prod": "Loratadina 10mg",
         "descripcion": "Antihistamínico utilizado para aliviar los síntomas de la alergia, como la congestión nasal y la picazón en los ojos.",
         "precio": "6.75",
+        "stock": 7,
         "farmacia_prod": 4
     }
 },
@@ -2941,9 +3913,11 @@
     "model": "App_Farmacia.producto",
     "pk": 5,
     "fields": {
+        "imagen_prod": "productos/Clorhexidina.jpg",
         "nombre_prod": "Clorhexidina en enjuague bucal",
         "descripcion": "Antiséptico bucal utilizado para prevenir la placa bacteriana y la gingivitis.",
         "precio": "7.99",
+        "stock": 5,
         "farmacia_prod": 5
     }
 },
@@ -2951,9 +3925,11 @@
     "model": "App_Farmacia.producto",
     "pk": 6,
     "fields": {
+        "imagen_prod": "productos/Simvastatina20mg.jpg",
         "nombre_prod": "Simvastatina 20mg",
         "descripcion": "Estatina utilizada para reducir los niveles de colesterol en sangre y prevenir enfermedades cardiovasculares.",
         "precio": "9.99",
+        "stock": 11,
         "farmacia_prod": 6
     }
 },
@@ -2961,9 +3937,11 @@
     "model": "App_Farmacia.producto",
     "pk": 7,
     "fields": {
+        "imagen_prod": "productos/Salbutamol.jpg",
         "nombre_prod": "Salbutamol (Ventolin) inhalador",
         "descripcion": "Broncodilatador utilizado para aliviar los síntomas del asma y otras enfermedades respiratorias.",
         "precio": "12.50",
+        "stock": 9,
         "farmacia_prod": 7
     }
 },
@@ -2971,9 +3949,11 @@
     "model": "App_Farmacia.producto",
     "pk": 8,
     "fields": {
+        "imagen_prod": "productos/Ranitidina.jpg",
         "nombre_prod": "Ranitidina 150mg",
         "descripcion": "Antagonista de los receptores H2 utilizado para tratar la acidez estomacal y las úlceras pépticas.",
         "precio": "4.99",
+        "stock": 1,
         "farmacia_prod": 8
     }
 },
@@ -2981,9 +3961,11 @@
     "model": "App_Farmacia.producto",
     "pk": 9,
     "fields": {
+        "imagen_prod": "productos/Multivitaminico.jpg",
         "nombre_prod": "Multivitamínico Centrum",
         "descripcion": "Suplemento vitamínico y mineral utilizado para cubrir las necesidades nutricionales diarias.",
         "precio": "15.99",
+        "stock": 5,
         "farmacia_prod": 9
     }
 },
@@ -2991,9 +3973,11 @@
     "model": "App_Farmacia.producto",
     "pk": 10,
     "fields": {
+        "imagen_prod": "productos/Hidrocortisona.jpg",
         "nombre_prod": "Crema de hidrocortisona 1%",
         "descripcion": "Corticosteroide tópico utilizado para aliviar la picazón, inflamación y enrojecimiento de la piel causados por irritaciones menores.",
         "precio": "6.25",
+        "stock": 3,
         "farmacia_prod": 10
     }
 },
@@ -3114,7 +4098,21 @@
         "usuario": 20,
         "direccion_cli": null,
         "telefono_cli": null,
-        "productos_favoritos": []
+        "birthday_date": "2024-03-08",
+        "productos_favoritos": [
+            1
+        ]
+    }
+},
+{
+    "model": "App_Farmacia.promocion",
+    "pk": 2,
+    "fields": {
+        "nombre_promo": "Feliz Cumpleaños",
+        "descripcion_promo": "¡Felicidades! Esperamos que disfrute de una promoción especial por su cumpleaños.",
+        "valor_promo": 10,
+        "fecha_fin_promo": null,
+        "cliente_promo": []
     }
 },
 {
@@ -3466,6 +4464,36 @@
     }
 },
 {
+    "model": "oauth2_provider.accesstoken",
+    "pk": 23,
+    "fields": {
+        "user": 1,
+        "source_refresh_token": null,
+        "token": "dP6x3kchtuTQnYCu7dFJFycfvKomGe",
+        "id_token": null,
+        "application": 1,
+        "expires": "2035-08-04T15:34:02.471Z",
+        "scope": "read write groups",
+        "created": "2024-03-07T23:34:02.471Z",
+        "updated": "2024-03-07T23:34:02.471Z"
+    }
+},
+{
+    "model": "oauth2_provider.accesstoken",
+    "pk": 24,
+    "fields": {
+        "user": 1,
+        "source_refresh_token": null,
+        "token": "jT0WzLeNVtvyTf2sp3JGph6WtFaXAN",
+        "id_token": null,
+        "application": 1,
+        "expires": "2035-08-04T17:21:41.186Z",
+        "scope": "read write groups",
+        "created": "2024-03-08T01:21:41.186Z",
+        "updated": "2024-03-08T01:21:41.186Z"
+    }
+},
+{
     "model": "oauth2_provider.refreshtoken",
     "pk": 1,
     "fields": {
@@ -3748,6 +4776,32 @@
         "access_token": 22,
         "created": "2024-02-28T20:29:49.432Z",
         "updated": "2024-02-28T20:29:49.432Z",
+        "revoked": null
+    }
+},
+{
+    "model": "oauth2_provider.refreshtoken",
+    "pk": 23,
+    "fields": {
+        "user": 1,
+        "token": "twyS1JFSYwsMbEU664tk3Hiy8g6HKt",
+        "application": 1,
+        "access_token": 23,
+        "created": "2024-03-07T23:34:02.472Z",
+        "updated": "2024-03-07T23:34:02.472Z",
+        "revoked": null
+    }
+},
+{
+    "model": "oauth2_provider.refreshtoken",
+    "pk": 24,
+    "fields": {
+        "user": 1,
+        "token": "lp0rDWEBgZ29jqOkinBGUsARsSsJVl",
+        "application": 1,
+        "access_token": 24,
+        "created": "2024-03-08T01:21:41.187Z",
+        "updated": "2024-03-08T01:21:41.187Z",
         "revoked": null
     }
 },
