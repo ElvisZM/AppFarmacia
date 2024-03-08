@@ -125,12 +125,10 @@ class Pago(models.Model):
 class Compra(models.Model):
     fecha_compra = models.DateField(null=False, blank=False)
     cliente_compra = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    producto_compra = models.ManyToManyField(Producto, through='DetalleCompra', related_name="producto_compra")
     empleado_compra = models.ForeignKey(Empleado, on_delete=models.CASCADE)
 
 class DetalleCompra(models.Model):
     cantidad_prod_comprado = models.IntegerField(null=True, blank=True)
-    precio_ud = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE)
     producto_detalle = models.ForeignKey(Producto, on_delete=models.CASCADE)
 
@@ -153,8 +151,8 @@ class Promocion(models.Model):
     nombre_promo = models.CharField(max_length=100)
     descripcion_promo = models.TextField()
     valor_promo = models.IntegerField(default=0)
-    fecha_fin_promo = models.DateField()
-    cliente_promo = models.OneToOneField(Cliente, on_delete=models.CASCADE)
+    fecha_fin_promo = models.DateField(null=True, blank=True)
+    cliente_promo = models.ManyToManyField(Cliente, blank=True)
         
     def __str__(self):
         return self.nombre_promo

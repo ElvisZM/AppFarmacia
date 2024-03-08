@@ -12,7 +12,9 @@ from .forms import *
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from django.contrib.auth.models import Group
-from oauth2_provider.models import AccessToken     
+from oauth2_provider.models import AccessToken
+from datetime import date, timedelta
+    
 
 
 
@@ -669,3 +671,27 @@ def votacion_eliminar(request, votacion_id):
     
     else:
         return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+
+@api_view(['GET']) 
+def promociones_list(request):
+    promociones = Promocion.objects.all()
+    serializer = PromocionSerializerMejorado(promociones, many=True)
+    return Response(serializer.data)
+
+
+
+
+
+
+@api_view(['GET'])
+def es_cumpleaños_elegible(cliente):
+    if cliente.fecha_nacimiento and cliente.fecha_registro:
+        hoy = date.today()
+        cumpleaños_cliente = cliente.fecha_nacimiento.replace(year=hoy.year)
+        if cumpleaños_cliente > hoy and (cumpleaños_cliente - cliente.fecha_registro) >= timedelta(days=30):
+            return True
+    return False
+

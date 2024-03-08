@@ -6,11 +6,8 @@ urlpatterns = [
     path('registrar/usuario',registrar_usuario.as_view()),
     path('usuario/token/<str:token>',obtener_usuario_token),
     
-    
     path('upload-file/', FileUploadAPIView.as_view()),
     path('upload-file/<int:pk>/', FileUploadAPIView.as_view(), name='file-detail'),
-
-
     
     path('productos', producto_list),
     path('producto/<int:producto_id>', producto_obtener),
@@ -22,11 +19,9 @@ urlpatterns = [
     path('producto/actualizar/nombre/<int:producto_id>', producto_actualizar_nombre),
     path('producto/eliminar/<int:producto_id>', producto_eliminar),
     
-    
     path('empleados', empleado_list),
     path('empleados/mejorado', empleado_list_mejorado),
     path('empleado/busqueda_avanzada', empleado_busqueda_avanzada),
-    
     
     path('farmacia/<int:farmacia_id>', farmacia_obtener),
     path('farmacias', farmacia_list),
@@ -35,9 +30,6 @@ urlpatterns = [
     path('farmacia/editar/<int:farmacia_id>', farmacia_editar),
     path('farmacia/actualizar/nombre/<int:farmacia_id>', farmacia_actualizar_nombre),
     path('farmacia/eliminar/<int:farmacia_id>', farmacia_eliminar),
-    
-    
-    
     
     path('votacion/<int:votacion_id>', votacion_obtener),
     path('votaciones/mejorado', votacion_list_mejorado),
@@ -51,4 +43,7 @@ urlpatterns = [
     path('proveedores', proveedor_list),
     
     path('clientes', clientes_list),
+    
+    path('promociones', promociones_list),
+
 ]

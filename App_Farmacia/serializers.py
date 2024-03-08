@@ -321,3 +321,13 @@ class VotacionSerializerActualizarPuntuacion(serializers.ModelSerializer):
         model = Votacion
         fields = ['puntuacion']
     
+    
+       
+class PromocionSerializerMejorado(serializers.ModelSerializer):
+    
+    #Para relaciones ManyToMany
+    cliente_promo = ClienteSerializerMejorado(read_only=True, many=True)
+    
+    class Meta:
+        fields = '__all__'
+        model = Promocion
