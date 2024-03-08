@@ -165,6 +165,7 @@ def producto_busqueda_avanzada(request):
             nombre_prod = formulario.cleaned_data.get('nombre_prod')
             descripcion = formulario.cleaned_data.get('descripcion')
             precio = formulario.cleaned_data.get('precio')
+            stock = formulario.cleaned_data.get('stock')
             farmacia_prod = formulario.cleaned_data.get('farmacia_prod')
             prov_sum_prod = formulario.cleaned_data.get('prov_sum_prod')
                             
@@ -695,3 +696,17 @@ def es_cumpleaños_elegible(cliente):
             return True
     return False
 
+
+
+@api_view(['GET'])
+def productos_stock_asc(request):
+    productos = Producto.objects.all().order_by('stock')
+    serializer_mejorado = ProductoSerializerMejorado(productos, many=True)
+    return Response(serializer_mejorado.data)
+
+
+@api_view(['GET'])
+def productos_stock_desc(request):
+    productos = Producto.objects.all().order_by('-stock')
+    serializer_mejorado = ProductoSerializerMejorado(productos, many=True)
+    return Response(serializer_mejorado.data)

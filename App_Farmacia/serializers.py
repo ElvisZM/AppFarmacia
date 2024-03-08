@@ -69,7 +69,7 @@ class ProductoSerializerMejorado(serializers.ModelSerializer):
     prov_sum_prod = ProveedorSerializer(read_only=True, many=True)
     
     class Meta:
-        fields = ('id', 'imagen_prod', 'nombre_prod', 'descripcion', 'precio', 'farmacia_prod', 'prov_sum_prod')
+        fields = ('id', 'imagen_prod', 'nombre_prod', 'descripcion', 'precio', 'stock','farmacia_prod', 'prov_sum_prod')
         model = Producto
         
         
@@ -139,7 +139,7 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
     
     class Meta:
         model = Producto
-        fields = ['nombre_prod','descripcion','precio','farmacia_prod','prov_sum_prod']
+        fields = ['nombre_prod','descripcion','precio', 'stock', 'farmacia_prod','prov_sum_prod']
             
     def validate_nombre_prod(self,nombre):
         productoNombre = Producto.objects.filter(nombre_prod=nombre, farmacia_prod=self.initial_data['farmacia_prod']).first()
@@ -159,6 +159,11 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
         if type(precio) != Decimal:
             raise serializers.ValidationError('El precio introducido no es válido')
         return precio
+    
+    def validate_stock(self, stock):
+        if type(stock) != int or stock < 0:
+            raise serializers.ValidationError('El stock introducido no es válido')
+        return stock
     
     def create(self, validated_data):
         if('prov_sum_prod' not  in self.initial_data):
@@ -189,6 +194,7 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
             nombre_prod = validated_data['nombre_prod'],
             descripcion = validated_data['descripcion'],
             precio = validated_data['precio'],
+            stock = validated_data['stock'],
             farmacia_prod = validated_data['farmacia_prod'],
             imagen_prod = archivo,
             )
@@ -210,6 +216,7 @@ class ProductoSerializerCreate(serializers.ModelSerializer):
         instance.nombre_prod = validated_data["nombre_prod"]
         instance.descripcion = validated_data["descripcion"]
         instance.precio = validated_data["precio"]
+        instance.stock = validated_data["stock"]
         instance.farmacia_prod = validated_data["farmacia_prod"]
         instance.save()
         

@@ -65,6 +65,7 @@ class Producto(models.Model):
     nombre_prod = models.CharField(max_length=200)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=5, decimal_places=2)
+    stock = models.IntegerField(default=0)
     farmacia_prod = models.ForeignKey(Farmacia, on_delete=models.CASCADE)
     prov_sum_prod = models.ManyToManyField(Proveedor, through='SuministroProducto')
     
