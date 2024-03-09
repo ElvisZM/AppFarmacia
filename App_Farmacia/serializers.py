@@ -27,6 +27,18 @@ class UsuarioSerializerRegistro(serializers.Serializer):
         if(not usuario is None):
             raise serializers.ValidationError('Ya existe un usuario con ese nombre.')
         return username
+    
+    def validate_telefono(self, telefono):
+        administradorTelefono = Administrador.objects.filter(telefono_admin=telefono).first()    
+        gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono).first()
+        empleadoTelefono = Empleado.objects.filter(telefono_emp=telefono).first()
+        clienteTelefono = Cliente.objects.filter(telefono_cli=telefono).first()    
+
+        if (str(telefono)[0] not in ('6','7','9') or len(str(telefono)) != 9) or (not(administradorTelefono is None or gerenteTelefono is None or empleadoTelefono is None or clienteTelefono is None)):
+            raise serializers.ValidationError('El teléfono introducido no es válido o ya existe en un usuario.')
+
+        return telefono
+        
 
 
 
@@ -338,3 +350,20 @@ class PromocionSerializerMejorado(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Promocion
+        
+class CarritoCompraProductoActualizar(serializers.ModelSerializer):
+    class Meta:
+        model = CarritoCompra
+        fields = '__all__'        
+        
+        
+
+class CarritoCompraSerializerMejorado(serializers.ModelSerializer):
+    
+    #Para relaciones ManyToOne u OneToOne
+    usuario = UsuarioSerializer()
+    producto_carrito = ProductoSerializerMejorado()
+    
+    class Meta:
+        fields = '__all__'
+        model = CarritoCompra

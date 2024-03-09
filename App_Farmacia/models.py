@@ -166,5 +166,6 @@ class UploadedFile(models.Model):
         return self.uploaded_on.date()
     
 class CarritoCompra(models.Model):
+    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     producto_carrito = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad_producto = models.IntegerField(default=1)

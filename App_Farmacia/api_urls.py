@@ -49,6 +49,8 @@ urlpatterns = [
     path('productos/stock/asc', productos_stock_asc),
     path('productos/stock/desc', productos_stock_desc),
 
+    path('producto/agregar/carrito/<int:producto_id>', agregar_al_carrito),
     
+    path('carrito/usuario', carrito_usuario),
 
 ]

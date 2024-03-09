@@ -46,19 +46,19 @@ class registrar_usuario(generics.CreateAPIView):
                 elif(rol == Usuario.EMPLEADO):
                     grupo = Group.objects.get(name='Empleado') 
                     grupo.user_set.add(user)
-                    empleado = Cliente.objects.create( usuario = user, direccion_emp = serializers.data.get("domicilio"), telefono_emp = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
+                    empleado = Empleado.objects.create( usuario = user, direccion_emp = serializers.data.get("domicilio"), telefono_emp = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
                     empleado.save()
                 
                 elif(rol == Usuario.GERENTE):
                     grupo = Group.objects.get(name='Gerente') 
                     grupo.user_set.add(user)
-                    gerente = Cliente.objects.create( usuario = user, direccion_ger = serializers.data.get("domicilio"), telefono_ger = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
+                    gerente = Gerente.objects.create( usuario = user, direccion_ger = serializers.data.get("domicilio"), telefono_ger = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
                     gerente.save()
                     
                 elif(rol == Usuario.ADMINISTRADOR):
                     grupo = Group.objects.get(name='Clientes') 
                     grupo.user_set.add(user)
-                    cliente = Cliente.objects.create( usuario = user, direccion_admin = serializers.data.get("domicilio"), telefono_admin = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
+                    cliente = Administrador.objects.create( usuario = user, direccion_admin = serializers.data.get("domicilio"), telefono_admin = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
                     cliente.save()
                     
                 usuarioSerializado = UsuarioSerializer(user)
@@ -710,3 +710,47 @@ def productos_stock_desc(request):
     productos = Producto.objects.all().order_by('-stock')
     serializer_mejorado = ProductoSerializerMejorado(productos, many=True)
     return Response(serializer_mejorado.data)
+
+
+
+@api_view(['POST'])
+def agregar_al_carrito(request, producto_id):
+    if(request.user.is_authenticated):
+        if request.method == 'POST':
+            producto = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod")
+            producto = producto.get(id=producto_id)
+        
+            carrito_usuario = CarritoCompra.objects.select_related("usuario", "producto_carrito").get(usuario=request.user)
+            
+            if (carrito_usuario):
+                productos_carro = carrito_usuario.producto_carrito
+                if (productos_carro.id == producto_id):
+                    item = CarritoCompra.objects.get(usuario=request.user ,producto_carrito=producto)
+                    item.cantidad_producto += 1
+                    item.save()
+                else:
+                    CarritoCompra.objects.create(usuario=request.user, producto_carrito=producto, cantidad_producto=1)
+
+            else:
+                CarritoCompra.objects.create(usuario=request.user, producto_carrito=producto, cantidad_producto=1)
+            
+            return Response({"Producto agregado al carrito correctamente"}, status=status.HTTP_200_OK)
+
+    else:
+        return Response({"Necesita iniciar sesion"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+@api_view(['GET'])
+def carrito_usuario(request):
+    if(request.user.is_authenticated):
+        try:
+            carrito_usuario = CarritoCompra.objects.get(usuario=request.user) 
+            serializer_mejorado = CarritoCompraSerializerMejorado(carrito_usuario)
+            return Response(serializer_mejorado.data)
+        
+        except CarritoCompra.DoesNotExist:
+            return Response("El usuario no tiene un carrito con productos", status=status.HTTP_404_NOT_FOUND)
+        
+    else:
+        return Response("Necesita iniciar sesion", status=status.HTTP_405_METHOD_NOT_ALLOWED)        
+        
