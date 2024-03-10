@@ -70,6 +70,64 @@ class registrar_usuario(generics.CreateAPIView):
 
 
 
+
+
+
+class registrar_usuario_google(generics.CreateAPIView):
+    serializer_class = UsuarioSerializerRegistroGoogle
+    permission_classes = [AllowAny]
+    
+    def create(self, request, *args, **kwargs):
+        serializers = UsuarioSerializerRegistroGoogle(data=request.data)
+        if serializers.is_valid():
+            try:
+                rol = int(request.data.get('rol'))
+                user = Usuario.objects.create_user(
+                        username = serializers.data.get("username"),
+                        first_name = serializers.data.get("first_name"),
+                        email = serializers.data.get("email"), 
+                        password = serializers.data.get("password1"),
+                        rol = rol,
+                        )
+                if(rol == Usuario.CLIENTE):
+                    domicilio = self.request.data.get("domicilio")
+                    telefono = 0
+                    fecha_cumple = self.request.data.get("birthday_date")
+                    grupo = Group.objects.get(name='Cliente') 
+                    grupo.user_set.add(user)
+                    cliente = Cliente.objects.create( usuario = user, direccion_cli = domicilio, telefono_cli = telefono, birthday_date = fecha_cumple)
+                    cliente.save()
+                    
+                elif(rol == Usuario.EMPLEADO):
+                    grupo = Group.objects.get(name='Empleado') 
+                    grupo.user_set.add(user)
+                    empleado = Empleado.objects.create( usuario = user, direccion_emp = serializers.data.get("domicilio"), telefono_emp = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
+                    empleado.save()
+                
+                elif(rol == Usuario.GERENTE):
+                    grupo = Group.objects.get(name='Gerente') 
+                    grupo.user_set.add(user)
+                    gerente = Gerente.objects.create( usuario = user, direccion_ger = serializers.data.get("domicilio"), telefono_ger = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
+                    gerente.save()
+                    
+                elif(rol == Usuario.ADMINISTRADOR):
+                    grupo = Group.objects.get(name='Clientes') 
+                    grupo.user_set.add(user)
+                    cliente = Administrador.objects.create( usuario = user, direccion_admin = serializers.data.get("domicilio"), telefono_admin = serializers.data.get("telefono"), birthday_date = serializers.data.get("birthday_date"))
+                    cliente.save()
+                    
+                usuarioSerializado = UsuarioSerializer(user)
+                return Response(usuarioSerializado.data)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
 @api_view(['GET'])
 def obtener_usuario_token(request,token):
     
@@ -688,11 +746,11 @@ def promociones_list(request):
 
 
 @api_view(['GET'])
-def es_cumpleaños_elegible(cliente):
+def es_cumpleanyos_elegible(cliente):
     if cliente.fecha_nacimiento and cliente.fecha_registro:
         hoy = date.today()
-        cumpleaños_cliente = cliente.fecha_nacimiento.replace(year=hoy.year)
-        if cumpleaños_cliente > hoy and (cumpleaños_cliente - cliente.fecha_registro) >= timedelta(days=30):
+        cumpleanyos_cliente = cliente.fecha_nacimiento.replace(year=hoy.year)
+        if cumpleanyos_cliente > hoy and (cumpleanyos_cliente - cliente.fecha_registro) >= timedelta(days=30):
             return True
     return False
 
@@ -717,22 +775,24 @@ def productos_stock_desc(request):
 def agregar_al_carrito(request, producto_id):
     if(request.user.is_authenticated):
         if request.method == 'POST':
-            producto = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod")
-            producto = producto.get(id=producto_id)
+            producto_anyadir = Producto.objects.get(id=producto_id)
         
-            carrito_usuario = CarritoCompra.objects.select_related("usuario", "producto_carrito").get(usuario=request.user)
+            carrito_usuario = CarritoCompra.objects.select_related("usuario").prefetch_related("producto_carrito").filter(usuario=request.user, realizado=False).first()
+            
             
             if (carrito_usuario):
-                productos_carro = carrito_usuario.producto_carrito
-                if (productos_carro.id == producto_id):
-                    item = CarritoCompra.objects.get(usuario=request.user ,producto_carrito=producto)
-                    item.cantidad_producto += 1
-                    item.save()
+                producto_carrito = UsuarioCarrito.objects.select_related("carrito", "producto").filter(carrito = carrito_usuario, producto = producto_anyadir)
+                if (producto_carrito):                    
+                    producto_aumentar = UsuarioCarrito.objects.get(carrito=carrito_usuario, producto = producto_anyadir)
+                    producto_aumentar.cantidad_producto += 1
+                    producto_aumentar.save()
                 else:
-                    CarritoCompra.objects.create(usuario=request.user, producto_carrito=producto, cantidad_producto=1)
+                    UsuarioCarrito.objects.create(carrito=carrito_usuario, producto = producto_anyadir, cantidad_producto=1)
 
             else:
-                CarritoCompra.objects.create(usuario=request.user, producto_carrito=producto, cantidad_producto=1)
+                CarritoCompra.objects.create(usuario=request.user, realizado=False)
+                carrito_usuario = CarritoCompra.objects.get(usuario = request.user, realizado=False)
+                UsuarioCarrito.objects.create(carrito=carrito_usuario, producto = producto_anyadir,cantidad_producto = 1)
             
             return Response({"Producto agregado al carrito correctamente"}, status=status.HTTP_200_OK)
 
@@ -743,14 +803,203 @@ def agregar_al_carrito(request, producto_id):
 @api_view(['GET'])
 def carrito_usuario(request):
     if(request.user.is_authenticated):
+        
         try:
-            carrito_usuario = CarritoCompra.objects.get(usuario=request.user) 
+            carrito_usuario = CarritoCompra.objects.get(usuario=request.user, realizado=False) 
             serializer_mejorado = CarritoCompraSerializerMejorado(carrito_usuario)
-            return Response(serializer_mejorado.data)
+            serializer_mejorado = serializer_mejorado.data
+            total_carrito = 0
+            for detalle_producto in carrito_usuario.usuariocarrito_set.all():
+                precio_producto = detalle_producto.producto.precio
+                cantidad_producto = detalle_producto.cantidad_producto
+                total_carrito += cantidad_producto * precio_producto
+            
+            serializer_mejorado['total_carrito'] = total_carrito
+            
+            return Response(serializer_mejorado)
         
         except CarritoCompra.DoesNotExist:
-            return Response("El usuario no tiene un carrito con productos", status=status.HTTP_404_NOT_FOUND)
+            CarritoCompra.objects.create(usuario=request.user, realizado=False)
+            carrito_usuario = CarritoCompra.objects.get(usuario=request.user, realizado=False)
+            serializer_mejorado=CarritoCompraSerializerMejorado(carrito_usuario)
+            return Response(serializer_mejorado.data)
         
     else:
         return Response("Necesita iniciar sesion", status=status.HTTP_405_METHOD_NOT_ALLOWED)        
         
+
+@api_view(['DELETE'])
+def quitar_del_carrito(request, producto_id):
+    if(request.user.is_authenticated):
+        if request.method == 'DELETE':
+            try:
+                producto_eliminar = Producto.objects.get(id=producto_id)
+        
+                carrito_usuario = CarritoCompra.objects.select_related("usuario").prefetch_related("producto_carrito").filter(usuario=request.user, realizado=False).first()
+                
+                
+                UsuarioCarrito.objects.select_related("carrito", "producto").filter(carrito = carrito_usuario, producto = producto_eliminar).delete()
+
+                return Response({"Producto eliminado del carrito correctamente"}, status=status.HTTP_200_OK)
+            
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    else:
+        return Response({"Necesita iniciar sesion"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+@api_view(['POST'])
+def bajar_unidad_carrito(request, producto_id):
+    if(request.user.is_authenticated):
+        if request.method == 'POST':
+            try:
+                producto_bajar_ud = Producto.objects.get(id=producto_id)
+        
+                carrito_usuario = CarritoCompra.objects.select_related("usuario").prefetch_related("producto_carrito").filter(usuario=request.user, realizado=False).first()
+                
+                producto_carrito = UsuarioCarrito.objects.select_related("carrito", "producto").filter(carrito = carrito_usuario, producto = producto_bajar_ud).first()
+                
+                if (producto_carrito and producto_carrito.cantidad_producto > 1):
+                    producto_carrito.cantidad_producto -= 1
+                    producto_carrito.save()
+                    
+                elif(producto_carrito and producto_carrito.cantidad_producto <= 1):
+                    producto_carrito.delete()
+                    
+                else:
+                    return Response({"Error en eliminar el producto, parece que no existe el producto seleccionado"}, status=status.HTTP_404_NOT_FOUND)
+
+                return Response({"Se ha quitado una unidad del producto correctamente"}, status=status.HTTP_200_OK)
+            
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    else:
+        return Response({"Necesita iniciar sesion"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+
+@api_view(['GET'])  
+def producto_prospecto(request, producto_id):
+    producto_prospecto = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod").get(id=producto_id)
+
+    try:
+    
+        # Obtener el prospecto asociado al producto
+        prospecto = producto_prospecto.prospecto
+    
+        # Serializar el prospecto y agregarlo al serializer
+        serializer = ProductoProspectoSerializerMejorado(instance=prospecto)
+    
+        return Response(serializer.data)
+    
+    except Exception as error:
+        Prospecto.objects.create(producto=producto_prospecto)
+        
+        prospecto = producto_prospecto.prospecto
+        
+        serializer = ProductoProspectoSerializerMejorado(instance=prospecto)
+        
+        return Response(serializer.data)
+            
+            
+            
+            
+
+@api_view(['GET'])
+def tratamiento_lista_mejorada(request):
+    tratamientos = Tratamiento.objects.all()
+    serializer_mejorado = TratamientoSerializerMejorado(tratamientos, many=True)
+    return Response(serializer_mejorado.data)
+
+
+
+@api_view(['DELETE'])
+def tratamiento_eliminar(request, tratamiento_id):
+    if(request.user.has_perm("App_Farmacia.delete_tratamiento")):
+
+        tratamiento = Tratamiento.objects.get(id=tratamiento_id)
+        try:
+            tratamiento.delete( )
+            return Response("Producto DELETEADO")
+        except Exception as error:
+            return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+
+
+@api_view(['POST'])
+def tratamiento_create(request):
+    if(request.user.has_perm("App_Farmacia.add_tratamiento")):
+        tratamiento_serializers = TratamientoSerializerCreate(data=request.data)
+        if tratamiento_serializers.is_valid():
+            try:
+                tratamiento_serializers.save()
+                return Response("Tratamiento CREADO")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                print(error)
+                return Response(error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+                return Response(tratamiento_serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(['GET'])  
+def producto_obtener(request, producto_id):
+    producto = Producto.objects.select_related("farmacia_prod").prefetch_related("prov_sum_prod")
+    producto = producto.get(id=producto_id)
+    serializer = ProductoSerializerMejorado(producto)
+    return Response(serializer.data)  
+  
+    
+@api_view(['PUT'])
+def producto_editar(request, producto_id):
+    if(request.user.has_perm("App_Farmacia.change_producto")):
+        producto = Producto.objects.get(id=producto_id)
+        productoCreateSerializer = ProductoSerializerCreate(instance=producto, data=request.data)
+        if productoCreateSerializer.is_valid():
+            try:
+                productoCreateSerializer.save()
+                return Response("Producto EDITADO")
+            except serializers.ValidationError as error:
+                return Response(error.detail, status=status.HTTP_400_BAD_REQUEST)
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR) 
+        else:
+            return Response(productoCreateSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+@api_view(['PATCH'])
+def producto_actualizar_nombre(request, producto_id):
+    if(request.user.has_perm("App_Farmacia.change_producto")):
+
+        serializers = ProductoSerializerCreate(data=request.data)
+        producto = Producto.objects.get(id=producto_id)
+        serializers = ProductoSerializerActualizarNombre(data=request.data, instance=producto)
+        if serializers.is_valid():
+            try:
+                serializers.save()
+                return Response("Producto EDITADO")
+            except Exception as error:
+                return Response(repr(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("Sin permisos para esta operación", status=status.HTTP_401_UNAUTHORIZED)
+
+        
+    
+ 

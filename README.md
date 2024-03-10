@@ -281,7 +281,7 @@ VALIDACIONES:
 
     * Comprobamos que se inserte una dirección
 
-    * Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+    * Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
 
     * Comprobamos que el numero no exista en otra farmacia.
 
@@ -533,7 +533,7 @@ VALIDACIONES:
 
     * Comprobamos que se inserte una dirección para el cliente.
 
-    * Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+    * Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
 
     * Comprobamos que el numero no exista en otro cliente.
 
@@ -639,7 +639,7 @@ VALIDACIONES:
 
 
 
-## PEQUEÑA ANOTACIÓN, NO OLVIDAR!!!:
+## PEQUEnyA ANOTACIÓN, NO OLVIDAR!!!:
 
     En las templates, se puede acceder a los datos de cualquier campo siempre y cuando tengan relacion entre ellos.
 

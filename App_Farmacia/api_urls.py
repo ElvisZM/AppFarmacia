@@ -50,7 +50,18 @@ urlpatterns = [
     path('productos/stock/desc', productos_stock_desc),
 
     path('producto/agregar/carrito/<int:producto_id>', agregar_al_carrito),
-    
+    path('producto/quitar/carrito/<int:producto_id>', quitar_del_carrito),
+    path('producto/quitar/unidad/carrito/<int:producto_id>', bajar_unidad_carrito),
     path('carrito/usuario', carrito_usuario),
+    
+    path('producto/prospecto/<int:producto_id>', producto_prospecto),
+    
+    
+    path('tratamiento/lista/mejorada', tratamiento_lista_mejorada),
+    path('tratamiento/eliminar/<int:tratamiento_id>', tratamiento_eliminar),
+
+    path('tratamiento/crear', tratamiento_create),
+
+    path('registro/google', registrar_usuario_google.as_view()),
 
 ]

@@ -71,6 +71,16 @@ class Producto(models.Model):
     
     def __str__(self):
         return self.nombre_prod
+    
+class Prospecto(models.Model):
+    producto = models.OneToOneField(Producto, on_delete=models.CASCADE)
+    detalles = models.TextField()
+    composicion = models.TextField()
+    modo_de_uso = models.TextField()
+
+    def __str__(self):
+        return self.producto.nombre_prod
+    
 
 class SuministroProducto(models.Model):
     fecha_sum = models.DateField(null=True, blank=True)
@@ -164,8 +174,23 @@ class UploadedFile(models.Model):
     
     def __str__(self):
         return self.uploaded_on.date()
-    
+
 class CarritoCompra(models.Model):
-    usuario = models.OneToOneField(Usuario, on_delete=models.CASCADE)
-    producto_carrito = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    producto_carrito = models.ManyToManyField(Producto, through='UsuarioCarrito')
+    realizado = models.BooleanField(default=False)
+    
+
+class UsuarioCarrito(models.Model):
+    carrito = models.ForeignKey(CarritoCompra, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad_producto = models.IntegerField(default=1)
+        
+        
+class Tratamiento(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    veces_al_dia = models.IntegerField()
+    fecha_inicio = models.DateField() 
+    fecha_fin = models.DateField()
+    activo = models.BooleanField(default=True)

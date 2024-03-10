@@ -132,7 +132,7 @@ def administrador_create(request):
     if (request.method == 'POST'):
         administrador_creado = crear_administrador_modelo(formulario)
         if (administrador_creado):
-            messages.success(request, 'Se ha añadido el administrador '+formulario.cleaned_data.get('first_name')+" correctamente")
+            messages.success(request, 'Se ha anyadido el administrador '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_administradores")       
 
     return render(request, 'admin/create_administrador.html', {'formulario':formulario})
@@ -534,7 +534,7 @@ def gerente_create(request):
     if (request.method == 'POST'):
         gerente_creado = crear_gerente_modelo(formulario)
         if (gerente_creado):
-            messages.success(request, 'Se ha añadido el gerente '+formulario.cleaned_data.get('first_name')+" correctamente")
+            messages.success(request, 'Se ha anyadido el gerente '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_gerentes")       
 
     return render(request, 'gerente/create_gerente.html', {'formulario':formulario})
@@ -712,7 +712,7 @@ def empleado_create(request):
     if (request.method == 'POST'):
         empleado_creado = crear_empleado_modelo(formulario)
         if (empleado_creado):
-            messages.success(request, 'Se ha añadido '+formulario.cleaned_data.get('first_name')+" correctamente")
+            messages.success(request, 'Se ha anyadido '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_empleados")       
 
     return render(request, 'empleado/create_empleado.html', {'formulario':formulario})
@@ -847,7 +847,7 @@ def votacion_create(request):
     if (request.method == 'POST'):
         votacion_creada = crear_votacion_modelo(formulario)
         if (votacion_creada):
-            messages.success(request, 'Se ha añadido la votación al producto '+formulario.cleaned_data.get('voto_producto').nombre_prod+" correctamente")
+            messages.success(request, 'Se ha anyadido la votación al producto '+formulario.cleaned_data.get('voto_producto').nombre_prod+" correctamente")
             return redirect("lista_votaciones")       
 
     return render(request, 'votacion/create_votacion.html', {'formulario':formulario})
@@ -1004,7 +1004,7 @@ def cliente_create(request):
         cliente_creado = crear_cliente_modelo(formulario)
         
         if (cliente_creado):
-            messages.success(request, 'Se ha añadido el cliente '+formulario.cleaned_data.get('first_name')+" correctamente")
+            messages.success(request, 'Se ha anyadido el cliente '+formulario.cleaned_data.get('first_name')+" correctamente")
             return redirect("lista_clientes")       
 
     return render(request, 'cliente/create_cliente.html', {'formulario':formulario})
@@ -1155,7 +1155,7 @@ def promocion_create(request):
     if (request.method == 'POST'):
         promocion_creada = crear_promocion_modelo(formulario)
         if (promocion_creada):
-            messages.success(request, 'Se ha añadido la promocion '+formulario.cleaned_data.get('nombre_promo')+" correctamente")
+            messages.success(request, 'Se ha anyadido la promocion '+formulario.cleaned_data.get('nombre_promo')+" correctamente")
             return redirect("lista_promociones")       
 
     return render(request, 'promocion/create_promocion.html', {'formulario':formulario})

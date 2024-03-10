@@ -42,6 +42,27 @@ class UsuarioSerializerRegistro(serializers.Serializer):
 
 
 
+class UsuarioSerializerRegistroGoogle(serializers.Serializer):
+    
+    username = serializers.CharField()
+    first_name = serializers.CharField()
+    password1 = serializers.CharField()
+    password2 = serializers.CharField()
+    email = serializers.EmailField()
+    rol = serializers.IntegerField()
+    domicilio = serializers.CharField(required=False, allow_blank=True)
+    telefono = serializers.CharField(required=False, allow_blank=True)
+    birthday_date = serializers.DateField()
+    
+    def validate_username(self, username):
+        usuario = Usuario.objects.filter(username=username).first()
+        
+        if(not usuario is None):
+            raise serializers.ValidationError('Ya existe un usuario con ese nombre.')
+        return username
+
+
+
 class UsuarioSerializer(serializers.ModelSerializer):
     
     date_joined = serializers.DateTimeField(format=('%d-%m-%Y'))
@@ -274,7 +295,7 @@ class FarmaciaSerializerCreate(serializers.ModelSerializer):
     
     def validate_telefono_farm(self,telefono):
         if (str(telefono)[0] not in ('6','7','9') or len(str(telefono)) != 9):
-            raise serializers.ValidationError('Debe especificar un número español de 9 dígitos.')
+            raise serializers.ValidationError('Debe especificar un número espanyol de 9 dígitos.')
         return telefono
     
     def update(self, instance, validated_data):
@@ -351,19 +372,86 @@ class PromocionSerializerMejorado(serializers.ModelSerializer):
         fields = '__all__'
         model = Promocion
         
-class CarritoCompraProductoActualizar(serializers.ModelSerializer):
-    class Meta:
-        model = CarritoCompra
-        fields = '__all__'        
-        
-        
 
 class CarritoCompraSerializerMejorado(serializers.ModelSerializer):
     
     #Para relaciones ManyToOne u OneToOne
     usuario = UsuarioSerializer()
-    producto_carrito = ProductoSerializerMejorado()
+    
+    #Para relaciones ManyToMany
+    producto_carrito = ProductoSerializerMejorado(read_only=True, many=True)
     
     class Meta:
         fields = '__all__'
         model = CarritoCompra
+        
+        
+class ProductoProspectoSerializerMejorado(serializers.ModelSerializer):
+    producto = ProductoSerializerMejorado()
+
+    class Meta:
+        fields = '__all__'
+        model = Prospecto
+        
+        
+class TratamientoSerializerMejorado(serializers.ModelSerializer):
+    cliente = ClienteSerializerMejorado()
+    producto = ProductoSerializerMejorado()
+        
+    class Meta:
+        fields = '__all__'
+        model = Tratamiento
+        
+        
+   
+class TratamientoSerializerCreate(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Tratamiento
+        fields = ['cliente','producto','veces_al_dia','fecha_inicio','fecha_fin','activo']
+
+            
+    def validate_cliente(self,cliente):
+        if(cliente is None):
+            raise serializers.ValidationError('Necesita aplicar el tratamiento a un cliente.')        
+        return cliente
+    
+    def validate_producto(self,producto):
+        if (producto is None):
+            raise serializers.ValidationError('Necesita seleccionar un producto para el tratamiento.')
+        return producto
+    
+    def validate_veces_al_dia(self,veces_al_dia):
+        if (veces_al_dia is None or veces_al_dia == 0):
+            raise serializers.ValidationError('Hay que especificar cuantas veces al dia usa el producto.')
+        return veces_al_dia
+    
+    def validate_fecha_inicio(self, fecha_inicio):
+        hoy = date.today()
+        if fecha_inicio < hoy:
+            raise serializers.ValidationError('Fecha de inicio inválida.')
+        fecha_inicio = self.initial_data["fecha_inicio"]
+        return fecha_inicio
+    
+    def validate_fecha_fin(self, fecha_fin):
+        
+        hoy = date.today()
+        if fecha_fin <= hoy:
+            raise serializers.ValidationError('Fecha de fin inválida.')
+
+        fecha_fin = self.initial_data["fecha_inicio"]
+        return fecha_fin
+
+    
+    def create(self, validated_data):        
+        
+        tratamiento = Tratamiento.objects.create(
+            cliente = validated_data['cliente'],
+            producto = validated_data['producto'],
+            veces_al_dia = validated_data['veces_al_dia'],
+            fecha_inicio = validated_data['fecha_inicio'],
+            fecha_fin = validated_data['fecha_fin'],
+            activo = self.initial_data['activo'],
+            )
+
+        return tratamiento

@@ -60,9 +60,9 @@ class AdministradorModelForm(UserCreationForm):
         if (direccion_admin is None):
             self.add_error('direccion_admin','Debe indicar una dirección de contacto para el administrador.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
         if (str(telefono_admin)[0] not in ('6','7','9') or len(str(telefono_admin)) != 9):
-            self.add_error('telefono_admin','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_admin','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro gerente.
         administradorTelefono = Administrador.objects.filter(telefono_admin=telefono_admin).first()    
@@ -98,9 +98,9 @@ class AdministradorEditarModelForm(forms.ModelForm):
         if (direccion_admin is None):
             self.add_error('direccion_admin','Debe indicar una dirección de contacto para el administrador.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
         if (str(telefono_admin)[0] not in ('6','7','9') or len(str(telefono_admin)) != 9):
-            self.add_error('telefono_admin','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_admin','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro administrador.
         administradorTelefono = Administrador.objects.filter(telefono_admin=telefono_admin).exclude(id=self.instance.id).first()    
@@ -308,9 +308,9 @@ class FarmaciaModelForm(ModelForm):
         if (direccion_farm is None):
             self.add_error('direccion_farm','Debe especificar una dirección para la farmacia')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
         if (str(telefono_farm)[0] not in ('6','7','9') or len(str(telefono_farm)) != 9):
-            self.add_error('telefono_farm','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_farm','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otra farmacia.
         farmaciaTelefono = Farmacia.objects.filter(telefono_farm=telefono_farm).first()    
@@ -399,9 +399,9 @@ class GerenteModelForm(UserCreationForm):
         if (direccion_ger is None):
             self.add_error('direccion_ger','Debe indicar una dirección de contacto para el gerente.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol.
         if (str(telefono_ger)[0] not in ('6','7','9') or len(str(telefono_ger)) != 9):
-            self.add_error('telefono_ger','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_ger','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro gerente.
         gerenteTelefono = Gerente.objects.filter(telefono_ger=telefono_ger).exclude(id=self.instance.id).first()    
@@ -467,9 +467,9 @@ class GerenteEdicionForm(forms.Form):
     def clean_telefono_ger(self):
         telefono_ger = self.cleaned_data.get('telefono_ger')
 
-        #Comprobamos que el numero tenga 9 digitos, sea español.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol.
         if not str(telefono_ger).startswith(('6', '7', '9')) or len(str(telefono_ger)) != 9:
-            raise forms.ValidationError('Debe especificar un número español de 9 dígitos.')
+            raise forms.ValidationError('Debe especificar un número espanyol de 9 dígitos.')
 
         #Obtenemos la ID del gerente actual
         gerente_id = self.data.get('gerente_id')
@@ -587,9 +587,9 @@ class EmpleadoModelForm(UserCreationForm):
         if (direccion_emp is None):
             self.add_error('direccion_emp','Debe indicar una dirección de contacto para el empleado.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
         if (str(telefono_emp)[0] not in ('6','7','9') or len(str(telefono_emp)) != 9):
-            self.add_error('telefono_emp','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_emp','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro empleado.
         empleadoTelefono = Empleado.objects.filter(telefono_emp=telefono_emp).first()    
@@ -631,9 +631,9 @@ class EmpleadoEditarModelForm(forms.ModelForm):
         if (direccion_emp is None):
             self.add_error('direccion_emp','Debe indicar una dirección de contacto para el empleado.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
         if (str(telefono_emp)[0] not in ('6','7','9') or len(str(telefono_emp)) != 9):
-            self.add_error('telefono_emp','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_emp','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro empleado.
         empleadoTelefono = Empleado.objects.filter(telefono_emp=telefono_emp).exclude(id=self.instance.id).first()    
@@ -836,9 +836,9 @@ class ClienteModelForm(UserCreationForm):
         if (direccion_cli is None):
             self.add_error('direccion_cli', 'Debe especificar una direccioón para el cliente.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
         if (str(telefono_cli)[0] not in ('6','7','9') or len(str(telefono_cli)) != 9):
-            self.add_error('telefono_cli','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_cli','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro cliente.
         clienteTelefono = Cliente.objects.filter(telefono_cli=telefono_cli).first()    
@@ -876,9 +876,9 @@ class ClienteEditarModelForm(forms.ModelForm):
         if (direccion_cli is None):
             self.add_error('direccion_cli', 'Debe especificar una direccioón para el cliente.')
             
-        #Comprobamos que el numero tenga 9 digitos, sea español y no exista ya.
+        #Comprobamos que el numero tenga 9 digitos, sea espanyol y no exista ya.
         if (str(telefono_cli)[0] not in ('6','7','9') or len(str(telefono_cli)) != 9):
-            self.add_error('telefono_cli','Debe especificar un número español de 9 dígitos.')
+            self.add_error('telefono_cli','Debe especificar un número espanyol de 9 dígitos.')
         
         #Comprobamos que el numero no exista en otro cliente.
         clienteTelefono = Cliente.objects.filter(telefono_cli=telefono_cli).first()    
